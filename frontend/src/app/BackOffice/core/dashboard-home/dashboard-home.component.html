@@ -1,0 +1,83 @@
+<section>
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <!-- Menu -->
+
+      <!-- Sidebar -->
+      <app-dashboard-sidebar></app-dashboard-sidebar>
+      <!-- / Menu -->
+      <!-- Layout container -->
+      <!-- / Sidebar -->
+
+      <!-- Layout page -->
+      <div class="layout-page">
+        <!-- Navbar -->
+
+        <!-- Header -->
+        <app-dashboard-header></app-dashboard-header>
+        <!-- / Navbar -->
+        <!-- / Header -->
+
+        <!-- Content wrapper -->
+        <div class="content-wrapper">
+
+          <!-- Content -->
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="row">
+              <!-- 1er ligne -->
+              <!--Welcome Admin -->
+<!--              <div class="col-xxl-8 mb-6 order-0">-->
+<!--                <div class="card">-->
+<!--                  <div class="d-flex align-items-start row">-->
+<!--                    <div class="col-sm-7">-->
+<!--                      <div class="card-body">-->
+<!--                        <h5 class="card-title text-primary mb-3">Welcome Admin 🎉</h5>-->
+<!--                        <p class="mb-6">-->
+<!--                          Ceci est un résumé de certaines statistiques de l'application.<br />Consultez la barre latérale pour plus de fonctionnalités.-->
+<!--                        </p>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-sm-5 text-center text-sm-left">-->
+<!--                      <div class="card-body pb-0 px-0 px-md-6">-->
+<!--                        <img-->
+<!--                          src="/assets/BackOffice/img/illustrations/man-with-laptop.png"-->
+<!--                          height="175"-->
+<!--                          alt="View Badge User" />-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+              <!-- / Welcome Admin -->
+              <!-- STATISTIQUES -->
+<!--              <app-urgence-stats></app-urgence-stats>-->
+<!--              <app-urgence-map-stats></app-urgence-map-stats>-->
+<!--              <app-dons-stats></app-dons-stats>-->
+              <!-- / STATISTIQUES -->
+            </div>
+            <!-- Ici s'affichera le contenu des routes enfants -->
+            <router-outlet></router-outlet>
+          </div>
+          <!-- / Content -->
+
+          <!-- Backdrop -->
+          <div class="content-backdrop fade"></div>
+        </div>
+        <!-- / Content wrapper -->
+
+        <!-- Content wrapper -->
+        <!-- Footer -->
+        <app-dashboard-footer></app-dashboard-footer>
+        <!-- / Footer -->
+
+      </div>
+      <!-- / Layout page -->
+
+    </div>
+
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+  </div>
+  <!-- Core JS -->
+</section>

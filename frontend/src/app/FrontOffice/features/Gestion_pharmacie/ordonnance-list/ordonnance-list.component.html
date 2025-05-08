@@ -1,0 +1,282 @@
+<div class="ordonnance-page py-5">
+  <div class="container ordonnance-list">
+
+    <!-- 🧠 Bloc Détection Médicament IA (on ajoute ici AVANT ordonnances) -->
+<!-- 🧠 Upload Image Medicament -->
+<!-- 🧠 Bouton déclencheur -->
+<!-- 🧠 Détection Médicaments IA -->
+<div class="text-center mb-4">
+  <button class="btn btn-outline-success btn-lg rounded-pill px-4 py-2 shadow-sm"
+          (click)="showIABox = !showIABox">
+    🧠 Détecter Médicaments par Image
+  </button>
+</div>
+
+<div *ngIf="showIABox" class="card shadow-sm p-4 rounded-4 mb-5 fade-in">
+
+  <h4 class="text-success mb-4">🧠 Détection Médicaments</h4>
+
+  <!-- Choix Upload ou Caméra -->
+  <div class="d-flex justify-content-center gap-3 mb-4">
+    <button class="btn btn-outline-primary" (click)="mode = 'upload'">📂 Upload Image</button>
+    <button class="btn btn-outline-secondary" (click)="mode = 'camera'; startCamera()">📸 Ouvrir Caméra</button>
+  </div>
+
+  <!-- Mode Upload -->
+  <div *ngIf="mode === 'upload'" class="text-center">
+    <input type="file" (change)="onFileSelected($event)" class="form-control mt-2 mb-3">
+    <button class="btn btn-success rounded-pill px-4 py-2 shadow-sm"
+            (click)="analyserImage()"
+            [disabled]="!selectedFile || isAnalysing">
+      🔍 Analyser l'image uploadée
+    </button>
+  </div>
+
+  <!-- Mode Caméra -->
+  <div *ngIf="mode === 'camera'" class="text-center">
+    <video #video autoplay playsinline width="300" height="200" class="rounded shadow-sm border"></video>
+    <canvas #canvas width="300" height="200" hidden class="rounded shadow-sm border"></canvas>
+  
+    <div class="d-flex justify-content-center gap-2 mt-3">
+      <button class="btn btn-outline-primary" (click)="capture()">📷 Prendre photo</button>
+      <button class="btn btn-success" (click)="analyserImageFromCamera()" [disabled]="!photoCaptured">
+        🔍 Analyser la photo
+      </button>
+    </div>
+  </div>
+  
+
+  <!-- Loader pendant analyse -->
+  <div *ngIf="isAnalysing" class="text-center mt-4">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="text-muted mt-2">Analyse en cours...</p>
+  </div>
+
+  <!-- Résultats -->
+  <div *ngIf="ocrMedicaments.length > 0" class="mt-4">
+    <h5 class="text-primary">📋 Médicaments détectés :</h5>
+    <ul class="list-group">
+      <li *ngFor="let med of ocrMedicaments" class="list-group-item">
+        <strong>{{ med.nom }}</strong> : {{ med.description }}
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="ocrTexte.length > 0" class="mt-4">
+    <h6 class="text-muted">📝 Texte brut détecté :</h6>
+    <pre class="bg-light p-3 rounded-3">{{ ocrTexte }}</pre>
+  </div>
+
+</div>
+
+
+
+    <!-- 🧠 Fin IA -->
+
+    <!-- 🩺 Bloc Ordonnances commence ici -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+      <h2 class="fw-bold" style="background: linear-gradient(135deg, #178066, #1fab89); -webkit-background-clip: text; color: transparent;">
+        <i class="bi bi-clipboard-check-fill me-2"></i> 🩺 Ordonnances
+      </h2>
+
+      <a routerLink="/pharmacies-map" class="btn btn-dewini shadow-sm rounded-pill px-4 py-2 d-flex align-items-center gap-2">
+        🌍 <span>Trouver une pharmacie</span>
+      </a>
+    </div>
+    
+
+    <!-- Liste ou message "Aucune ordonnance" -->
+    <div *ngIf="ordonnances.length > 0; else noData">
+      <div *ngFor="let ord of ordonnances" 
+           class="card shadow-sm mb-3 border-0 rounded-4 hover-shadow transition"
+           (click)="toggleDetails(ord.id!)"
+           [ngClass]="{ 'bg-light': openedOrdonnanceId !== ord.id, 'bg-white': openedOrdonnanceId === ord.id }"
+           style="cursor: pointer;">
+        
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0 text-primary">
+              🩺 Ordonnance <span class="text-dark"><small>{{ ord.dateEmission | date:'dd/MM/yyyy' }}</small></span>
+            </h5>
+            <i class="bi fs-4 text-muted"
+              [ngClass]="{
+                'bi-chevron-down': openedOrdonnanceId !== ord.id,
+                'bi-chevron-up': openedOrdonnanceId === ord.id
+              }"></i>
+          </div>
+
+          <div *ngIf="openedOrdonnanceId === ord.id">
+            <p class="mb-2"><strong class="text-muted">📄 Instructions :</strong> {{ ord.instructions }}</p>
+
+            <div>
+              <strong class="text-muted">💊 Prescriptions :</strong>
+              <ul class="list-group list-group-flush rounded mt-2">
+                <li *ngFor="let pres of ord.prescriptions" class="list-group-item bg-transparent">
+                  {{ pres.medicament?.nom }} — {{ pres.posologie }} — {{ pres.duree }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Boutons PDF et Commander -->
+            <div class="mt-4 d-flex justify-content-center gap-3">
+              <button class="btn btn-outline-primary bouton-hover d-flex align-items-center gap-2 rounded-pill px-3 py-2 small"
+                      (click)="telechargerPdf(ord); $event.stopPropagation()">
+                <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+              </button>
+
+              <button class="btn btn-success bouton-pulse d-flex align-items-center gap-2 rounded-pill px-3 py-2 small"
+                      (click)="toggleCommande(ord.id!); $event.stopPropagation()">
+                <i class="bi bi-bag-check-fill"></i> Commander
+              </button>
+              
+            </div>
+
+            <!-- Formulaire de commande -->
+            <div *ngIf="commandeVisibleId === ord.id" class="mt-4 p-3 bg-light rounded-3">
+              <h6 class="fw-bold mb-3 text-success">📦 Détails de la commande</h6>
+
+              <form #commandeForm="ngForm" (ngSubmit)="commander(ord.id!)" novalidate (click)="$event.stopPropagation()">
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <input class="form-control"
+                           placeholder="Nom du client"
+                           [(ngModel)]="commande.nomClient"
+                           name="nomClient"
+                           required
+                           minlength="3"
+                           #nomClientField="ngModel"
+                           [ngClass]="{
+                             'is-valid': nomClientField.valid && nomClientField.touched,
+                             'is-invalid': nomClientField.invalid && nomClientField.touched
+                           }" />
+                    <div *ngIf="nomClientField.invalid && nomClientField.touched" class="text-danger small mt-1">
+                      ❌ Nom requis (min. 3 caractères).
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <input class="form-control"
+                           placeholder="Adresse de livraison"
+                           [(ngModel)]="commande.adresse"
+                           name="adresse"
+                           required
+                           minlength="5"
+                           #adresseField="ngModel"
+                           [ngClass]="{
+                             'is-valid': adresseField.valid && adresseField.touched,
+                             'is-invalid': adresseField.invalid && adresseField.touched
+                           }" />
+                    <div *ngIf="adresseField.invalid && adresseField.touched" class="text-danger small mt-1">
+                      ❌ Adresse requise (min. 5 caractères).
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <button class="btn btn-success btn-sm px-4" 
+                          type="submit" 
+                          [disabled]="commandeForm.invalid">
+                    📬 Confirmer la commande
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Template ng-template si aucune ordonnance -->
+    <ng-template #noData>
+      <div class="alert alert-warning text-center p-4 shadow-sm rounded-4">
+        😕 Aucune ordonnance trouvée.
+      </div>
+    </ng-template>
+
+    <p class="text-muted small text-center mt-3">
+      ✅ : Ordonnance signée électroniquement
+    </p>
+  </div>
+</div>
+<!-- 📄 Contenu invisible pour générer un PDF PRO -->
+<!-- 📄 Contenu invisible pour PDF PRO -->
+<div id="pdfContent" style="display: none; font-family: Arial, sans-serif; padding: 20px;">
+
+  <!-- 🔷 Titre principal -->
+  <div style="text-align: center; margin-bottom: 30px;">
+    <h1 style="color: #178066; font-size: 32px; font-weight: bold;">DEWINI CENTRE : Ordonnance Médicale </h1>
+  </div>
+
+  <!-- 📑 Instructions -->
+  <div style="margin-bottom: 20px;">
+    <h4 style="color: #666; font-size: 18px; display: flex; align-items: center;">
+      📄 <span style="margin-left: 8px;">Instructions :</span>
+    </h4>
+    <p style="font-size: 16px; margin-left: 30px;">{{ selectedOrdonnance?.instructions }}</p>
+  </div>
+
+  <!-- 💊 Prescriptions avec tableau -->
+  <div *ngIf="selectedOrdonnance?.prescriptions?.length > 0" style="margin-bottom: 30px;">
+    <h4 style="color: #1fab89; font-size: 18px; display: flex; align-items: center;">
+      💊 <span style="margin-left: 8px;">Prescriptions :</span>
+    </h4>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+      <thead>
+        <tr style="background-color: #f0f8f5;">
+          <th style="border: 1px solid #ccc; padding: 10px;">Médicament</th>
+          <th style="border: 1px solid #ccc; padding: 10px;">Posologie</th>
+          <th style="border: 1px solid #ccc; padding: 10px;">Durée</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let presc of selectedOrdonnance.prescriptions">
+          <td style="border: 1px solid #ccc; padding: 10px;">{{ presc.medicament?.nom }}</td>
+          <td style="border: 1px solid #ccc; padding: 10px;">{{ presc.posologie }}</td>
+          <td style="border: 1px solid #ccc; padding: 10px;">{{ presc.duree }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✍️ Signature -->
+  <div *ngIf="selectedOrdonnance?.signature && selectedOrdonnance.signature.startsWith('data:image/')" 
+       style="text-align: center; margin-top: 40px;">
+    <h4 style="color: #62d2a2; font-size: 18px; display: flex; align-items: center; justify-content: center;">
+      🖊️ <span style="margin-left: 8px;">Signature du médecin :</span>
+    </h4>
+
+    <div style="display: inline-block; margin-top: 20px; padding: 15px; border: 2px solid #ccc; border-radius: 10px;">
+      <img [src]="selectedOrdonnance.signature" 
+           alt="Signature"
+           style="max-width: 300px; height: auto;">
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ✅ Toast personnalisé en bas -->
+<div *ngIf="toastVisible" 
+     class="toast-container position-fixed bottom-0 end-0 p-4" 
+     style="z-index: 1055;">
+  <div class="toast show align-items-center text-white shadow rounded-4" 
+       role="alert" aria-live="assertive" aria-atomic="true" 
+       style="background-color: #178066; min-width: 280px;">
+    <div class="d-flex">
+      <div class="toast-body fw-semibold">
+        {{ toastMessage }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+              (click)="toastVisible = false" aria-label="Close"></button>
+    </div>
+  </div>
+</div>

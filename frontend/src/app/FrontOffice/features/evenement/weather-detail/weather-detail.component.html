@@ -1,0 +1,61 @@
+<div class="container weather-page">
+  <!-- Bouton Retour -->
+  <div class="mb-3">
+    <button class="btn btn-secondary" (click)="goBack()">Retour à la liste des événements</button>
+  </div>
+  
+  <!-- Détails de l'événement -->
+  <div class="mb-4">
+    <div>   
+      <h2>Météo pour {{ evenement?.nom }}</h2>
+      <p>Lieu: {{ evenement?.lieu?.nom || 'Aucun lieu' }} ({{ evenement?.lieu?.estExterieur ? 'Extérieur' : (evenement?.lieu ? 'Intérieur' : 'N/A') }})</p>
+      <p>Date: {{ evenement?.dateDebut | date:'d MMM y, HH:mm' }}</p>
+
+      <!-- Section météo -->
+      <div class="weather-container" *ngIf="weatherData">
+        <div class="current-weather">
+          <h2 class="location">{{ evenement?.lieu?.nom || 'Aucun lieu' }}</h2>
+          <div class="weather-details">
+            <img class="weather-icon" [src]="'http://openweathermap.org/img/wn/' + weatherData.iconCode + '@2x.png'" alt="Weather icon">
+            <span class="temperature">{{ weatherData.currentTemp | number:'1.0-0' }}°</span>
+          </div>
+          <div class="weather-info">
+            <span class="condition">{{ weatherData.currentCondition }}</span>
+            <span class="temp-range">
+              ↑ {{ weatherData.tempMax | number:'1.0-0' }}° ↓ {{ weatherData.tempMin | number:'1.0-0' }}°
+            </span>
+          </div>
+          <p class="wind-info">
+            Temps {{ weatherData.currentCondition.toLowerCase() }} pour le reste de la journée. Rafales de vent allant jusqu’à {{ weatherData.windSpeed | number:'1.0-0' }} km/h.
+          </p>
+        </div>
+
+        <!-- Prévisions horaires -->
+        <div class="hourly-forecast">
+          <h3>Prévisions horaires</h3>
+          <div class="hourly-items">
+            <div *ngFor="let forecast of weatherData.hourlyForecasts" class="hourly-item">
+              <span class="hour">{{ formatHour(forecast.time) }}</span>
+              <img class="weather-icon small" [src]="'http://openweathermap.org/img/wn/' + forecast.icon + '@2x.png'" alt="Weather icon">
+              <span class="temp">{{ forecast.temp | number:'1.0-0' }}°</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prévisions sur 4 jours -->
+        <div class="daily-forecast">
+          <h3>Prévisions sur 4 jours</h3>
+          <div *ngFor="let forecast of weatherData.dailyForecasts" class="daily-item">
+            <span class="day">{{ forecast.day }}</span>
+            <img class="weather-icon small" [src]="'http://openweathermap.org/img/wn/' + forecast.icon + '@2x.png'" alt="Weather icon">
+            <div class="temp-bar">
+              <span class="temp-min">{{ forecast.minTemp | number:'1.0-0' }}°</span>
+              <div class="temp-range" [style.width]="getTempWidth(forecast.minTemp, forecast.maxTemp)" [style.background]="getTempBarColor(forecast.minTemp, forecast.maxTemp)"></div>
+              <span class="temp-max">{{ forecast.maxTemp | number:'1.0-0' }}°</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

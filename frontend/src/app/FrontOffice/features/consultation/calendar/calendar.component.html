@@ -1,0 +1,47 @@
+<div class="calendar-container" [@fadeIn]>
+    <!-- Loading Overlay -->
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="modern-spinner">
+        <div class="spinner-core"></div>
+        <div class="spinner-orbits">
+          <div class="orbit"></div>
+          <div class="orbit"></div>
+          <div class="orbit"></div>
+        </div>
+        <div class="loading-text">Chargement du calendrier...</div>
+      </div>
+    </div>
+  
+    <!-- Header Section -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="header-titles">
+          <h1><i class="fas fa-calendar-alt"></i> Calendrier des Consultations</h1>
+          <p class="subtitle">Vue d'ensemble des consultations planifiées</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn action-btn" routerLink="/consultations" [@buttonHover]>
+            <i class="fas fa-arrow-left"></i> Retour
+          </button>
+        </div>
+      </div>
+    </header>
+  
+    <!-- Error State -->
+    <div *ngIf="error" class="alert alert-danger my-3" role="alert" [@fadeIn]>
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+      <button class="btn btn-outline-danger ms-3" (click)="loadConsultations()" [@buttonHover]>
+        <i class="fas fa-arrow-clockwise me-1"></i> Réessayer
+      </button>
+    </div>
+  
+    <!-- Calendar -->
+    <div class="calendar-wrapper" *ngIf="!loading" [@fadeIn]>
+      <div class="card">
+        <div class="card-body">
+          <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+        </div>
+      </div>
+    </div>
+  </div>

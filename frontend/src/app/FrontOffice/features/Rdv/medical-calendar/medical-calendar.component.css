@@ -1,0 +1,78 @@
+.e-schedule-dialog {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10000 !important;
+  }
+  
+  .e-schedule-dialog .e-dlg-content {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  /* Style de base pour TOUS les événements */
+.e-schedule .e-appointment,
+.e-schedule .e-appointment.e-selected-cell,
+.e-schedule .e-appointment.e-active-cell {
+  background-color: #7bddb3 !important;
+  border-color: #7bddb3 !important;
+}
+
+/* Style pour l'aperçu lors du drag-and-drop */
+.e-schedule .e-appointment.e-appointment-border {
+  background-color: #7bddb3 !important;
+  border-color: #7bddb3 !important;
+}
+
+/* Style via la classe personnalisée (double garantie) */
+.e-schedule .e-appointment.custom-event-color {
+  background-color: #7bddb3 !important;
+  border-color: #7bddb3 !important;
+}
+
+/* Style pour les éléments enfants (titre, etc.) */
+.e-schedule .e-appointment .e-appointment-details {
+  color: white !important; /* Texte en blanc pour meilleur contraste */
+}
+  /* Styles de la fenêtre modale */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 100%;
+  }
+  
+  .modal input,
+  .modal select,
+  .modal button {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .modal button {
+    cursor: pointer;
+  }
+  
+  .modal button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .modal button[type="button"] {
+    background-color: #f44336;
+    color: white;
+  }
+  

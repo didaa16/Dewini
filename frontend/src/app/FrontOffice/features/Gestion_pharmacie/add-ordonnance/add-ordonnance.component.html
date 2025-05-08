@@ -1,0 +1,152 @@
+<div class="container mt-5 add-ordonnance-form">
+  <h2 class="text-success mb-4 text-center">➕ Ajouter une Ordonnance</h2>
+
+  <form (ngSubmit)="submit()" #ordonnanceForm="ngForm" class="shadow p-4 bg-white rounded-3">
+    <!-- Instructions -->
+    <div class="mb-3">
+      <label for="instructions" class="form-label">📝 Instructions</label>
+      <textarea
+        class="form-control"
+        id="instructions"
+        [(ngModel)]="ordonnance.instructions"
+        name="instructions"
+        rows="3"
+        required
+      ></textarea>
+    </div>
+
+    <!-- Médecin -->
+    <div class="mb-3">
+      <label for="medecinId" class="form-label">👨‍⚕️ ID Médecin</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="ordonnance.medecinId"
+        name="medecinId"
+        required
+        readonly
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="patientId" class="form-label">🧑‍⚕️ Patient</label>
+      <select
+        id="patientId"
+        class="form-control"
+        [(ngModel)]="ordonnance.patientId"
+        name="patientId"
+        required
+        #patientId="ngModel"
+        [ngClass]="{
+          'is-valid': patientId.valid && patientId.touched,
+          'is-invalid': patientId.invalid && patientId.touched
+        }"
+      >
+        <option [ngValue]="null" disabled selected>-- Sélectionnez un patient --</option>
+        <option *ngFor="let user of allUsers" [value]="user.id">
+          {{ user.firstname }} {{ user.lastname }} (ID: {{ user.id }})
+        </option>
+      </select>
+      <div *ngIf="patientId.errors?.['required'] && patientId.touched" class="text-danger small mt-1">
+        ❌ Veuillez sélectionner un patient.
+      </div>
+    </div>
+
+    <!-- Liste des prescriptions -->
+    <div *ngFor="let pres of ordonnance.prescriptions; let i = index" class="prescription-box border rounded p-3 mb-4">
+      <h5 class="mb-3">💊 Prescription {{ i + 1 }}</h5>
+
+      <div class="row g-3">
+        <!-- Médicament -->
+        <div class="col-md-4">
+          <label class="form-label">Médicament</label>
+          <select
+            class="form-select"
+            [(ngModel)]="pres.medicament.id"
+            name="medicament{{ i }}"
+            required
+          >
+            <option *ngFor="let med of listeMedicaments" [value]="med.id">
+              {{ med.nom }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Posologie -->
+        <div class="col-md-4">
+          <label class="form-label">Posologie</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="pres.posologie"
+            name="posologie{{ i }}"
+            placeholder="ex: 2x/jour"
+            required
+          />
+        </div>
+
+        <!-- Durée -->
+        <div class="col-md-3">
+          <label class="form-label">Durée</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="pres.duree"
+            name="duree{{ i }}"
+            placeholder="ex: 5 jours"
+            required
+          />
+        </div>
+
+        <!-- Supprimer -->
+        <div class="col-md-1 d-flex align-items-end">
+          <button
+            class="btn btn-outline-danger btn-sm w-100"
+            type="button"
+            (click)="removePrescription(i)"
+            title="Supprimer cette prescription"
+          >
+            ❌
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ➕ Ajouter prescription -->
+    <div class="text-center mb-4">
+      <button type="button" class="btn btn-outline-secondary" (click)="addPrescription()">
+        ➕ Ajouter une prescription
+      </button>
+    </div>
+
+    <!-- 🖊️ Signature numérique -->
+    <div class="mb-4">
+      <label class="form-label fw-bold text-success">✍ Signature du médecin</label>
+
+      <div class="border rounded p-3 shadow-sm bg-light">
+        <canvas
+          id="signatureCanvas"
+          width="500"
+          height="150"
+          style="border: 2px dashed #ccc; border-radius: 6px; background-color: white;"
+        ></canvas>
+
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button class="btn btn-outline-danger btn-sm" type="button" (click)="effacerSignature()">
+            🧹 Effacer
+          </button>
+          <button class="btn btn-outline-primary btn-sm" type="button" (click)="sauvegarderSignature()">
+            💾 Enregistrer la signature
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enregistrer -->
+    <div class="text-end">
+      <button class="btn btn-success btn-lg shadow-sm" type="submit">
+        💾 Enregistrer l’ordonnance
+      </button>
+    </div>
+  </form>
+</div>

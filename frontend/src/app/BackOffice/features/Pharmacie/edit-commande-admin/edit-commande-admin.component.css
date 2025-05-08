@@ -1,0 +1,25 @@
+input.form-control, select.form-select {
+    border-radius: 0.5rem;
+  }
+  
+  input.form-control:focus, select.form-select:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, 0.25);
+  }
+  .toast-notif {
+    transition: all 0.3s ease-in-out;
+    animation: fadeInUp 0.4s ease forwards;
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

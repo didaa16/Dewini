@@ -1,0 +1,23 @@
+.tracking-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff;
+  border-radius: 10px;
+  width: 300px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  margin-top: 15px;
+  border: none;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #125ea5;
+}

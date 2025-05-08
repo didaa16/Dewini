@@ -1,0 +1,143 @@
+/* Style général du panier */
+h2.text-template {
+  font-size: 2rem;
+  color: #178066;
+}
+
+/* ===== Tableau des produits ===== */
+.table {
+  border-spacing: 0;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.table thead th {
+  background-color: #e8f9f0;
+  color: #178066;
+  font-weight: bold;
+  border-bottom: 2px solid #bde8d4;
+}
+
+.table tbody tr:hover {
+  background-color: #f0f9f4;
+}
+
+/* Petit input quantité */
+input[type="number"] {
+  text-align: center;
+}
+
+/* ===== Carte Récapitulatif ===== */
+.card-body h5 {
+  font-weight: bold;
+  color: #178066;
+}
+
+.list-group-item {
+  background-color: #f8f9fa;
+  border: none;
+  font-size: 0.95rem;
+}
+
+/* Total */
+.list-group-item:last-child {
+  font-size: 1.1rem;
+}
+
+/* Champs formulaire */
+input.form-control {
+  border-radius: 50px;
+  border: 1px solid #bde8d4;
+}
+
+/* Boutons */
+.btn-template {
+  background-color: #178066;
+  border-color: #178066;
+  color: white;
+}
+
+.btn-template:hover {
+  background-color: #126049;
+  border-color: #126049;
+}
+
+.btn-outline-warning {
+  color: #ff9f00;
+  border-color: #ff9f00;
+}
+
+.btn-outline-warning:hover {
+  background-color: #ff9f00;
+  color: white;
+}
+
+/* Toast succès */
+.toast {
+  border-radius: 1rem;
+  font-weight: bold;
+}
+
+/* ===== Interactions ===== */
+.alert-warning {
+  border-radius: 1rem;
+  font-size: 0.95rem;
+}
+
+.alert-warning h5 {
+  font-weight: bold;
+  color: #b85b00;
+}
+
+/* Lire plus */
+.alert-warning a {
+  color: #178066;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+/* Image produit panier */
+img.rounded {
+  border: 1px solid #dee2e6;
+  padding: 2px;
+  background: #fff;
+}
+
+/* Actions */
+.btn-outline-danger {
+  border-radius: 50px;
+  padding: 0.4rem 0.8rem;
+}
+
+/* Bouton vider panier */
+.btn-outline-secondary {
+  border-radius: 50px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table thead {
+    display: none;
+  }
+  .table tbody td {
+    display: block;
+    text-align: left;
+    padding: 0.75rem 0;
+  }
+  .table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #178066;
+  }
+}
+/* Effet hover élégant sur la carte de résumé */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}

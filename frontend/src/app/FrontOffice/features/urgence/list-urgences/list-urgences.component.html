@@ -1,0 +1,207 @@
+<div class="urgence-container">
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="modern-spinner">
+      <div class="spinner-core"></div>
+      <div class="spinner-orbits">
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+      </div>
+      <div class="loading-text">Chargement des urgences...</div>
+    </div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-titles">
+        <h1><i class="fas fa-ambulance"></i> Gestion des Urgences</h1>
+        <p class="subtitle">Interface de gestion des cas d'urgence médicale</p>
+      </div>
+      <div class="header-actions">
+        <button routerLink="/addUrgence" class="btn action-btn" [@buttonHover] *ngIf="roles == 'ROLE_USER'">
+          <i class="fas fa-plus-circle"></i> Nouvelle Urgence
+        </button>
+        <button (click)="exportExcel()" class="btn action-btn" [@buttonHover]>
+          <i class="fas fa-file-excel"></i> Exporter
+        </button>
+      </div>
+    </div>
+    <app-notification></app-notification>
+  </header>
+
+  <!-- Filters Section -->
+  <section class="filters-section" [@filterAnimation]>
+    <div class="filter-grid">
+      <div class="search-filter">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Rechercher patient ou adresse..."
+          class="form-control filter-input"
+          (input)="onFilterChange()"
+          aria-label="Rechercher par nom de patient ou adresse"
+        />
+        <i class="fas fa-search"></i>
+      </div>
+
+      <div class="date-filter">
+        <label for="dateFilter">Date :</label>
+        <input
+          id="dateFilter"
+          type="date"
+          [(ngModel)]="selectedDate"
+          (change)="onFilterChange()"
+          class="form-control filter-input"
+          aria-label="Filtrer par date"
+        />
+      </div>
+
+      <div class="select-filter">
+        <label for="statusFilter">Statut :</label>
+        <select
+          id="statusFilter"
+          [(ngModel)]="selectedStatus"
+          class="form-control filter-input"
+          (change)="onFilterChange()"
+          aria-label="Filtrer par statut"
+        >
+          <option value="">Tous</option>
+          <option value="En_Attente">En attente</option>
+          <option value="En_Cours">En cours</option>
+        </select>
+      </div>
+
+      <div class="select-filter">
+        <label for="typeFilter">Type :</label>
+        <select
+          id="typeFilter"
+          [(ngModel)]="selectedType"
+          class="form-control filter-input"
+          (change)="onFilterChange()"
+          aria-label="Filtrer par type"
+        >
+          <option value="">Tous</option>
+          <option value="A_Domicile">À domicile</option>
+          <option value="En_Ligne">En ligne</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Urgences List -->
+  <main class="urgences-grid">
+    <div *ngIf="filteredUrgences?.length === 0" class="empty-state">
+      <div class="empty-state-icon">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+      <p>Aucune urgence trouvée</p>
+      <button class="btn action-btn" routerLink="/addUrgence" [@buttonHover]>
+        Créer une nouvelle urgence
+      </button>
+    </div>
+
+    <div
+      *ngFor="let u of filteredUrgences"
+      class="urgence-card"
+      [ngClass]="{
+        'en-attente': u.statutUrgence === 'En_Attente',
+        'en-cours': u.statutUrgence === 'En_Cours'
+      }"
+      [@cardAnimation]
+    >
+      <div class="card-header">
+        <div class="patient-info">
+          <h3 class="patient-name">
+            <i
+              class="fas icon-bg"
+              [ngClass]="{
+                'fa-home': u.typeUrgence === 'A_Domicile',
+                'fa-video': u.typeUrgence === 'En_Ligne'
+              }"
+            ></i>
+            <span class="name-container">
+              <span class="last-name">{{ u.patient.firstname }}</span>
+              <span class="first-name">{{ u.patient.lastname }}</span>
+            </span>
+          </h3>
+          <span
+            class="priority-badge"
+            [ngClass]="{
+              'badge-critique': u.priority === 'Critique',
+              'badge-moyen': u.priority === 'Moyen',
+              'badge-faible': u.priority === 'Faible'
+            }"
+          >
+            <span class="badge-content">
+              <i class="fas fa-heartbeat"></i>
+              <span class="priority-text">{{ u.priority }}</span>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="urgence-details">
+          <div class="detail-item">
+            <label>Statut :</label>
+            <span
+              class="status-badge"
+              [ngClass]="{
+                'badge-attente': u.statutUrgence === 'En_Attente',
+                'badge-cours': u.statutUrgence === 'En_Cours'
+              }"
+            >
+              {{ formatStatut(u.statutUrgence) }}
+            </span>
+          </div>
+          <div *ngIf="u.typeUrgence === TypeUrgence.A_Domicile" class="detail-item">
+            <label>Adresse :</label>
+            <p>{{ u.addressePatient || 'Non renseigné' }}</p>
+          </div>
+          <div class="detail-item">
+            <label>Description :</label>
+            <p>{{ u.description || 'Aucune description' }}</p>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button [routerLink]="['/urgenceDetails', u.idUrgence]" class="btn action-btn" [@buttonHover]>
+            <i class="fas fa-eye"></i> Détails
+          </button>
+          <button (click)="updateUrgence(u.idUrgence)" class="btn action-btn" [@buttonHover] *ngIf="roles == 'ROLE_USER'">
+            <i class="fas fa-edit"></i> Modifier
+          </button>
+          <button (click)="deleteUrgence(u.idUrgence)" class="btn action-btn danger" [@buttonHover] *ngIf="roles == 'ROLE_USER'">
+            <i class="fas fa-trash"></i> Supprimer
+          </button>
+          <button
+            *ngIf="u.statutUrgence === 'En_Attente' && roles != 'ROLE_USER'"
+            (click)="prendreEnCharge(u.idUrgence)"
+            class="btn action-btn success"
+            [@buttonHover]
+          >
+            <i class="fas fa-handshake"></i> Prendre en charge
+          </button>
+          <div *ngIf="u.statutUrgence === 'En_Cours' && roles != 'ROLE_USER'" class="special-actions">
+            <button
+              (click)="seDecharger(u.idUrgence, u.consultationUrgente.idConsultationUrgente)"
+              class="btn action-btn warning"
+              [@buttonHover]
+            >
+              <i class="fas fa-sign-out-alt"></i> Décharger
+            </button>
+            <button
+              (click)="seTerminer(u.idUrgence, u.consultationUrgente.idConsultationUrgente)"
+              class="btn action-btn success"
+              [@buttonHover]
+            >
+              <i class="fas fa-check-circle"></i> Terminer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

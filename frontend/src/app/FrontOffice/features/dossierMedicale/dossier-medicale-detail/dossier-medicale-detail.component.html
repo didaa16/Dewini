@@ -1,0 +1,99 @@
+<div class="dossier-detail-container" [@fadeIn]>
+  <!-- Loading Overlay -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="modern-spinner">
+      <div class="spinner-core"></div>
+      <div class="spinner-orbits">
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+      </div>
+      <div class="loading-text">Chargement du dossier médical...</div>
+    </div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-titles">
+        <h1><i class="fas fa-folder-medical"></i> Détails du Dossier Médical</h1>
+        <p class="subtitle">Informations détaillées du dossier médical</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn action-btn" (click)="onBack()" [@buttonHover]>
+          <i class="fas fa-arrow-left"></i> Retour
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- Dossier Details -->
+  <div *ngIf="dossier && !loading" class="dossier-details" [@fadeIn] [attr.data-dossier]="dossier | json">
+    <div class="card">
+      <div class="card-body">
+        <div class="details-grid">
+          <div class="detail-section">
+            <h3 class="section-title"><i class="fas fa-user"></i> Informations du Patient</h3>
+            <div class="detail-item">
+              <label>Nom :</label>
+              <p>{{ dossier.patient?.firstname || 'Non spécifié' }} {{ dossier.patient?.lastname || '' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Email :</label>
+              <p>{{ dossier.patient?.email || 'Non spécifié' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Téléphone :</label>
+              <p>{{ dossier.patient?.phoneNumber || 'Non spécifié' }}</p>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h3 class="section-title"><i class="fas fa-clipboard"></i> Informations Médicales</h3>
+            <div class="detail-item">
+              <label>Date de création :</label>
+              <p>{{ dossier.dateCreation ? (dossier.dateCreation | date:'dd MMM yyyy') : 'Non spécifiée' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Antécédents médicaux :</label>
+              <p>{{ dossier.antecedentsMedicaux || 'Aucun' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Allergies :</label>
+              <p>{{ dossier.allergies || 'Aucune' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Traitements en cours :</label>
+              <p>{{ dossier.traitementsEnCours || 'Aucun' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="analysis-section mt-4">
+          <button class="btn action-btn" (click)="onAnalyserDossier()" [disabled]="analysisLoading" [@buttonHover]>
+            <i class="fas" [ngClass]="{'fa-hourglass-half': analysisLoading, 'fa-robot': !analysisLoading}"></i>
+            {{ analysisLoading ? 'Analyse en cours...' : 'Analyser le Dossier' }}
+          </button>
+        </div>
+
+        <div *ngIf="analysisError" class="alert alert-danger my-3" role="alert" [@fadeIn]>
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          {{ analysisError }}
+        </div>
+
+        <div *ngIf="analyse" class="analysis-result mt-4" [@fadeIn]>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="section-title"><i class="fas fa-graph-up"></i> Analyse IA du Dossier</h3>
+            </div>
+            <div class="card-body">
+              <pre class="analysis-content">{{ analyse }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

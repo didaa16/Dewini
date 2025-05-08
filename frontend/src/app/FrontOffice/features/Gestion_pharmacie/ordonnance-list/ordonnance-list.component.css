@@ -1,0 +1,104 @@
+.ordonnance-page {
+  background: #f9f9f9;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-2px);
+  transition: all 0.3s ease-in-out;
+}
+
+.card {
+  transition: all 0.2s ease-in-out;
+}
+
+.card-body {
+  padding: 1.2rem 1.5rem;
+}
+
+.btn {
+  font-weight: 500;
+}
+
+.badge {
+  font-size: 0.8rem;
+}
+.toast-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* 🎯 Animation hover léger */
+.bouton-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bouton-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(23, 128, 102, 0.2);
+}
+
+/* 🚀 Animation pulse spéciale pour Commander */
+.bouton-pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Définition du keyframe pulse */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.btn-dewini {
+  background: linear-gradient(135deg, #178066, #1fab89);
+  border: none;
+  color: white;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.btn-dewini:hover {
+  background: linear-gradient(135deg, #1fab89, #62d2a2);
+  transform: translateY(-2px);
+  color: white;
+}
+
+.btn-dewini-outline {
+  background: transparent;
+  border: 2px solid #1fab89;
+  color: #1fab89;
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn-dewini-outline:hover {
+  background: #1fab89;
+  color: white;
+}
+h2 {
+  letter-spacing: 0.5px;
+}
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+

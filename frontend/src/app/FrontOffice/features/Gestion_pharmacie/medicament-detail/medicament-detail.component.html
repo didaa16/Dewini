@@ -1,0 +1,142 @@
+<div class="container mt-5" *ngIf="medicament">
+
+  <div class="row g-4 align-items-start">
+    <!-- 📷 Image produit -->
+    <div class="col-md-5">
+      <div class="position-relative">
+        <img [src]="medicament.imageUrl || 'https://via.placeholder.com/500x300'"
+             alt="{{ medicament.nom }}"
+             class="img-fluid w-100 rounded-4 shadow-sm"
+             style="object-fit: cover;" />
+
+        <!-- ✅ Badge Stock -->
+        <span class="badge-stock-detail"
+              [ngClass]="medicament.quantiteEnStock === 0 ? 'bg-danger' : 'bg-success'">
+          {{ medicament.quantiteEnStock === 0 ? 'Rupture' : 'En stock' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- 📄 Détails produit -->
+    <div class="col-md-7">
+      <h2 class="fw-bold text-dark mb-2">{{ medicament.nom }}</h2>
+
+      <!-- ⭐️ Affichage moyenne note -->
+      <div class="d-flex align-items-center mb-2">
+        <ng-container *ngFor="let star of [1,2,3,4,5]">
+          <i class="bi"
+             [ngClass]="moyenneNote >= star ? 'bi-star-fill text-warning' : 'bi-star text-secondary'">
+          </i>
+        </ng-container>
+        <small class="text-muted ms-2">
+          ({{ medicament?.notes?.length || 0 }} avis)
+        </small>
+      </div>
+
+      <!-- ✨ Ajouter une note utilisateur -->
+      <div class="mt-3">
+        <p class="fw-semibold mb-2">📝 Donnez votre note :</p>
+        <div class="d-flex">
+          <ng-container *ngFor="let star of [1,2,3,4,5]">
+            <i class="bi"
+               style="cursor: pointer; font-size: 2rem;"
+               (click)="ajouterNote(star)"
+               [ngClass]="noteUtilisateur >= star ? 'bi-star-fill text-warning' : 'bi-star text-secondary'">
+            </i>
+          </ng-container>
+        </div>
+        <div *ngIf="noteUtilisateur" class="text-success mt-2 fw-bold">
+          Merci pour votre note de {{ noteUtilisateur }}/5 !
+        </div>
+      </div>
+
+      <p class="text-muted small mt-3">
+        📦 Livraison estimée sous 48h après commande.
+      </p>
+      
+      <!-- 📋 Description -->
+      <div class="mt-3">
+        <h5 class="fw-semibold mb-2">🧾 Description</h5>
+        <p class="text-muted">{{ medicament.description }}</p>
+      </div>
+
+      <!-- 🕓 Détails techniques -->
+      <ul class="list-unstyled text-muted small mt-4">
+        <li>📦 <strong>Stock :</strong> {{ medicament.quantiteEnStock }}</li>
+        <li>📅 <strong>Date d’expiration :</strong> {{ medicament.dateExpiration | date:'longDate' }}</li>
+      </ul>
+
+      <!-- ➕ Ajouter au panier -->
+      <div class="d-flex align-items-center mt-4 gap-3 flex-wrap">
+        <div class="quantity-selector d-flex border rounded-pill overflow-hidden shadow-sm">
+          <button class="btn btn-light px-3 fw-bold" (click)="decrementerQuantite()">−</button>
+          <input type="number" [(ngModel)]="quantite"
+                 class="form-control border-0 text-center fw-bold"
+                 style="width: 60px;" min="1" />
+          <button class="btn btn-light px-3 fw-bold" (click)="incrementerQuantite()">+</button>
+        </div>
+      
+        <button class="btn btn-danger px-4 py-2 rounded-pill shadow-sm"
+                (click)="ajouterAuPanier(medicament, quantite)">
+          🛒 AJOUTER AU PANIER
+        </button>
+      </div>
+
+      <a routerLink="/medicaments" class="btn btn-link mt-3">← Retour à la liste</a>
+    </div>
+  </div>
+
+  <!-- 💡 Infos complémentaires depuis la FDA -->
+  <div class="alert alert-info mt-4" *ngIf="fdaData">
+    <h5 class="mb-2">💡 Informations complémentaires (source openFDA)</h5>
+    <p *ngIf="fdaData.openfda?.brand_name">
+      <strong>🏷️ Nom commercial :</strong> {{ fdaData.openfda.brand_name[0] }}
+    </p>
+    <p *ngIf="fdaData.active_ingredient?.length">
+      <strong>🧪 Ingrédient actif :</strong> {{ fdaData.active_ingredient[0] }}
+    </p>
+    <p *ngIf="fdaData.purpose?.length">
+      <strong>🎯 Utilisation :</strong> {{ fdaData.purpose[0] }}
+    </p>
+    <p *ngIf="fdaData.inactive_ingredient?.length">
+      <strong>🧫 Ingrédients inactifs :</strong> {{ fdaData.inactive_ingredient.join(', ') }}
+    </p>
+  </div>
+
+  <!-- ⚠️ Erreur FDA -->
+  <div class="alert alert-warning mt-4" *ngIf="fdaError">
+    ⚠️ {{ fdaError }}
+  </div>
+
+  <!-- 🧪 Médicaments similaires -->
+  <div class="mt-5" *ngIf="medicamentsSimilaires.length > 0">
+    <h4 class="text-success mb-4">🔗 Médicaments similaires dans la catégorie "{{ medicament.categorie }}"</h4>
+    <div class="row">
+      <div class="col-md-3 mb-4" *ngFor="let med of medicamentsSimilaires">
+        <div class="card h-100 shadow-sm rounded-4 border-0">
+          <img [src]="med.imageUrl || 'https://via.placeholder.com/200x150'" class="card-img-top rounded-top-4"
+               style="height: 160px; object-fit: cover;" />
+          <div class="card-body text-center">
+            <h5 class="card-title text-truncate">{{ med.nom }}</h5>
+            <p class="text-muted mb-2">{{ med.prix }} TND</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> <!-- ✅ FIN -->
+
+<!-- ✅ Toast succès -->
+<div *ngIf="toastVisible"
+     class="toast show position-fixed bottom-0 end-0 m-4 text-bg-success rounded shadow"
+     style="z-index: 9999;">
+  <div class="d-flex">
+    <div class="toast-body fw-bold">
+      {{ toastMessage }}
+    </div>
+    <button class="btn-close btn-close-white me-2 m-auto"
+            (click)="toastVisible = false"></button>
+  </div>
+</div>

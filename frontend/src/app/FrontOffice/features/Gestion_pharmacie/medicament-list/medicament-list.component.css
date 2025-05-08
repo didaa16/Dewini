@@ -1,0 +1,281 @@
+/* === Cartes médicaments === */
+.card {
+  border-radius: 1.25rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  background-color: #f5fdf9 !important;
+  border: 1px solid #d1ebe2;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+.card:hover img {
+  transform: scale(1.05);
+}
+
+/* === Titres et textes === */
+.card-title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+  color: #333;
+}
+.card-text {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* === Pied de carte === */
+.card-footer {
+  background-color: #f8f9fa;
+  border-top: none;
+  padding: 1rem;
+}
+.card-footer .btn {
+  border-radius: 999px;
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+.card-footer .btn:hover {
+  transform: scale(1.05);
+}
+
+/* === Badge promo === */
+.promo-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff6b35;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* === Bouton panier === */
+.btn-panier {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  padding: 10px 12px;
+  color: #178066;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+.btn-panier:hover {
+  background-color: #178066;
+  color: white;
+}
+
+/* === Produit-card === */
+.produit-card {
+  background-color: #e8f9f0 !important;
+  border: 2px solid #bde8d4;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.produit-card:hover {
+  box-shadow: 0 8px 20px rgba(29, 85, 56, 0.15) !important;
+}
+
+/* === Image produit === */
+.produit-image {
+  border-radius: 1rem 1rem 0 0;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* === Bouton favoris inline === */
+.btn-fav-inline {
+  padding: 0.2rem 0.6rem;
+  font-size: 1.2rem;
+  line-height: 1;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+.btn-fav-inline:hover {
+  transform: scale(1.2);
+}
+
+/* === Badges divers === */
+.badge-ribbon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 1rem;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.badge-stock {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 1rem;
+  color: white;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* === Catégories horizontales arrondies === */
+/* Conteneur global arrondi et fond blanc */
+.categorie-bar {
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  overflow-x: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+}
+
+/* Chaque item prend un peu d’espace et possède un séparateur */
+.categorie-bar .nav-item {
+  position: relative;
+  margin-right: 1rem;
+}
+
+/* Trait vertical entre les items (sauf après le dernier) */
+.categorie-bar .nav-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 60%;
+  background: #ccc;
+}
+
+/* Les “pills” elles-mêmes */
+.categorie-bar .nav-link.categorie-btn {
+  background: #f9fcfa;
+  color: #178066;
+  border-radius: 50px;
+  padding: 0.4rem 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Hover et état actif */
+.categorie-bar .nav-link.categorie-btn:hover,
+.categorie-bar .nav-link.categorie-btn.active {
+  background: #178066;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+
+/* conteneur de pills */
+.categorie-pills {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;   /* Firefox */
+}
+.categorie-pills::-webkit-scrollbar {
+  display: none;           /* Chrome, Safari, Opera */
+}
+
+/* chaque bouton de catégorie */
+.categorie-pills .nav-link {
+  flex: 0 0 auto;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  background: transparent;
+  color: #555;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* état actif */
+.categorie-pills .nav-link.active {
+  background-color: #178066;
+  color: #fff;
+}
+
+/* hover */
+.categorie-pills .nav-link:not(.active):hover {
+  background-color: rgba(23, 128, 102, 0.1);
+  color: #178066;
+}
+
+/* === Toggle Grille/Liste avec vos couleurs === */
+.btn-template {
+  background-color: #178066;
+  border-color: #178066;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+.btn-template:hover {
+  background-color: #126049;
+  border-color: #126049;
+}
+.btn-outline-template {
+  color: #178066;
+  border: 1px solid #178066;
+}
+.btn-outline-template:hover {
+  background-color: #178066;
+  color: #fff;
+}
+
+/* === Texte thématique === */
+.text-template {
+  color: #178066 !important;
+}
+.btn-favoris {
+  background-color: #178066;
+  color: #fff;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+.btn-favoris:hover {
+  background-color: #126049;
+}
+.search-top-bar {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.btn-template {
+  background-color: #178066;
+  color: white;
+  border: none;
+}
+
+.btn-template:hover {
+  background-color: #146b55;
+  color: white;
+}
+.tooltip {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(23, 128, 102, 0.2);
+  opacity: 0.95;
+  transition: opacity 0.2s ease-in-out;
+}
+.tooltip.show {
+  opacity: 1;
+}
+

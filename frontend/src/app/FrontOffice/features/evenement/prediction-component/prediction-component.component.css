@@ -1,0 +1,84 @@
+/* Icônes check et x */
+.check-icon, .x-icon {
+    font-size: 2rem;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  
+  .check-icon {
+    color: green;
+  }
+  
+  .x-icon {
+    color: red;
+  }
+  
+  /* Texte stat */
+  .stat-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Barre de progression */
+  .progress-bar-container {
+    width: 100%;
+    background-color: #f0f0f0;
+    border-radius: 25px;
+    height: 30px;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .progress-bar {
+    height: 100%;
+    border-radius: 25px;
+    position: relative;
+    text-align: center;
+    transition: width 0.5s ease-in-out;
+  }
+  
+  .progress-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 30px;
+    font-size: 1.2rem;
+  }
+  
+  /* Couleurs de la barre */
+  .high-probability {
+    background-color: #4caf50;
+  }
+  
+  .low-probability {
+    background-color: #f44336;
+  }
+  
+  /* Suggestions */
+  .suggestions {
+    font-size: 1.2rem;
+    margin-top: 10px;
+  }
+  
+  /* Emojis tournants */
+  .emoji-animation {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 1.5rem;
+    animation: rotate 2s linear infinite;
+    vertical-align: middle;
+  }
+  
+  /* Animation de rotation */
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

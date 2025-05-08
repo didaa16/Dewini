@@ -1,0 +1,130 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container-xl d-flex justify-content-center align-items-center py-5" *ngIf="user && !loading">
+  <div class="main-body w-100">
+    <div class="row gutters-sm">
+
+      <!-- Col gauche -->
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-lg" style="border: 1px solid #696cff;">
+          <div class="card-body text-center py-4">
+            <!-- Photo -->
+            <img *ngIf="user.profilePicUrl && user.profilePicUrl.trim() !== ''; else defaultPic"
+            [src]="user.profilePicUrl" alt="Photo de profil" class="rounded-circle shadow" width="150">
+       <ng-template #defaultPic>
+         <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle shadow" width="150" alt="Image par défaut">
+       </ng-template>
+
+
+            <div class="mt-4">
+              <h3 class="fw-bold mb-1">{{ user.firstname }} {{ user.lastname }}</h3>
+              <p class="text-secondary mb-1 fs-5">Patient Profile</p>
+              <p class="text-muted">{{ user.email }}</p>
+              <div class="d-flex justify-content-center mt-4">
+                <button class="btn btn-primary me-3 px-4">Follow</button>
+                <button class="btn btn-outline-primary px-4">About us</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations principales -->
+        <div class="card mt-4 shadow-sm" style="border: 1px solid #696cff;">
+          <ul class="list-group list-group-flush fs-5">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.username && user.lastname">
+              <span class="fw-semibold">Username</span>
+              <span class="text-secondary">{{ user.firstname }} {{ user.lastname }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.dateOfBirth">
+              <span class="fw-semibold">Date of birth</span>
+              <span class="text-secondary">{{ user.dateOfBirth }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.phoneNumber">
+              <span class="fw-semibold">Phone Number</span>
+              <span class="text-secondary">{{ user.phoneNumber }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.address">
+              <span class="fw-semibold">Address</span>
+              <span class="text-secondary">{{ user.address }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.createdDate">
+              <span class="fw-semibold">Inscription</span>
+              <span class="text-secondary">{{ user.createdDate | date }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.lastModifiedDate">
+              <span class="fw-semibold">Last Modified</span>
+              <span class="text-secondary">{{ user.lastModifiedDate | date }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Col droite -->
+      <div class="col-md-8">
+        <div class="card shadow-lg mb-4" style="border: 1px solid #696cff;">
+          <div class="card-body p-5">
+
+            <!-- Bouton édition -->
+            <div class="d-flex justify-content-end mb-4">
+              <i class="bi bi-pencil-fill"
+                 style="font-size: 1.5rem; cursor: pointer; color: #4b49ac;"
+                 [routerLink]="['/dashboard/update-user', this.userId]"></i>
+            </div>
+
+            <!-- Infos détaillées -->
+            <div *ngIf="user.firstname" class="row mb-3">
+              <div class="col-sm-3 fw-semibold">First Name</div>
+              <div class="col-sm-9 text-secondary">{{ user.firstname }}</div>
+            </div>
+            <hr *ngIf="user.firstname">
+
+
+            <div *ngIf="user.lastname" class="row mb-3">
+              <div class="col-sm-3 fw-semibold">Last Name</div>
+              <div class="col-sm-9 text-secondary">{{ user.lastname }}</div>
+            </div>
+            <hr *ngIf="user.lastname">
+
+
+            <div *ngIf="user.dateOfBirth" class="row mb-3">
+              <div class="col-sm-3 fw-semibold">Date of Birth</div>
+              <div class="col-sm-9 text-secondary">{{ user.dateOfBirth }}</div>
+            </div>
+            <hr *ngIf="user.dateOfBirth">
+
+            <div *ngIf="user.phoneNumber" class="row mb-3">
+              <div class="col-sm-3 fw-semibold">Phone Number</div>
+              <div class="col-sm-9 text-secondary">{{ user.phoneNumber }}</div>
+            </div>
+            <hr *ngIf="user.phoneNumber">
+
+            <div *ngIf="user.address" class="row mb-3">
+              <div class="col-sm-3 fw-semibold">Address</div>
+              <div class="col-sm-9 text-secondary">{{ user.address }}</div>
+            </div>
+            <hr *ngIf="user.address">
+
+            <div *ngIf="user.email" class="row mb-3">
+              <div class="col-sm-3 fw-semibold">Email</div>
+              <div class="col-sm-9 text-secondary">{{ user.email }}</div>
+            </div>
+            <hr *ngIf="user.email">
+
+            <div *ngIf="user.gender" class="row mb-3">
+              <div class="col-sm-3 fw-semibold">Gender</div>
+              <div class="col-sm-9 text-secondary">{{ user.gender }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- row -->
+  </div> <!-- main-body -->
+
+  <!-- Chargement / Erreur -->
+  <div *ngIf="loading" class="text-center mt-5">
+    <p class="fs-4">Chargement du profil utilisateur...</p>
+  </div>
+  <div *ngIf="!loading && !user" class="text-center mt-5">
+    <p class="fs-4 text-danger">Utilisateur introuvable.</p>
+  </div>
+</div>

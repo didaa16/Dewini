@@ -1,0 +1,133 @@
+<!-- medicament-admin-list.component.html -->
+<div class="px-3 mt-4 w-100">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-center text-primary-custom fw-bold mb-4" style="font-size: 2rem; background: linear-gradient(135deg, #178066, #1fab89); -webkit-background-clip: text; color: transparent;">
+      <i class="bi bi-capsule-pill me-2"></i> Gestion des Médicaments
+    </h2>
+        <a class="btn btn-primary-custom rounded-pill shadow-sm px-4" [routerLink]="['/dashboard/medicaments/ajouter']">
+      ➕ Ajouter
+    </a>
+    
+  </div>
+
+  <!-- 🔍 Barre de recherche, tri et catégorie -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <input
+        type="text"
+        class="form-control shadow-sm"
+        [(ngModel)]="searchTerm"
+        placeholder="🔍 Rechercher un médicament..."
+      />
+    </div>
+    <div class="col-md-4">
+      <select class="form-select shadow-sm" [(ngModel)]="triSelection">
+        <option value="">🔽 Trier par...</option>
+        <option value="prix-asc">Prix croissant</option>
+        <option value="prix-desc">Prix décroissant</option>
+        <option value="stock">Stock (du + au -)</option>
+        <option value="expiration">Expiration la plus proche</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select class="form-select shadow-sm" [(ngModel)]="categorieSelectionnee">
+        <option value="">Toutes les catégories</option>
+        <option *ngFor="let cat of categoriesDisponibles" [value]="cat">🏷️ {{ cat }}</option>
+      </select>
+    </div>
+  </div>
+  <!-- Bouton pour afficher les stats -->
+<div class="text-end mb-3">
+  <button class="btn btn-outline-info rounded-pill shadow-sm" (click)="afficherStats = !afficherStats">
+    📈 Statistiques par Catégorie
+  </button>
+</div>
+
+<!-- Affichage conditionnel -->
+<app-statistiques-medicaments *ngIf="afficherStats"></app-statistiques-medicaments>
+
+
+  <!-- 🧾 Statistiques -->
+  <div class="row my-4">
+    <div class="col-md-4">
+      <div class="alert alert-primary text-center rounded-4 shadow-sm">
+        💊 Total : <strong>{{ totalMedicaments }}</strong>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="alert alert-danger text-center rounded-4 shadow-sm">
+        🛑 Rupture : <strong>{{ totalEnRupture }}</strong>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="alert alert-warning text-center rounded-4 shadow-sm">
+        ⏳ Expirant : <strong>{{ totalExpirant }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧾 Cartes Médicaments -->
+  <div class="row g-4">
+    <div class="col-md-4" *ngFor="let med of medicamentsFiltres">
+      <div class="card shadow-sm border-0 rounded-4 h-100 hover-card">
+        <img [src]="med.imageUrl || 'assets/images/default-medicament.jpg'" class="card-img-top" alt="{{ med.nom }}"
+          style="height: 180px; object-fit: cover;" />
+
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="card-title">{{ med.nom }}</h5>
+            <span *ngIf="isExpired(med.dateExpiration)" class="badge bg-danger">Expiré</span>
+            <span *ngIf="!isExpired(med.dateExpiration) && isExpiringSoon(med.dateExpiration)" class="badge bg-warning text-dark">Expire bientôt</span>
+          </div>
+
+          <p class="card-text mb-1">💰 <strong>{{ med.prix }} TND</strong></p>
+           <!--  ←———  Ici on ajoute le rating  ———→ -->
+  <div class="d-flex align-items-center mb-2">
+    <ng-container *ngFor="let star of [1,2,3,4,5]">
+      <i class="bi"
+         [ngClass]="averageNote(med) >= star 
+                      ? 'bi-star-fill text-warning' 
+                      : 'bi-star text-secondary'">
+      </i>
+    </ng-container>
+    <small class="text-muted ms-2">({{ med.notes?.length || 0 }} avis)</small>
+  </div>
+  <!--  ←—————  fin du rating —————→ -->
+          <p class="card-text mb-1">
+            📦 Stock :
+            <span class="fw-bold" [ngClass]="{'text-danger': med.quantiteEnStock === 0, 'text-warning': med.quantiteEnStock < 5}">
+              {{ med.quantiteEnStock }}
+            </span>
+          </p>
+          <p class="card-text mb-1">📅 Expire le : {{ med.dateExpiration | date:'shortDate' }}</p>
+          <p class="card-text">
+            <span class="badge rounded-pill bg-info text-dark">🏷️ {{ med.categorie }}</span>
+          </p>
+        </div>
+
+        <div class="card-footer bg-white border-0 d-flex justify-content-end gap-2">
+          <button class="btn btn-sm btn-outline-info" [routerLink]="['/dashboard/medicaments/detail', med.id]">🔍</button>
+          <button class="btn btn-sm btn-outline-warning" [routerLink]="['/dashboard/medicaments/modifier', med.id]">✏️</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="supprimer(med.id!)">🗑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔢 Pagination -->
+  <nav *ngIf="totalPages.length > 1" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="page === 1">
+        <button class="page-link" (click)="page = page - 1" [disabled]="page === 1">«</button>
+      </li>
+
+      <li class="page-item" *ngFor="let p of totalPages" [class.active]="p === page">
+        <button class="page-link" (click)="page = p">{{ p }}</button>
+      </li>
+
+      <li class="page-item" [class.disabled]="page === totalPages.length">
+        <button class="page-link" (click)="page = page + 1" [disabled]="page === totalPages.length">»</button>
+      </li>
+    </ul>
+  </nav>
+</div>

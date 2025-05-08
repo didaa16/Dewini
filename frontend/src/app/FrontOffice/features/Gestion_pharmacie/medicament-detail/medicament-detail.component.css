@@ -1,0 +1,56 @@
+.card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  
+  .card-body p {
+    font-size: 0.9rem;
+  }
+  .badge-stock-detail {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 1rem;
+    color: white;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+  .quantity-selector input:focus {
+    box-shadow: none;
+    outline: none;
+  }
+  .fade-toast {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .fade-toast.show {
+    opacity: 1;
+  }
+  .toast-notif {
+    transition: all 0.3s ease-in-out;
+    animation: fadeInUp 0.4s ease forwards;
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  

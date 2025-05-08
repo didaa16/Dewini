@@ -1,0 +1,32 @@
+.container {
+    margin-bottom: 5rem;
+  }
+  
+  
+  .card {
+    background: #f8f9fa;
+  }
+  
+  .card-title {
+    font-size: 1.3rem;
+  }
+  
+  .list-group-item {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+  }
+  
+  .alert {
+    font-weight: 500;
+  }
+  
+  button.btn-success {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  button.btn-success:hover {
+    background-color: #198754 !important;
+    transform: scale(1.05);
+  }
+  

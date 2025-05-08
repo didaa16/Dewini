@@ -1,0 +1,194 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;" *ngIf="user && !loading">
+  <div class="main-body w-100 h-100">
+    <div class="row gutters-sm">
+
+      <!-- Col gauche -->
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body text-center">
+            <!-- Icône de déconnexion en haut à droite -->
+            <div class="d-flex justify-content-end">
+              <a [routerLink]="['/login']">
+                <i class="bi bi-box-arrow-right" style="font-size: 1.5rem; cursor: pointer; color: #62D2A2;"></i>
+              </a>
+            </div>
+              <!-- Affichage de la photo (facultatif, mais tu peux ajouter un champ de photo de profil ici) -->
+              <img [src]="userService.getSafeProfilePicUrl(user.profilePicUrl)" 
+              (error)="userService.handleImageError($event, userId!)"
+              class="profile-picture rounded-circle shadow"
+              alt="Profile picture">
+            <ng-template #defaultPic>
+              <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle shadow" width="150" alt="Image par défaut">
+            </ng-template>
+
+            <div class="mt-3">
+              <h4 class="mt-3 mb-1">{{ user.firstname }} {{ user.lastname }}</h4>
+              <p class="text-secondary mb-1">Patient Profile</p>
+              <p class="text-muted">{{ user.email }}</p>
+              <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-sm btn-primary me-2 px-3">Follow</button>
+                <button class="btn btn-sm btn-outline-primary px-3">About us</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations principales -->
+        <div class="card mt-3">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.username && user.lastname">
+              <h6 class="mb-0">Username</h6>
+              <span class="text-secondary">{{ user.firstname  }}  {{user.lastname}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.dateOfBirth">
+              <h6 class="mb-0">Date of birth</h6>
+              <span class="text-secondary">{{ user.dateOfBirth }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.phoneNumber">
+              <h6 class="mb-0">Phone Number</h6>
+              <span class="text-secondary">{{ user.phoneNumber }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.address">
+              <h6 class="mb-0">Adress</h6>
+              <span class="text-secondary">{{ user.address }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.createdDate">
+              <h6 class="mb-0">Inscription</h6>
+              <span class="text-secondary">{{ user.createdDate | date }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="user.lastModifiedDate">
+              <h6 class="mb-0">Last Modifited Date</h6>
+              <span class="text-secondary">{{ user.lastModifiedDate | date }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Col droite -->
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-body">
+            <!-- Icône d'édition en haut à droite -->
+            <div class="d-flex justify-content-end">
+              <i class="bi bi-pencil-fill"
+                 style="font-size: 1.5rem; cursor: pointer; color: #62D2A2;"
+                 (click)="redirectToUpdateUser()"></i>
+            </div>
+
+
+            <!-- Informations détaillées -->
+            <div class="row" *ngIf="user.firstname">
+              <div class="col-sm-3"><h6 class="mb-0">FirstName</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.firstname }}</div>
+            </div>
+            <hr *ngIf="user.firstname">
+
+            <div class="row" *ngIf="user.lastname">
+              <div class="col-sm-3"><h6 class="mb-0">LastName</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.lastname }}</div>
+            </div>
+            <hr *ngIf="isMedecin">
+            <div class="row" *ngIf="user.specialite">
+              <div class="col-sm-3"><h6 class="mb-0">speciality</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.specialite }}</div>
+            </div>
+
+
+            <hr *ngIf="isMedecin">
+            <div class="row" *ngIf="user.anneesExperience">
+              <div class="col-sm-3"><h6 class="mb-0">Experience Years</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.anneesExperience }}</div>
+            </div>
+            <hr *ngIf="user.anneesExperience">
+
+
+            <div class="row" *ngIf="user.dateOfBirth">
+              <div class="col-sm-3"><h6 class="mb-0">Date Of Birth</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.dateOfBirth }}</div>
+            </div>
+            <hr *ngIf="user.dateOfBirth">
+            <div class="row" *ngIf="user.phoneNumber">
+              <div class="col-sm-3"><h6 class="mb-0">phoneNumber</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.phoneNumber }}</div>
+            </div>
+            <hr *ngIf="user.phoneNumber">
+
+
+            <div class="row" *ngIf="user.address">
+              <div class="col-sm-3"><h6 class="mb-0">Adress</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.address }}</div>
+            </div>
+            <hr *ngIf="user.address">
+
+            <div class="row" *ngIf="user.email">
+              <div class="col-sm-3"><h6 class="mb-0">Email</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.email }}</div>
+            </div>
+            <hr *ngIf="user.email">
+            <div class="row" *ngIf="user.gender">
+              <div class="col-sm-3"><h6 class="mb-0">Gender</h6></div>
+              <div class="col-sm-9 text-secondary">{{ user.gender }}</div>
+            </div>
+            <hr *ngIf="user.gender">
+
+
+          </div>
+<!-- user-profile.component.html -->
+<!-- Ajoutez cette section après les informations de base -->
+<div class="card mt-3" *ngIf="userStats && !statsLoading">
+  <div class="card-header">
+    <h5>Your Statistics</h5>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="stat-card">
+          <h6>Profile Completion</h6>
+          <div class="progress">
+            <div class="progress-bar" 
+                 [style.width]="userStats.profileCompletion + '%'">
+              {{userStats.profileCompletion}}%
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="stat-card">
+          <h6>Member Since</h6>
+          <p>{{userStats.registrationDate | date}}</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stats spécifiques aux médecins -->
+    <div *ngIf="isMedecin()" class="row mt-3">
+      <div class="col-md-6">
+        <div class="stat-card">
+          <h6>Years of Experience</h6>
+          <p>{{userStats.yearsOfExperience}}</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="stat-card">
+          <h6>Speciality</h6>
+          <p>{{userStats.speciality}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      </div> <!-- col-md-8 -->
+    </div> <!-- row -->
+  </div> <!-- main-body -->
+
+  <!-- Chargement ou utilisateur introuvable -->
+  <div *ngIf="loading" class="text-center mt-5">
+    <p>Chargement du profil utilisateur...</p>
+  </div>
+  <div *ngIf="!loading && !user" class="text-center mt-5">
+    <p>Utilisateur introuvable.</p>
+  </div>
+</div>

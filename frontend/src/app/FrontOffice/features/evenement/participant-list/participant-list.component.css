@@ -1,0 +1,28 @@
+
+.badge {
+  &.bg-ORGANISATEUR {
+    background-color: #6610f2;
+  }
+  &.bg-SPONSOR {
+    background-color: #fd7e14;
+  }
+  &.bg-PARTICIPANT {
+    background-color: #20c997;
+  }
+  &.bg-INTERVENANT {
+    background-color: #0dcaf0;
+  }
+  &.bg-BENEVOLE {
+    background-color: #ffc107;
+    color: #000;
+  }
+}
+
+.table-hover tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}

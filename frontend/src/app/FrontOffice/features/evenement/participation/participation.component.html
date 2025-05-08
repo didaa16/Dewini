@@ -1,0 +1,68 @@
+<!-- src/app/participation-table/participation-table.component.html -->
+<h2>Participations for Event</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Participant</th>
+      <th>Statut</th>
+      <th>Date Inscription</th>
+      <th>Présence</th>
+      <th>Prix Payé</th>
+      <th>Note</th>
+      <th>Commentaire</th>
+  
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let participation of participations">
+      <td>{{ participation.id }}</td>
+      <td>{{ participation.engagement.id }}</td>
+      <td>{{ participation.statut }}</td>
+      <td>{{ participation.dateInscription | date:'yyyy-MM-dd HH:mm' }}</td>
+      <td>{{ participation.presence ? 'Oui' : 'Non' }}</td>
+      <td>{{ participation.prixPaye }}</td>
+      <td>{{ participation.evaluationNote }}</td>
+      <td>{{ participation.commentaire }}</td>
+      <button mat-button color="accent" (click)="showp(participation.id)">prediction</button>
+    </tr>
+  </tbody>
+</table>
+
+
+<div *ngIf="stats">
+  <h3>Statistiques de Participation</h3>
+
+  <!-- Statistiques générales -->
+  <div class="stats-summary">
+    <div class="stat">
+      <strong>Total des participations :</strong> 
+      <span>{{ stats.totalParticipations }}</span>
+    </div>
+
+    <div class="stat">
+      <strong>Taux de présence :</strong>
+      <span>{{ stats.presenceRate | percent }}</span>
+    </div>
+
+    <div class="stat">
+      <strong>Prix payé moyen :</strong>
+      <span>{{ stats.averagePrixPaye | currency }}</span>
+    </div>
+  </div>
+
+  <!-- Graphiques côte à côte -->
+  <div class="charts-container">
+    <!-- Répartition par statut -->
+    <div class="chart-item">
+      <h4>Répartition par statut</h4>
+      <canvas #statusChart></canvas>
+    </div>
+
+    <!-- Taux de présence -->
+    <div class="chart-item">
+      <h4>Taux de présence</h4>
+      <canvas #presenceChart></canvas>
+    </div>
+  </div>
+</div>

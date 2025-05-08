@@ -1,0 +1,95 @@
+<div class="consultation-detail-container" [@fadeIn]>
+  <!-- Loading Overlay -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="modern-spinner">
+      <div class="spinner-core"></div>
+      <div class="spinner-orbits">
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+      </div>
+      <div class="loading-text">Chargement de la consultation...</div>
+    </div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-titles">
+        <h1><i class="fas fa-stethoscope"></i> Détails de la Consultation</h1>
+        <p class="subtitle">Informations détaillées de la consultation</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn action-btn" (click)="onStartVideo()" *ngIf="consultation && consultation.id_consultation" [@buttonHover]>
+          <i class="fas fa-video"></i> Démarrer une consultation vidéo
+        </button>
+        <button class="btn action-btn" (click)="onBack()" [@buttonHover]>
+          <i class="fas fa-arrow-left"></i> Retour
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- Consultation Details -->
+  <div *ngIf="consultation && !loading" class="consultation-details" [@fadeIn] [attr.data-consultation]="consultation | json">
+    <div class="card">
+      <div class="card-body">
+        <div class="details-grid">
+          <div class="detail-section">
+            <h3 class="section-title"><i class="fas fa-user"></i> Patient</h3>
+            <div class="detail-item">
+              <label>Nom :</label>
+              <p>{{ consultation.patient?.firstname || 'Non spécifié' }} {{ consultation.patient?.lastname || '' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Email :</label>
+              <p>{{ consultation.patient?.email || 'Non spécifié' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Téléphone :</label>
+              <p>{{ consultation.patient?.phoneNumber || 'Non spécifié' }}</p>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h3 class="section-title"><i class="fas fa-user-md"></i> Médecin</h3>
+            <div class="detail-item">
+              <label>Nom :</label>
+              <p>{{ consultation.medecin?.firstname || 'Non spécifié' }} {{ consultation.medecin?.lastname || '' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Email :</label>
+              <p>{{ consultation.medecin?.email || 'Non spécifié' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Téléphone :</label>
+              <p>{{ consultation.medecin?.phoneNumber || 'Non spécifié' }}</p>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h3 class="section-title"><i class="fas fa-calendar"></i> Détails de la Consultation</h3>
+            <div class="detail-item">
+              <label>Date :</label>
+              <p>{{ consultation.date ? (consultation.date | date:'dd MMM yyyy') : 'Non spécifiée' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Heure :</label>
+              <p>{{ consultation.heure || 'Non spécifiée' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Rapport :</label>
+              <p>{{ consultation.rapport || 'Aucun' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Recommandations :</label>
+              <p>{{ consultation.recommandations || 'Aucune' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

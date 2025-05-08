@@ -1,0 +1,111 @@
+<div class="consultation-container">
+  <!-- Loading Overlay -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="modern-spinner">
+      <div class="spinner-core"></div>
+      <div class="spinner-orbits">
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+      </div>
+      <div class="loading-text">Chargement des consultations...</div>
+    </div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-titles">
+        <h1><i class="fas fa-stethoscope"></i> Gestion des Consultations</h1>
+        <p class="subtitle">Interface de gestion des consultations médicales</p>
+      </div>
+      <div class="header-actions">
+        <button routerLink="/consultations/calendar" class="btn action-btn" [@buttonHover]>
+          <i class="fas fa-calendar"></i> Calendrier
+        </button>
+        <button (click)="onAdd()" class="btn action-btn" [@buttonHover]>
+          <i class="fas fa-plus-circle"></i> Nouvelle Consultation
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="alert alert-danger my-3" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button class="btn btn-outline-danger ms-3" (click)="loadConsultations()">
+      <i class="fas fa-arrow-clockwise me-1"></i> Réessayer
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && consultations.length === 0" class="empty-state">
+    <div class="empty-state-icon">
+      <i class="fas fa-calendar-xmark"></i>
+    </div>
+    <p>Aucune consultation trouvée</p>
+    <button class="btn action-btn" (click)="onAdd()" [@buttonHover]>
+      Créer une nouvelle consultation
+    </button>
+  </div>
+
+  <!-- Consultations List -->
+  <main class="consultations-grid">
+    <div
+      *ngFor="let consultation of consultations"
+      class="consultation-card"
+      [@cardAnimation]
+      [attr.data-consultation]="consultation | json"
+    >
+      <div class="card-header">
+        <div class="patient-info">
+          <h3 class="patient-name">
+            <i class="fas fa-user"></i>
+            <span class="name-container">
+              <span class="last-name">{{ consultation.patient?.firstname || 'Non spécifié' }}</span>
+              <span class="first-name">{{ consultation.patient?.lastname || '' }}</span>
+            </span>
+          </h3>
+          <span class="date-badge">
+            <i class="fas fa-calendar-day"></i>
+            {{ consultation.date ? (consultation.date | date:'dd MMM yyyy') : 'Date inconnue' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="consultation-details">
+          <div class="detail-item">
+            <label>Date & Heure :</label>
+            <p>{{ consultation.heure || 'Non spécifiée' }} {{ consultation.date || 'Non spécifiée' }} </p>
+          </div>
+          <div class="detail-item">
+            <label>Médecin :</label>
+            <p>{{ consultation.medecin ? ('Dr. ' + consultation.medecin.firstname + ' ' + consultation.medecin.lastname) : 'Non spécifié' }}</p>
+          </div>
+          <div class="detail-item">
+            <label>Rapport :</label>
+            <div class="content" [innerHTML]="formatText(consultation.rapport)"></div>
+          </div>
+          <div class="detail-item">
+            <label>Recommandations :</label>
+            <div class="content" [innerHTML]="formatText(consultation.recommandations)"></div>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button (click)="onView(consultation.id_consultation!)" class="btn action-btn" [@buttonHover] [disabled]="!consultation.id_consultation">
+            <i class="fas fa-eye"></i> Détails
+          </button>
+          <button (click)="onEdit(consultation.id_consultation!)" class="btn action-btn" [@buttonHover] [disabled]="!consultation.id_consultation">
+            <i class="fas fa-edit"></i> Modifier
+          </button>
+          <button (click)="onDelete(consultation.id_consultation!)" class="btn action-btn danger" [@buttonHover] [disabled]="!consultation.id_consultation">
+            <i class="fas fa-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

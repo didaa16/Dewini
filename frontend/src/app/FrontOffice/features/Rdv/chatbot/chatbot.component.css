@@ -1,0 +1,10 @@
+.chat-title {
+  color: #34495e;
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 1.8rem;
+  text-align: center;
+  letter-spacing: 0.3px;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+}

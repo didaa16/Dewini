@@ -1,0 +1,177 @@
+<div class="container mt-4">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="alert alert-info">
+    <div class="spinner-border spinner-border-sm me-2"></div>
+    Chargement en cours...
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+    <button (click)="refreshList()" class="btn btn-sm btn-outline-light ms-2">
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Statistiques simplifiées -->
+  <div *ngIf="stats" class="card mb-4">
+    <div class="card-header bg-info text-white">
+      <h5 class="mb-0">
+        <i class="fas fa-chart-pie me-2"></i>Statistiques des Réponses
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold">Rendez-vous avec réponse :</span>
+            <span class="badge bg-success rounded-pill fs-6">
+              {{ stats.avecReponse || 0 }}
+            </span>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold">Rendez-vous sans réponse :</span>
+            <span class="badge bg-danger rounded-pill fs-6">
+              {{ stats.sansReponse || 0 }}
+            </span>
+          </div>
+
+          <div class="progress mb-2" style="height: 25px;">
+            <div class="progress-bar bg-success" 
+                 role="progressbar"
+                 [style.width]="getPercentage(stats.avecReponse, stats.avecReponse + stats.sansReponse) + '%'"
+                 [attr.aria-valuenow]="getPercentage(stats.avecReponse, stats.avecReponse + stats.sansReponse)"
+                 aria-valuemin="0" 
+                 aria-valuemax="100">
+              {{ getPercentage(stats.avecReponse, stats.avecReponse + stats.sansReponse) }}% avec réponse
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rendez-vous selection -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5>Liste des Rendez-vous</h5>
+      <div>
+        <button (click)="refreshList()" class="btn btn-sm btn-outline-primary me-2">
+          <i class="fas fa-sync-alt"></i> Actualiser
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Heure</th>
+              <th>Patient</th>
+              <th>État médical</th>
+              <th>Email</th>
+              <th>État</th>
+              <th>Urgence</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rdv of rendezvousWithStatus" 
+                [class.table-primary]="selectedRendezvousId === rdv.idRendezvous">
+              <td>{{ formatDate(rdv.dateRendezvous) }}</td>
+              <td>{{ rdv.heureRendezvous || 'N/A' }}</td>
+              <td>{{ rdv.nomPatient || 'N/A' }}</td>
+              <td>{{ rdv.medicalState || 'Non précisé' }}</td>
+              <td>{{ rdv.emailPatient || 'N/A' }}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'bg-success': rdv.hasResponse,
+                  'bg-warning': !rdv.hasResponse
+                }">
+                  {{ rdv.hasResponse ? 'Traité' : 'Non traité' }}
+                </span>
+              </td>
+
+              <td>
+                <span *ngIf="drBertResults[rdv.idRendezvous] !== undefined; else enCours">
+                  <span *ngIf="drBertResults[rdv.idRendezvous] > 0; else pasUrgence" class="badge bg-danger">
+                    {{ (drBertResults[rdv.idRendezvous] * 100) | number:'1.0-0' }}%
+                  </span>
+                </span>
+                <ng-template #pasUrgence>
+                  <span class="badge bg-secondary">Pas d'urgence détectée</span>
+                </ng-template>
+                <ng-template #enCours>
+                  <span class="badge bg-light text-dark"></span>
+                </ng-template>
+              </td>
+            
+              <td>
+                <button [routerLink]="['/dashboard/repondre', rdv.idRendezvous]" 
+                        class="btn btn-sm me-2" 
+                        [ngClass]="{
+                          'btn-success': !rdv.hasResponse,
+                          'btn-secondary': rdv.hasResponse
+                        }"
+                        [disabled]="rdv.hasResponse">
+                  {{ rdv.hasResponse ? 'Déjà répondu' : 'Répondre' }}
+                </button>
+              </td>
+            </tr>
+            
+            <tr *ngIf="rendezvousWithStatus.length === 0 && !isLoading">
+              <td colspan="7" class="text-center">Aucun rendez-vous trouvé</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reponses list -->
+  <div *ngIf="selectedRendezvousId" class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5>Réponses pour le rendez-vous sélectionné</h5>
+      <button (click)="selectedRendezvousId = null" 
+              class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-times"></i> Fermer
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Contenu</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reponse of reponsesList">
+              <td>{{ reponse.contenu }}</td>
+              <td>
+                <span [ngClass]="{
+                  'badge bg-success': reponse.statut === 'ACCEPTED',
+                  'badge bg-danger': reponse.statut === 'REFUSED'
+                }">
+                  {{ reponse.statut === 'ACCEPTED' ? 'Accepté' : 'Refusé' }}
+                </span>
+              </td>
+               <td>
+                <button class="btn btn-sm btn-danger" (click)="deleteReponse(reponse.idReponse!)">
+                  <i class="fas fa-trash"></i> Supprimer
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="reponsesList.length === 0 && !isLoading">
+              <td colspan="3" class="text-center">Aucune réponse trouvée pour ce rendez-vous</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

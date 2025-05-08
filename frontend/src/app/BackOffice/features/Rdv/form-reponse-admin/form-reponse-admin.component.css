@@ -1,0 +1,123 @@
+/* Card styling */
+.card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+  }
+  
+  .card-header {
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 16px;
+    font-size: 1.25rem;
+    color: #007bff;
+  }
+  
+  /* Form control enhancements */
+  .form-select, .form-control {
+    font-size: 1.1rem;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-select:focus, .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.25rem rgba(38, 143, 255, 0.25);
+  }
+  
+  /* Input group styling */
+  .input-group-text {
+    background-color: #f0f8ff;
+    border-color: #ced4da;
+    color: #007bff;
+  }
+  
+  .input-group .form-control {
+    border-radius: 10px;
+  }
+  
+  /* Invalid input styling */
+  .is-invalid {
+    border-color: #dc3545;
+  }
+  
+  .invalid-feedback {
+    font-size: 0.875rem;
+    color: #dc3545;
+    margin-top: 5px;
+  }
+  
+  /* Button styling */
+  button {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: background-color 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+  }
+  
+  button:disabled {
+    opacity: 0.65;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+  }
+  
+  button:active {
+    transform: translateY(2px);
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+  }
+  
+  .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+  }
+  
+  /* Alert message enhancements */
+  .alert {
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 1rem;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  /* Spinner customization */
+  .spinner-border {
+    width: 1.2rem;
+    height: 1.2rem;
+    border-width: 0.2rem;
+    border-top-color: transparent;
+    animation: spinner-border 0.75s linear infinite;
+  }
+  
+  @keyframes spinner-border {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

@@ -1,0 +1,38 @@
+<div class="scanner-container p-4">
+  <div class="scanner-header text-center mb-4">
+      <h3 class="scanner-title">
+          <i class="fas fa-qrcode me-2"></i>Scanner un QR Code
+      </h3>
+      <p class="text-muted">Positionnez le QR Code dans le cadre pour le scanner</p>
+  </div>
+  
+  <div class="scanner-wrapper position-relative">
+      <!-- Cadre de scan avec effet visuel -->
+      <div class="scan-frame"></div>
+      <div class="scan-overlay"></div>
+      
+      <zxing-scanner 
+          [enable]="scannerEnabled"
+          (scanSuccess)="onCodeResult($event)"
+          class="scanner-video"
+      ></zxing-scanner>
+      
+      <!-- Animation de scan -->
+      <div class="scan-line" [class.active]="scannerEnabled"></div>
+  </div>
+
+  <div class="scanner-controls text-center mt-4">
+      <button class="btn btn-lg" 
+              [class.btn-primary]="!scannerEnabled"
+              [class.btn-danger]="scannerEnabled"
+              (click)="scannerEnabled = !scannerEnabled">
+          <i class="fas" [class.fa-play]="!scannerEnabled" [class.fa-stop]="scannerEnabled"></i>
+          {{ scannerEnabled ? 'Arrêter le scan' : 'Démarrer le scan' }}
+      </button>
+      
+      <div class="scanner-hint mt-3 text-muted small">
+          <i class="fas fa-info-circle me-1"></i>
+          Assurez-vous que le QR Code est bien éclairé et complet dans le cadre
+      </div>
+  </div>
+</div>

@@ -1,0 +1,83 @@
+
+.header h1 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* face-auth.component.css */
+.face-auth-container {
+  max-width: 800px; /* Augmenté de 500px à 800px */
+  margin: 2rem auto;
+  padding: 3rem; /* Augmenté le padding */
+  background: white;
+  border-radius: 15px; /* Bordure plus arrondie */
+  box-shadow: 0 0 25px rgba(0,0,0,0.15); /* Ombre plus prononcée */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.camera-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* Ratio plus carré (4:3) au lieu de 56.25% (16:9) */
+  background: #f5f5f5;
+  border-radius: 12px; /* Bordure plus arrondie */
+  overflow: hidden;
+  margin: 2rem 0; /* Marge augmentée */
+  border: 3px solid #e0e0e0; /* Bordure ajoutée */
+}
+
+/* Le reste du CSS reste identique */
+.camera-feed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.get-started {
+  margin: 1.5rem 0;
+  color: #444;
+  font-size: 1.1rem;
+}
+
+.actions {
+  margin-top: 1.5rem;
+}
+
+.btn {
+  margin-top: 20px;
+  border-radius: 15px;
+  background-color: #62d2a2;
+  border-color: #62d2a2;
+  color: white;
+}
+
+.btn:hover {
+  background-color: #4cc295;
+  border-color: #4cc295;
+  color: white;
+}
+
+
+.footer-note {
+  margin-top: 2rem;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+}

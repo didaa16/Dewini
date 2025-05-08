@@ -1,0 +1,210 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;" *ngIf="user">
+  <div class="main-body w-100 h-100">
+    <div class="row gutters-sm">
+
+      <!-- Col gauche -->
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body text-center">
+            <img [src]="userService.getSafeProfilePicUrl(user.profilePicUrl)" 
+                 (error)="userService.handleImageError($event, userId!)"
+                 class="profile-picture rounded-circle shadow"
+                 alt="Profile picture">
+            <ng-template #defaultPic>
+              <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle shadow" width="150">
+            </ng-template>
+            <div class="mt-3">
+              <h4 class="mt-3 mb-1">{{ user.firstname }} {{ user.lastname }}</h4>
+              <p class="text-secondary mb-1">{{ isMedecin ? 'Doctor Profile' : 'Patient Profile' }}</p>
+              <p class="text-muted">{{ user.email }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col droite -->
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-body">
+            <!-- Icône de retour au profil utilisateur -->
+            <div class="d-flex justify-content-start">
+              <a [routerLink]="['/user-profile', userId]" target="_blank">
+                <i class="bi bi-arrow-left-circle" style="font-size: 1.5rem; cursor: pointer; color: #62D2A2;"></i>
+              </a>
+            </div>
+
+            <!-- Formulaire de mise à jour -->
+            <form [formGroup]="updateUserForm" (ngSubmit)="updateUser()">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="firstname" class="form-label">First Name</label>
+                  <div class="input-field">
+                    <i class="bi bi-person p-2"></i>
+                    <input type="text" id="firstname" class="form-control" formControlName="firstname" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['firstname'].invalid && updateUserForm.controls['firstname'].touched" class="text-danger">
+                    First Name is required.
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="lastname" class="form-label">Last Name</label>
+                  <div class="input-field">
+                    <i class="bi bi-person p-2"></i>
+                    <input type="text" id="lastname" class="form-control" formControlName="lastname" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['lastname'].invalid && updateUserForm.controls['lastname'].touched" class="text-danger">
+                    Last Name is required.
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <div class="input-field">
+                    <i class="bi bi-envelope p-2"></i>
+                    <input type="email" id="email" class="form-control" formControlName="email" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['email'].invalid && updateUserForm.controls['email'].touched" class="text-danger">
+                    A valid email is required.
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="phoneNumber" class="form-label">Phone Number</label>
+                  <div class="input-field">
+                    <i class="bi bi-phone p-2"></i>
+                    <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['phoneNumber'].invalid && updateUserForm.controls['phoneNumber'].touched" class="text-danger">
+                    Phone Number is required.
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="address" class="form-label">Address</label>
+                  <div class="input-field">
+                    <i class="bi bi-house-door p-2"></i>
+                    <input type="text" id="address" class="form-control" formControlName="address" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['address'].invalid && updateUserForm.controls['address'].touched" class="text-danger">
+                    Address is required.
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="gender" class="form-label">Gender</label>
+                  <div class="input-field">
+                    <i class="bi bi-gender-ambiguous p-2"></i>
+                    <select id="gender" class="form-control" formControlName="gender">
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div *ngIf="updateUserForm.controls['gender'].invalid && updateUserForm.controls['gender'].touched" class="text-danger">
+                    Gender is required.
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                  <div class="input-field">
+                    <i class="bi bi-calendar p-2"></i>
+                    <input type="date" id="dateOfBirth" class="form-control" formControlName="dateOfBirth" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['dateOfBirth'].invalid && updateUserForm.controls['dateOfBirth'].touched" class="text-danger">
+                    Date of Birth is required.
+                  </div>
+                </div>
+              </div>
+
+              <!-- MEDECIN-specific fields -->
+              <div class="row" *ngIf="isMedecin">
+                <div class="col-md-6 mb-3">
+                  <label for="specialite" class="form-label">Specialty</label>
+                  <div class="input-field">
+                    <i class="bi bi-briefcase p-2"></i>
+                    <input type="text" id="specialite" class="form-control" formControlName="specialite" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['specialite'].invalid && updateUserForm.controls['specialite'].touched" class="text-danger">
+                    Specialty is required.
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="anneesExperience" class="form-label">Years of Experience</label>
+                  <div class="input-field">
+                    <i class="bi bi-clock-history p-2"></i>
+                    <input type="number" id="anneesExperience" class="form-control" formControlName="anneesExperience" min="0" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['anneesExperience'].invalid && updateUserForm.controls['anneesExperience'].touched" class="text-danger">
+                    Years of Experience is required and must be a positive number.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Password fields -->
+              <div class="row" *ngIf="isPasswordChanged()">
+                <div class="col-12 mb-3">
+                  <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> You are changing your password. Please make sure to remember your new password.
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="currentPassword" class="form-label">Current Password (required if changing password)</label>
+                  <div class="input-field">
+                    <i class="bi bi-lock p-2"></i>
+                    <input type="password" id="currentPassword" class="form-control" formControlName="currentPassword" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['currentPassword'].touched && updateUserForm.controls['currentPassword'].errors?.['required']" class="text-danger">
+                    Current password is required when changing password.
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="password" class="form-label">New Password (leave blank to keep current)</label>
+                  <div class="input-field">
+                    <i class="bi bi-lock p-2"></i>
+                    <input type="password" id="password" class="form-control" formControlName="password" />
+                  </div>
+                  <div *ngIf="updateUserForm.controls['password'].touched && updateUserForm.controls['password'].errors?.['minlength']" class="text-danger">
+                    Password must be at least 6 characters.
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                  <div class="input-field">
+                    <i class="bi bi-lock p-2"></i>
+                    <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword" />
+                  </div>
+                  <div *ngIf="updateUserForm.hasError('passwordMismatch') && updateUserForm.controls['confirmPassword'].touched" class="text-danger">
+                    Passwords do not match.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bouton de soumission -->
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success" [disabled]="updateUserForm.invalid">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

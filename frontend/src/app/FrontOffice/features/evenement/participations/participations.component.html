@@ -1,0 +1,138 @@
+
+
+
+
+
+
+
+  <p>participations works!</p>
+  <div class="participations-container">
+    <!-- Erreur -->
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  
+    <div class="row">
+      <!-- Colonne gauche - Liste des participations -->
+      <div class="col-md-8">
+        <!-- Liste des participations -->
+        <table *ngIf="participations.length > 0" class="participations-table">
+          <thead>
+            <tr>
+              <th>Événement</th>
+              <th>Participant</th>
+              <th>Statut</th>
+              <th>Prix payé</th>
+              <th>Note</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let participation of participations">
+              <td>{{ participation.evenement.nom }}</td>
+              <td>{{ participation.engagement.id }}</td>
+              <td>{{ participation.statut }}</td>
+              <td>{{ participation.prixPaye | currency }}</td>
+              <td>{{ participation.evaluationNote }}</td>
+              <td>{{ participation.commentaire }}</td>
+              <td>
+                <div class="d-flex flex-wrap gap-2 my-3">
+                  <button (click)="editParticipation(participation)" style="background: none; border: none; font-size: 24px; cursor: pointer;">
+                    ✏️
+                  </button>
+                  <button (click)="deleteParticipation(participation.id)" style="background: none; border: none; font-size: 24px; cursor: pointer;">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+      <!-- Aucun participant -->
+        <div *ngIf="participations.length === 0" class="no-participations">
+          <p>Aucune participation à afficher.</p>
+        </div>
+    
+      </div>
+  
+      <!-- Colonne droite - Statistiques -->
+      <div class="col-md-4" *ngIf="stats">
+        <div class="stats-card">
+          <h3>Statistiques de Participation</h3>
+  
+          <!-- Statistiques générales -->
+          <div class="stats-summary">
+            <div class="stat">
+              <strong>Total des participations :</strong> 
+              <span>{{ stats.totalParticipations }}</span>
+            </div>
+  
+            <div class="stat">
+              <strong>Taux de présence :</strong>
+              <span>{{ stats.presenceRate | percent }}</span>
+            </div>
+  
+            <div class="stat">
+              <strong>Prix payé moyen :</strong>
+              <span>{{ stats.averagePrixPaye | currency }}</span>
+            </div>
+          </div>
+  
+          <!-- Graphiques -->
+          <div class="charts-container">
+            <!-- Répartition par statut -->
+            <div class="chart-item">
+              <h4>Répartition par statut</h4>
+              <canvas #statusChart></canvas>
+            </div>
+            <div class="chart-item">
+                <h4>Taux de présence</h4>
+                <canvas #presenceChart></canvas>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Formulaire de modification -->
+    <div *ngIf="selectedParticipation" class="edit-participation-form">
+      <h3>{{ isAddMode ? 'Ajouter une participation' : 'Modifier une participation' }}</h3>
+  
+      <form (ngSubmit)="handleSubmit()">
+        <div>
+          <label for="evenement">Événement :</label>
+          <input type="text" id="evenement" [(ngModel)]="selectedParticipation.evenement.nom" name="evenement" [readonly]="true" />
+        </div>
+  
+        <div>
+          <label for="engagement">Participant :</label>
+          <input type="text" id="engagement" [(ngModel)]="selectedParticipation.engagement.id" name="engagement" [readonly]="true" />
+        </div>
+  
+        <div>
+          <label for="statut">Statut :</label>
+          <select id="statut" [(ngModel)]="selectedParticipation.statut" name="statut" required>
+            <option *ngFor="let statut of statutParticipationValues" [value]="statut">{{ statut }}</option>
+          </select>
+        </div>
+  
+        <div>
+          <label for="prixPaye">Prix payé :</label>
+          <input type="number" id="prixPaye" [(ngModel)]="selectedParticipation.prixPaye" name="prixPaye" required />
+        </div>
+  
+        <div>
+          <label for="evaluationNote">Note d'évaluation (0-5) :</label>
+          <input type="number" id="evaluationNote" [(ngModel)]="selectedParticipation.evaluationNote" name="evaluationNote" min="0" max="5" required />
+        </div>
+  
+        <div>
+          <label for="commentaire">Commentaire :</label>
+          <textarea id="commentaire" [(ngModel)]="selectedParticipation.commentaire" name="commentaire"></textarea>
+        </div>
+  
+        <button type="submit" class="btn-submit">{{ isAddMode ? 'Ajouter' : 'Mettre à jour' }}</button>
+        <button type="button" class="btn-cancel" (click)="cancelEdit()">Annuler</button>
+      </form>
+    </div>
+  </div>
+  

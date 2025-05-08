@@ -1,0 +1,70 @@
+<div class="video-consultation-container" [@fadeIn]>
+    <!-- Loading Overlay -->
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="modern-spinner">
+        <div class="spinner-core"></div>
+        <div class="spinner-orbits">
+          <div class="orbit"></div>
+          <div class="orbit"></div>
+          <div class="orbit"></div>
+        </div>
+        <div class="loading-text">Initialisation de la vidéoconférence...</div>
+      </div>
+    </div>
+  
+    <!-- Header Section -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="header-titles">
+          <h1><i class="fas fa-video"></i> Consultation Vidéo en Direct</h1>
+          <p class="subtitle">Participez à une consultation vidéo avec le patient</p>
+        </div>
+        <div class="header-actions" *ngIf="showSendLinkButton">
+          <button class="btn action-btn" (click)="sendLinkToPatient()" [@buttonHover]>
+            <i class="fas fa-envelope"></i> Envoyer le lien au patient
+          </button>
+        </div>
+      </div>
+    </header>
+  
+    <!-- Error State -->
+    <div *ngIf="error" class="alert alert-danger my-3" role="alert" [@fadeIn]>
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+    </div>
+  
+    <!-- Video Container -->
+    <div class="video-wrapper" *ngIf="!loading" [@fadeIn]>
+      <div class="card">
+        <div class="card-body">
+          <div id="zegoContainer" style="width: 100%; min-height: 600px;"></div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal -->
+    <div class="modal fade" id="sendLinkModal" tabindex="-1" aria-labelledby="sendLinkModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="sendLinkModalLabel">Envoyer le lien de consultation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="patientEmail" class="form-label">Email du patient</label>
+              <input type="email" class="form-control" id="patientEmail" [(ngModel)]="patientEmail" placeholder="Entrez l'email du patient">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn action-btn" data-bs-dismiss="modal" [@buttonHover]>
+              <i class="fas fa-times-circle"></i> Annuler
+            </button>
+            <button type="button" class="btn action-btn primary" (click)="confirmSendLink()" [disabled]="!patientEmail" [@buttonHover]>
+              <i class="fas fa-envelope"></i> Envoyer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,113 @@
+<header class="header_section">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg custom_nav-container">
+      <a class="navbar-brand" routerLink="/index.html">
+        <span>
+          <svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background Gradient inversé (maintenant blanc) -->
+            <defs>
+              <linearGradient id="logoGradientInverted" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#f0f0f0;stop-opacity:1" />
+              </linearGradient>
+
+              <!-- Gradient vert pour les éléments qui étaient blancs -->
+              <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#26b5a0;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#1a7d76;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+
+            <!-- Main Circle (maintenant blanc) -->
+            <circle cx="50" cy="50" r="40" fill="url(#logoGradientInverted)" />
+
+            <!-- Cross Symbol (maintenant vert) -->
+            <rect x="45" y="20" width="10" height="60" rx="4" fill="url(#greenGradient)" />
+            <rect x="20" y="45" width="60" height="10" rx="4" fill="url(#greenGradient)" />
+
+            <!-- Heartbeat Line (maintenant blanc) -->
+            <polyline points="110,50 120,50 125,35 130,65 135,50 140,50 145,35 150,65 155,50 165,50"
+                      stroke="url(#logoGradientInverted)" stroke-width="4" fill="none" stroke-linecap="round" />
+
+            <!-- Text (maintenant blanc) -->
+            <text x="175" y="45" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="url(#logoGradientInverted)">Dewini</text>
+            <text x="175" y="65" font-family="Arial, sans-serif" font-size="12" fill="#ffffff">GESTION MÉDICALE</text>
+          </svg>
+        </span>
+      </a>
+      <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" [class.show]="!isNavbarCollapsed">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item" [class.active]="currentRoute === '/home'">
+            <a class="nav-link" routerLink="/home">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/list-rendezvous">Rendez-vous</a>
+          </li>
+
+
+
+
+          <li class="nav-item" *ngIf="userRole != 'ROLE_USER'">
+            <a class="nav-link" routerLink="/consultations">Consultations</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dossiers">Dossier Médical</a>
+          </li>
+          <li class="nav-item" >
+            <a class="nav-link" routerLink="/donation">Dons</a>
+          </li>
+          <li class="nav-item" *ngIf="userRole != 'ROLE_USER'">
+            <a class="nav-link" routerLink="/ordonnances/ajouter">ordonnances</a>
+          </li>
+          <li class="nav-item" *ngIf="userRole != 'ROLE_USER'">
+            <a class="nav-link" routerLink="/medicaments">Medicaments</a>
+          </li>
+          <li class="nav-item" [class.active]="currentRoute === '/listUrgences'">
+            <a class="nav-link" routerLink="/listUrgences">Urgences</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/events">evenement</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center">
+          <!-- Affiché quand NON connecté -->
+          <ng-container *ngIf="!isAuthenticated">
+            <a class="btn btn-signin mr-2" routerLink="/login">Sign In</a>
+            <a class="btn btn-signup" routerLink="/register">Sign Up</a>
+          </ng-container>
+
+          <!-- Affiché quand connecté -->
+          <ng-container *ngIf="isAuthenticated">
+            <!-- Menu déroulant utilisateur -->
+            <div class="dropdown ml-3">
+              <button class="btn btn-settings" (click)="toggleDropdown()">
+                <i class="fa fa-cog"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" [class.show]="dropdownOpen">
+                <a class="dropdown-item" (click)="goToUserProfile()">
+                  <i class="fa fa-user mr-2"></i> Profil
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" (click)="logout()">
+                  <i class="fa fa-sign-out mr-2"></i> Déconnexion
+                </a>
+              </div>
+            </div>
+
+            <!-- Bouton de recherche -->
+            <form class="form-inline ml-3">
+              <button class="btn nav_search-btn" type="submit">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </button>
+            </form>
+          </ng-container>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,106 @@
+<div class="dossier-container">
+  <!-- Loading Overlay -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="modern-spinner">
+      <div class="spinner-core"></div>
+      <div class="spinner-orbits">
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+      </div>
+      <div class="loading-text">Chargement des dossiers médicaux...</div>
+    </div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-titles">
+        <h1><i class="fas fa-folder-medical"></i> Gestion des Dossiers Médicaux</h1>
+        <p class="subtitle">Interface de gestion des dossiers médicaux des patients</p>
+      </div>
+      <div class="header-actions">
+        <button (click)="onCreate()" class="btn action-btn" [@buttonHover]>
+          <i class="fas fa-plus-circle"></i> Nouveau Dossier
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- Error State -->
+  <div *ngIf="error" class="alert alert-danger my-3" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button class="btn btn-outline-danger ms-3" (click)="loadDossiers()">
+      <i class="fas fa-arrow-clockwise me-1"></i> Réessayer
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && dossiers.length === 0" class="empty-state">
+    <div class="empty-state-icon">
+      <i class="fas fa-folder-xmark"></i>
+    </div>
+    <p>Aucun dossier médical trouvé</p>
+    <button class="btn action-btn" (click)="onCreate()" [@buttonHover]>
+      Créer un nouveau dossier
+    </button>
+  </div>
+
+  <!-- Dossiers List -->
+  <main class="dossiers-grid">
+    <div
+      *ngFor="let dossier of dossiers"
+      class="dossier-card"
+      [@cardAnimation]
+      [attr.data-dossier]="dossier | json"
+    >
+      <div class="card-header">
+        <div class="patient-info">
+          <h3 class="patient-name">
+            <i class="fas fa-user"></i>
+            <span class="name-container">
+              <span class="last-name">{{ dossier.patient.firstname || 'Non spécifié' }}</span>
+              <span class="first-name">{{ dossier.patient.lastname || '' }}</span>
+            </span>
+          </h3>
+          <span class="date-badge">
+            <i class="fas fa-calendar-day"></i>
+            {{ dossier.dateCreation ? (dossier.dateCreation | date:'dd MMM yyyy') : 'Date inconnue' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="dossier-details">
+          <div class="detail-item">
+            <label>Antécédents Médicaux :</label>
+            <div class="content" [innerHTML]="formatText(dossier.antecedentsMedicaux)"></div>
+          </div>
+          <div class="detail-item">
+            <label>Allergies :</label>
+            <div class="content" [innerHTML]="formatText(dossier.allergies)"></div>
+          </div>
+          <div class="detail-item">
+            <label>Traitements en Cours :</label>
+            <div class="content" [innerHTML]="formatText(dossier.traitementsEnCours)"></div>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button [routerLink]="['/dossiers', dossier.id_dossier]" class="btn action-btn" [@buttonHover] [disabled]="!dossier.id_dossier">
+            <i class="fas fa-eye"></i> Détails
+          </button>
+          <button [routerLink]="['/dossiers/edit', dossier.id_dossier]" class="btn action-btn" [@buttonHover] [disabled]="!dossier.id_dossier">
+            <i class="fas fa-edit"></i> Modifier
+          </button>
+          <button (click)="onDelete(dossier.id_dossier!)" class="btn action-btn danger" [@buttonHover] [disabled]="!dossier.id_dossier">
+            <i class="fas fa-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

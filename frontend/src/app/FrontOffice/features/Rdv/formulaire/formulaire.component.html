@@ -1,0 +1,213 @@
+<div class="container mt-4">
+  <div *ngIf="showPopup" class="popup-overlay">
+    <div class="popup-container">
+      <div class="popup-content">
+        <div class="popup-header">
+          <span class="popup-icon">✓</span>
+          <h3>Rendez-vous enregistré !</h3>
+        </div>
+        <div class="popup-body">
+          <p>Votre rendez-vous a été enregistré avec succès.</p>
+         
+        </div>
+        <div class="popup-footer">
+          <button (click)="closePopup()" class="popup-button">Fermer maintenant</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card card-custom p-0 overflow-hidden">
+    <div class="row g-0">
+      <!-- Colonne Image (identique à la proposition précédente) -->
+      <div class="col-md-5 d-none d-md-block medical-image-col">
+        <div class="medical-image-container h-100">
+          <div class="medical-image-overlay"></div>
+          <div class="medical-image-content">
+            <h3><i class="bi bi-heart-pulse"></i> Votre Santé, Notre Priorité</h3>
+            <p class="mt-3">Prenez rendez-vous en toute simplicité avec notre équipe médicale qualifiée.</p>
+            <ul class="medical-benefits mt-4">
+              <li><i class="bi bi-check-circle"></i> Prise en charge personnalisée</li>
+              <li><i class="bi bi-check-circle"></i> Environnement médical sécurisé</li>
+              <li><i class="bi bi-check-circle"></i> Confidentialité garantie</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne Formulaire (avec TOUS vos champs d'origine) -->
+      <div class="col-md-7">
+        <div class="p-4">
+          <h2 class="form-title">
+            <i class="bi bi-calendar-heart me-2"></i>
+            {{ isEditMode ? 'Modifier votre rendez-vous' : 'Nouveau rendez-vous médical' }}
+          </h2>
+
+          <form [formGroup]="rendezvousForm" (ngSubmit)="onSubmit()">
+            <!-- Section 1: Nom + Sexe -->
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="nomPatient" class="form-label">
+                    <i class="bi bi-person-fill me-2"></i>Nom du Patient
+                  </label>
+                  <input type="text" id="nomPatient" formControlName="nomPatient" class="form-control"
+                         [class.is-invalid]="rendezvousForm.get('nomPatient')?.invalid && rendezvousForm.get('nomPatient')?.touched">
+                  <div class="invalid-feedback" *ngIf="rendezvousForm.get('nomPatient')?.invalid && rendezvousForm.get('nomPatient')?.touched">
+                    Le nom du patient est requis.
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="sexePatient" class="form-label">
+                    <i class="bi bi-gender-ambiguous me-2"></i>Sexe du Patient
+                  </label>
+                  <select id="sexePatient" formControlName="sexePatient" class="form-control"
+                          [class.is-invalid]="rendezvousForm.get('sexePatient')?.invalid && rendezvousForm.get('sexePatient')?.touched">
+                    <option value="HOMME">Homme</option>
+                    <option value="FEMME">Femme</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Email -->
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="emailPatient" class="form-label">
+                    <i class="bi bi-envelope me-2"></i>Email du Patient
+                  </label>
+                  <input type="email" id="emailPatient" formControlName="emailPatient" class="form-control"
+                         [class.is-invalid]="rendezvousForm.get('emailPatient')?.invalid && rendezvousForm.get('emailPatient')?.touched">
+                  <div class="invalid-feedback" *ngIf="rendezvousForm.get('emailPatient')?.errors?.['required'] && rendezvousForm.get('emailPatient')?.touched">
+                    L'email est requis.
+                  </div>
+                  <div class="invalid-feedback" *ngIf="rendezvousForm.get('emailPatient')?.errors?.['email'] && rendezvousForm.get('emailPatient')?.touched">
+                    Veuillez entrer une adresse email valide.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Dates -->
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="dateNaissance" class="form-label">
+                    <i class="bi bi-calendar-date me-2"></i>Date de Naissance
+                  </label>
+                  <input type="date" id="dateNaissance" formControlName="dateNaissance" class="form-control"
+                         [class.is-invalid]="rendezvousForm.get('dateNaissance')?.invalid && rendezvousForm.get('dateNaissance')?.touched">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="dateRendezvous" class="form-label">
+                    <i class="bi bi-calendar-event me-2"></i>Date du Rendez-vous
+                  </label>
+                  <input type="date" 
+                         id="dateRendezvous" 
+                         formControlName="dateRendezvous" 
+                         class="form-control"
+                         [min]="todayDate | date:'yyyy-MM-dd'"
+                         [class.is-invalid]="rendezvousForm.get('dateRendezvous')?.invalid && rendezvousForm.get('dateRendezvous')?.touched">
+                  <div class="invalid-feedback" *ngIf="rendezvousForm.get('dateRendezvous')?.errors?.['pastDate']">
+                    La date du rendez-vous ne peut pas être antérieure à aujourd'hui.
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="heureRendezvous" class="form-label">
+                    <i class="bi bi-clock me-2"></i>Heure du Rendez-vous
+                  </label>
+                  <input type="time" id="heureRendezvous" formControlName="heureRendezvous" class="form-control" step="300"
+                         [class.is-invalid]="rendezvousForm.get('heureRendezvous')?.invalid && rendezvousForm.get('heureRendezvous')?.touched">
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 4: État médical -->
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="medicalState" class="form-label">
+                    <i class="bi bi-heart me-2"></i>État Médical
+                  </label>
+                  <textarea id="medicalState" formControlName="medicalState" class="form-control"
+                            rows="3" 
+                            [class.is-invalid]="rendezvousForm.get('medicalState')?.invalid && rendezvousForm.get('medicalState')?.touched"></textarea>
+                  <div class="invalid-feedback" *ngIf="rendezvousForm.get('medicalState')?.invalid && rendezvousForm.get('medicalState')?.touched">
+                    L'état médical est requis.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Suggestions de créneaux (conservé) -->
+            <div *ngIf="showSuggestions" class="alert alert-warning mt-3">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <h5 class="mb-0">Créneau indisponible</h5>
+              </div>
+              <p class="mt-2">Veuillez choisir l'un de ces créneaux disponibles :</p>
+              <div class="d-flex gap-2 flex-wrap">
+                <button *ngFor="let suggestion of suggestions" type="button" 
+                        class="btn btn-outline-primary btn-sm"
+                        (click)="selectSuggestion(suggestion)">
+                  {{ suggestion }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="mt-4 d-flex justify-content-between">
+              <button type="button" (click)="onCancel()" class="btn btn-outline-secondary">
+                <i class="bi bi-x-circle me-1"></i> Annuler
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="rendezvousForm.invalid">
+                <i class="bi bi-save me-1"></i> {{ isEditMode ? 'Mettre à jour' : 'Confirmer' }}
+              </button>
+            </div>
+            <!-- Bouton Visualiser les rendez-vous -->
+
+
+          </form>
+        <!-- Carte stylée pour les rendez-vous -->
+        <div class="appointment-box mt-4 p-3 rounded shadow-sm border bg-white text-center">
+          <div class="d-flex justify-content-center align-items-center mb-2">
+            <i class="bi bi-calendar3 fs-4 text-success me-2"></i>
+            <p class="mb-0 fw-semibold">Vous souhaitez Visualiser les rendez-vous existants ?</p>
+          </div>
+          <a routerLink="/medcalendar" class="btn btn-outline-success mt-2 d-inline-flex align-items-center">
+            <i class="bi bi-eye me-2"></i> Visualisez les rendez-vous
+          </a>
+        </div>
+        
+
+
+          <!-- Section Chat (identique) -->
+          <div class="chat-link-box mt-4">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-robot fs-4 me-3"></i>
+              <div>
+                <p class="mb-1"><strong>Besoin d'aide ?</strong></p>
+                <p class="mb-0">DewiniBot est disponible pour répondre à vos questions</p>
+              </div>
+            </div>
+            <a routerLink="/chat" class="chat-button mt-2">
+              <i class="bi bi-chat-left-text me-1"></i> Ouvrir le chat
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Popup de confirmation (identique à votre version) -->
+ <!-- Popup de confirmation -->

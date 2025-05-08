@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+</head>
+<body>
+  <div class="container py-1">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        <div class="panel border bg-white">
+          <div class="panel-heading p-0 sticky-top bg-white">
+            <h1 class="brand-title">
+              New in <span class="brand-blue">Dewini</span>?
+            </h1>
+          </div>
+          <div class="panel-body p-2">
+            <form [formGroup]="signUpForm">
+              <!-- Profile Picture Upload -->
+              <div class="form-group image-upload-container">
+                <div class="image-upload-wrapper" (click)="fileInput.click()">
+                  <ng-container *ngIf="!imagePreviewUrl; else imagePreview">
+                    <i class="bi bi-camera upload-icon"></i>
+                  </ng-container>
+                  <ng-template #imagePreview>
+                    <img [src]="imagePreviewUrl" class="preview-image" alt="Profile Preview">
+                  </ng-template>
+                </div>
+                <input #fileInput type="file" class="file-input" 
+                       (change)="onFileSelected($event)" accept="image/*">
+                <small *ngIf="signUpForm.controls['profilePicture'].invalid && signUpForm.controls['profilePicture'].touched" 
+                       class="text-danger">
+                  Profile picture is required
+                </small>
+              </div>
+
+              <!-- First Name -->
+              <div class="form-group pt-3">
+                <div class="input-field" [class.error]="signUpForm.controls['firstname'].invalid && signUpForm.controls['firstname'].touched">
+                  <span class="bi bi-person p-2"></span>
+                  <input formControlName="firstname" type="text" placeholder="First Name" class="form-control">
+                </div>
+                <small *ngIf="signUpForm.controls['firstname'].invalid && signUpForm.controls['firstname'].touched" class="text-danger">
+                  First Name is required
+                </small>
+              </div>
+
+              <!-- Last Name -->
+              <div class="form-group pt-3">
+                <div class="input-field" [class.error]="signUpForm.controls['lastname'].invalid && signUpForm.controls['lastname'].touched">
+                  <span class="bi bi-person p-2"></span>
+                  <input formControlName="lastname" type="text" placeholder="Last Name" class="form-control">
+                </div>
+                <small *ngIf="signUpForm.controls['lastname'].invalid && signUpForm.controls['lastname'].touched" class="text-danger">
+                  Last Name is required
+                </small>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group pt-3">
+                <div class="input-field" [class.error]="signUpForm.controls['email'].invalid && signUpForm.controls['email'].touched">
+                  <span class="bi bi-envelope p-2"></span>
+                  <input formControlName="email" type="email" placeholder="Email" class="form-control">
+                </div>
+                <small *ngIf="signUpForm.controls['email'].invalid && signUpForm.controls['email'].touched" class="text-danger">
+                  <span *ngIf="signUpForm.controls['email'].errors?.['required']">Email is required</span>
+                  <span *ngIf="signUpForm.controls['email'].errors?.['email']">Please enter a valid email</span>
+                </small>
+              </div>
+
+              <!-- Phone Number -->
+              <div class="form-group pt-3">
+                <div class="input-field" [class.error]="signUpForm.controls['phoneNumber'].invalid && signUpForm.controls['phoneNumber'].touched">
+                  <span class="bi bi-telephone p-2"></span>
+                  <input formControlName="phoneNumber" type="text" placeholder="Phone Number" class="form-control">
+                </div>
+                <small *ngIf="signUpForm.controls['phoneNumber'].invalid && signUpForm.controls['phoneNumber'].touched" class="text-danger">
+                  Phone Number is required
+                </small>
+              </div>
+
+              <!-- Gender Field -->
+              <div class="form-group pt-3">
+                <div class="input-field" [class.error]="signUpForm.controls['gender'].invalid && signUpForm.controls['gender'].touched">
+                  <span class="bi bi-gender-ambiguous p-2"></span>
+                  <select formControlName="gender" class="form-control" required>
+                    <option value="" disabled selected hidden>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <small *ngIf="signUpForm.controls['gender'].invalid && signUpForm.controls['gender'].touched" class="text-danger">
+                  Gender is required
+                </small>
+              </div>
+
+              <!-- Date of Birth Field -->
+              <div class="form-group pt-3">
+                <div class="input-field" [class.error]="signUpForm.controls['dateOfBirth'].invalid && signUpForm.controls['dateOfBirth'].touched">
+                  <span class="bi bi-calendar p-2"></span>
+                  <input formControlName="dateOfBirth" type="date" class="form-control" required 
+                         [max]="maxDate | date:'yyyy-MM-dd'" 
+                         [min]="minDate | date:'yyyy-MM-dd'">
+                </div>
+                <small *ngIf="signUpForm.controls['dateOfBirth'].invalid && signUpForm.controls['dateOfBirth'].touched" class="text-danger">
+                  Date of Birth is required (must be at least 18 years old)
+                </small>
+              </div>
+
+              <!-- Address -->
+              <div class="form-group pt-3">
+                <div class="input-field" [class.error]="signUpForm.controls['address'].invalid && signUpForm.controls['address'].touched">
+                  <span class="bi bi-house-door p-2"></span>
+                  <input formControlName="address" type="text" placeholder="Address" class="form-control">
+                </div>
+                <small *ngIf="signUpForm.controls['address'].invalid && signUpForm.controls['address'].touched" class="text-danger">
+                  Address is required
+                </small>
+              </div>
+              
+              <!-- Healthcare Professional Form (Hidden by default) -->
+              <div class="healthcare-professional-form" *ngIf="showProfessionalFields">
+                <div class="form-group pt-3">
+                  <div class="input-field" [class.error]="signUpForm.controls['specialite'].invalid && signUpForm.controls['specialite'].touched">
+                    <span class="bi bi-hospital"></span>
+                    <select formControlName="specialite" class="form-control" required>
+                      <option value="" disabled selected hidden>Select Specialty</option>
+                      <option *ngFor="let specialty of medicalSpecialties" [value]="specialty">{{specialty}}</option>
+                    </select>
+                  </div>
+                  <small *ngIf="signUpForm.controls['specialite'].invalid && signUpForm.controls['specialite'].touched" 
+                         class="text-danger">
+                    Specialty is required
+                  </small>
+                </div>
+
+                <div class="form-group pt-3">
+                  <div class="input-field" [class.error]="signUpForm.controls['anneesExperience'].invalid && signUpForm.controls['anneesExperience'].touched">
+                    <span class="bi bi-calendar-check p-2"></span>
+                    <input formControlName="anneesExperience" type="number" placeholder="Years of Experience" class="form-control" min="0">
+                  </div>
+                  <small *ngIf="signUpForm.controls['anneesExperience'].invalid && signUpForm.controls['anneesExperience'].touched" 
+                         class="text-danger">
+                    Years of experience is required
+                  </small>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="form-group pt-3">
+                <div class="input-field" [class.error]="signUpForm.controls['password'].invalid && signUpForm.controls['password'].touched">
+                  <span class="bi bi-lock p-2"></span>
+                  <input formControlName="password" [type]="passwordFieldType" placeholder="Password" class="form-control">
+                  <span class="bi" [ngClass]="eyeIcon" (click)="togglePasswordVisibility()"></span>
+                </div>
+                <small *ngIf="signUpForm.controls['password'].invalid && signUpForm.controls['password'].touched" class="text-danger">
+                  <span *ngIf="signUpForm.controls['password'].errors?.['required']">Password is required</span>
+                  <span *ngIf="signUpForm.controls['password'].errors?.['minlength']">Password must be at least 8 characters</span>
+                  <span *ngIf="signUpForm.controls['password'].errors?.['pattern']">
+                    Password must contain at least one uppercase, one lowercase, one number and one special character
+                  </span>
+                </small>
+              </div>
+
+              <!-- Error Messages -->
+              <div *ngIf="errorMessages.length > 0" class="alert alert-danger mt-3">
+                <ul class="mb-0">
+                  <li *ngFor="let error of errorMessages">{{ error }}</li>
+                </ul>
+              </div>
+
+              <!-- Success Message -->
+              <div *ngIf="successMessage" class="alert alert-success mt-3">
+                {{ successMessage }}
+              </div>
+
+              <!-- Submit Button -->
+              <button (click)="register()" type="button" class="btn btn-primary btn-block mt-4 w-100" [disabled]="isLoading">
+                <span *ngIf="!isLoading">
+                  <i class="bi bi-person-add me-2"></i>Sign-up
+                </span>
+                <span *ngIf="isLoading">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Registering...
+                </span>
+              </button>
+
+              <div class="text-center pt-4 text-muted">
+                Already have an account? <a routerLink="/login" class="text-primary">Login</a>
+              </div>
+            </form>
+          </div>
+          <!-- Button to toggle professional fields -->
+          <div class="mx-3 my-2 py-2 bordert sticky-bottom">
+            <button type="button" class="btn btn-outline-primary btn-block mt-3 w-100" 
+                    (click)="toggleProfessionalFields()">
+              <i class="bi bi-person-add me-2"></i>
+              {{ showProfessionalFields ? 'I am not a healthcare professional' : 'Are you a healthcare professional?' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

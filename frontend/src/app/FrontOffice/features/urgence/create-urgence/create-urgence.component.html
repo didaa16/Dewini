@@ -1,0 +1,132 @@
+<section class="contact-section">
+  <div class="container">
+    <div class="heading-container text-center mb-5" [@fadeIn]>
+      <h2 class="heading-title">Déclarer une Urgence</h2>
+      <p class="heading-subtitle">Remplissez le formulaire pour soumettre une urgence.</p>
+    </div>
+
+    <div class="row align-items-center">
+      <!-- Form Section -->
+      <div class="col-lg-6 mb-4">
+        <div class="form-card" [@slideInLeft]>
+          <form [formGroup]="urgenceForm" (ngSubmit)="save()">
+            <!-- Description Field -->
+            <div class="form-group mb-4">
+              <label for="description" class="form-label">
+                Description <span class="text-danger">*</span>
+              </label>
+              <textarea
+                id="description"
+                formControlName="description"
+                class="form-control custom-input"
+                placeholder="Décrivez votre situation en détail..."
+                rows="4"
+                [ngClass]="{
+                  'is-invalid': urgenceForm.get('description')?.invalid && urgenceForm.get('description')?.touched,
+                  'border-success': urgenceForm.get('description')?.value && !isCorrectingDescription && urgenceForm.get('description')?.valid
+                }"
+              ></textarea>
+              <div
+                *ngIf="urgenceForm.get('description')?.invalid && urgenceForm.get('description')?.touched"
+                class="invalid-feedback"
+              >
+                La description est requise et doit contenir au moins 10 caractères.
+              </div>
+            </div>
+
+            <!-- Type d'Urgence Field -->
+            <div class="form-group mb-4">
+              <label for="typeUrgence" class="form-label">
+                Type d'urgence <span class="text-danger">*</span>
+              </label>
+              <select
+                id="typeUrgence"
+                formControlName="typeUrgence"
+                class="form-control custom-input"
+                [ngClass]="{
+                  'is-invalid': urgenceForm.get('typeUrgence')?.invalid && urgenceForm.get('typeUrgence')?.touched
+                }"
+              >
+                <option value="" disabled>Sélectionnez un type</option>
+                <option value="A_Domicile">À Domicile</option>
+                <option value="En_Ligne">En Ligne</option>
+              </select>
+              <div
+                *ngIf="urgenceForm.get('typeUrgence')?.invalid && urgenceForm.get('typeUrgence')?.touched"
+                class="invalid-feedback"
+              >
+                Veuillez sélectionner un type d'urgence.
+              </div>
+            </div>
+
+            <!-- Address Field (Conditional) -->
+            <div class="form-group mb-4" *ngIf="isAddressVisible()" [@fadeIn]>
+              <label for="addressePatient" class="form-label">Adresse</label>
+              <div class="input-group">
+                <input
+                  id="addressePatient"
+                  formControlName="addressePatient"
+                  class="form-control custom-input"
+                  placeholder="Cliquez pour localiser..."
+                  readonly
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-primary location-btn"
+                  (click)="getCurrentLocation()"
+                  title="Obtenir ma position"
+                  aria-label="Obtenir ma position actuelle"
+                >
+                  <i class="fas fa-map-marker-alt"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Specialty Field (Read-only) -->
+            <div class="form-group mb-4" *ngIf="predictedSpecialty" [@fadeIn]>
+              <label for="specialty" class="form-label">Spécialité prédite</label>
+              <input
+                id="specialty"
+                class="form-control custom-input"
+                [value]="predictedSpecialty"
+                readonly
+              />
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+              <button
+                type="submit"
+                class="btn btn-primary submit-btn"
+                [disabled]="urgenceForm.invalid || isLoading || isCorrectingDescription"
+                [ngClass]="{ 'btn-disabled': urgenceForm.invalid || isLoading || isCorrectingDescription }"
+              >
+                {{ idUrgence ? 'Mettre à jour' : 'Soumettre' }}
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm ml-2"></span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-link return-btn"
+                (click)="navigateToUrgenceList()"
+                [disabled]="isLoading || isCorrectingDescription"
+              >
+                Retour <i class="fas fa-arrow-left ml-1"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Image Section -->
+      <div class="col-lg-6 mb-4">
+        <div class="img-box text-center" [@slideInRight]>
+          <img
+            src="/assets/FrontOffice/images/d2.jpg"
+            alt="Urgence Illustration"
+            class="img-fluid rounded shadow-sm"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

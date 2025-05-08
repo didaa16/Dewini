@@ -1,0 +1,139 @@
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  .card-body {
+    padding: 2rem;
+  }
+  
+  img.rounded-circle {
+    border: 4px solid #f0f0f0;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h4 {
+    font-weight: 600;
+    color: #4b49ac; /* Titre en vert */
+  }
+  
+  .text-muted {
+    font-size: 0.95rem;
+    color: #6c757d !important;
+  }
+  
+  .progress {
+    background-color: #e9ecef;
+    border-radius: 0.5rem;
+  }
+  
+  .progress-bar {
+    height: 8px !important;
+    border-radius: 0.5rem;
+    background-color: #4b49ac; /* Couleur de la barre de progression */
+  }
+  
+  .breadcrumb {
+    background-color: transparent;
+    font-size: 0.875rem;
+    color: #4b49ac; /* Couleur du texte de la breadcrumb */
+  }
+  
+  .card {
+    border: 2px solid #4b49ac; /* Bordure de la carte en vert */
+  }
+  
+  /* Boutons */
+  .btn {
+    background-color: #4b49ac; /* Fond du bouton */
+    color: white; /* Texte du bouton */
+    border: none; /* Enlever les bordures */
+    border-radius: 0.5rem; /* Coins arrondis */
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+  }
+  
+  .btn:hover {
+    background-color: #4b49ac; /* Couleur un peu plus foncée au survol */
+    color: white;
+  }
+  
+  .btn:disabled {
+    background-color: #4b49ac; /* Fond pour bouton désactivé */
+    color: #6c757d; /* Texte pour bouton désactivé */
+  }
+  /* Style pour les champs de saisie dans le formulaire */
+  .input-field {
+    display: flex;
+    align-items: center;
+    border: 1px solid #4b49ac;
+    border-radius: 5px;
+    padding: 5px;
+    background: #fff;
+    color: #4b49ac;
+    cursor: pointer;
+  }
+  
+  .input-field.error {
+    border: 1px solid red;
+    color: red;
+  }
+  
+  .input-field input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 8px;
+  }
+  
+  /* Style spécifique pour le dropdown */
+  .input-field select {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 8px;
+    background: transparent;
+    width: 100%;
+    color: inherit; /* Pour hériter de la couleur du parent */
+    cursor: pointer;
+  }
+  
+  /* Style pour les options du dropdown */
+  .input-field select option {
+    color: #000; /* Couleur du texte des options */
+    background: #fff; /* Fond des options */
+  }
+  
+  /* Style pour le placeholder des options sélectionnées */
+  .input-field select option[disabled][selected] {
+    color: #4b49ac; /* Même couleur que votre thème */
+    opacity: 1; /* Pour éviter l'opacité réduite par défaut */
+  }
+  /* Styles pour l'image de profil */
+  .profile-picture-container {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 4px solid #62D2A2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+  
+  .profile-picture:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Image par défaut si erreur */
+  .profile-picture[src*="default-profile.png"] {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 2px dashed #4b49ac;
+  }

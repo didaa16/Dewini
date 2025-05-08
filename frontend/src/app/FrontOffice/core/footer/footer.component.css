@@ -1,0 +1,147 @@
+/* ===== Footer Styles ===== */
+.footer_section {
+  background: linear-gradient(to right, #32ac93, #7dbdb6);
+  color: white;
+  padding: 60px 0 20px;
+  position: relative;
+}
+
+.footer_col {
+  margin-bottom: 30px;
+}
+
+.footer_contact h4,
+.footer_detail h4,
+.footer_link_box h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  position: relative;
+  color: white;
+}
+
+.footer_contact h4::after,
+.footer_detail h4::after,
+.footer_link_box h4::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 50px;
+  height: 2px;
+  background: white;
+}
+
+.contact_link_box a {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  color: white;
+  transition: all 0.3s;
+}
+
+.contact_link_box a:hover {
+  color: #e6e6e6;
+  text-decoration: none;
+}
+
+.contact_link_box i {
+  margin-right: 10px;
+  font-size: 1.1rem;
+  min-width: 25px;
+}
+
+.footer_social {
+  margin-top: 25px;
+}
+
+.footer_social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  margin-right: 10px;
+  color: white;
+  transition: all 0.3s;
+}
+
+.footer_social a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+.footer_detail p {
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.footer_links {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer_links a {
+  color: white;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+  padding: 5px 0;
+}
+
+.footer_links a:hover {
+  color: #e6e6e6;
+  text-decoration: none;
+  padding-left: 5px;
+}
+
+.btn-info {
+  background: white;
+  color: #32ac93;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: all 0.3s;
+  margin-top: 15px;
+}
+
+.btn-info:hover {
+  background: #f5f5f5;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Copyright Section */
+.footer-info {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .footer_col {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer_section {
+    padding: 40px 0 20px;
+  }
+
+  .footer_contact h4,
+  .footer_detail h4,
+  .footer_link_box h4 {
+    font-size: 1.3rem;
+  }
+
+  .btn-info {
+    padding: 10px 25px;
+  }
+}

@@ -1,0 +1,139 @@
+<div class="container mt-4" *ngIf="event && !isLoading">
+  <div class="row">
+    <!-- Colonne Événement -->
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h2>{{ event.nom }}</h2>
+        </div>
+        <div class="card-body">
+          <p class="lead">{{ event.description }}</p>
+
+          <!-- Informations événement -->
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <h4><i class="bi bi-info-circle"></i> Informations</h4>
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <i class="bi bi-calendar me-2"></i>
+                  <strong>Date:</strong> {{ event.dateDebut | date:'fullDate' }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-clock me-2"></i>
+                  <strong>Heure:</strong> {{ event.dateDebut | date:'shortTime' }} - {{ event.dateFin | date:'shortTime' }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-cash me-2"></i>
+                  <strong>Prix:</strong> {{ event.prix | currency:'TND':'symbol':'1.2-2' }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-geo-alt me-2"></i>
+                  <strong>Lieu:</strong> {{ getEventLocation() }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Participation -->
+            <div class="col-md-6">
+              <h4><i class="bi bi-people"></i> Participation</h4>
+              <div class="card">
+                <div class="card-body">
+                  <p><strong>Total participants:</strong> {{ participants.length }}</p>
+                  <p><strong>Seuil minimum:</strong> {{ event.seuilMinimum }}</p>
+
+                  <!-- Barre de participation -->
+                  <div class="progress mb-3">
+                    <div class="progress-bar bg-success" [style.width.%]="getParticipationPercentage()">
+                      {{ getParticipationPercentage() | number:'1.0-0' }}%
+                    </div>
+                  </div>
+
+                  <!-- Répartition par type -->
+                  <div *ngIf="participants.length > 0">
+                    <h5>Répartition par type</h5>
+                    <div *ngFor="let p of participants | groupBy:'type'">
+                      <span class="badge me-2" [ngClass]="getBadgeClass(p.key, 'type')">
+                        {{ p.key }} ({{ p.items.length }})
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Liste des participants -->
+          <div class="card mt-4" *ngIf="participants.length > 0">
+            <div class="card-header bg-info text-white">
+              <h4><i class="bi bi-list-ul"></i> Liste des Participants ({{ participants.length }})</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Rôle</th>
+                      <th>Date d'inscription</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let p of participants">
+                      <td>
+                        <span class="badge" [ngClass]="getBadgeClass(p.type, 'type')">
+                          {{ p.type }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge" [ngClass]="getBadgeClass(p.role, 'role')">
+                          {{ p.role }}
+                        </span>
+                      </td>
+                      <td>{{ p.dateEngagement | date:'shortDate' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div> <!-- Fin card-body événement -->
+      </div> <!-- Fin card événement -->
+
+      <!-- Formulaire d'inscription -->
+      <div *ngIf="afficherFormulaire" class="mt-4">
+        <div class="card">
+          <div class="card-header bg-warning text-white">
+            <h4>Inscription à l'événement</h4>
+          </div>
+          <div class="card-body">
+            <app-inscription-form [evenement]="event" (inscriptionTerminee)="onInscriptionTerminee($event)"></app-inscription-form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne Participer et Météo -->
+    <div class="col-md-4">
+      <!-- Participer -->
+      <div class="card mb-4">
+        <div class="card-header bg-warning">
+          <h4 class="mb-0">Participer</h4>
+        </div>
+        <div class="card-body text-center">
+          <button class="btn btn-primary btn-lg w-100 mb-2" (click)="ouvrirFormulaire()">S'inscrire</button>
+        </div>
+      </div>
+
+      <!-- Météo -->
+      <app-weather-detail event.id></app-weather-detail>
+    </div>
+  </div> <!-- Fin row -->
+</div>
+
+<!-- Spinner de chargement -->
+<div *ngIf="isLoading" class="text-center my-5">
+  <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+    <span class="visually-hidden">Chargement...</span>
+  </div>
+  <p class="mt-2">Chargement des détails de l'événement...</p>
+</div>

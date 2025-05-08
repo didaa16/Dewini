@@ -1,0 +1,249 @@
+/* Structure principale */
+.card-custom {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+/* Colonne de l'image */
+.medical-image-col {
+  background-color: #7bddb3;
+  background-image: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.medical-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(123, 221, 179, 0.85);
+}
+
+.medical-image-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.medical-image-content h3 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.medical-image-content p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.medical-benefits {
+  list-style: none;
+  padding-left: 0;
+}
+
+.medical-benefits li {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+.medical-benefits i {
+  margin-right: 0.5rem;
+  color: #fff;
+}
+
+/* Titres du formulaire */
+.form-title {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+  color: #7f8c8d;
+  font-size: 1rem;
+}
+
+/* Champs de formulaire */
+.form-control {
+  border-radius: 0.5rem;
+  border: 1px solid #dfe6e9;
+  padding: 0.6rem 1rem;
+  transition: all 0.3s;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(123, 221, 179, 0.25);
+  border-color: #7bddb3;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Boutons */
+.btn-primary {
+  background-color: #7bddb3;
+  border-color: #7bddb3;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #6acba5;
+  border-color: #6acba5;
+}
+
+.btn-outline-secondary {
+  border-color: #dfe6e9;
+  color: #7f8c8d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f5f6f7;
+}
+
+/* Section Chat */
+.chat-link-box {
+  background: #f8f9fa;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  border-left: 4px solid #7bddb3;
+}
+
+.chat-button {
+  display: inline-flex;
+  align-items: center;
+  background-color: #7bddb3;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.chat-button:hover {
+  background-color: #6acba5;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .medical-image-col {
+    display: none;
+  }
+  
+  .form-title {
+    font-size: 1.5rem;
+  }
+}
+/* Styles pour le popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.popup-container {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 450px;
+  overflow: hidden;
+}
+
+.popup-content {
+  padding: 25px;
+  text-align: center;
+}
+
+.popup-header {
+  margin-bottom: 20px;
+}
+
+.popup-icon {
+  display: inline-block;
+  background-color: #7bddb3;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 30px;
+  line-height: 60px;
+  margin-bottom: 15px;
+}
+
+.popup-body {
+  margin-bottom: 25px;
+}
+
+.popup-body p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.popup-body .small {
+  font-size: 14px;
+  color: #666;
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.popup-button {
+  background-color: #7bddb3;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.popup-button:hover {
+  background-color: #6acba5;
+  transform: translateY(-2px);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,90 @@
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.dashboard-card {
+  background-color: #1f2937;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+}
+
+.dashboard-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+#map {
+  height: 600px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-doctor-icon, .custom-patient-icon {
+  background: transparent !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heatmap-legend {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(17, 24, 39, 0.9);
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.legend-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.legend-color.low {
+  background-color: #3B82F6;
+}
+
+.legend-color.medium {
+  background-color: #10B981;
+}
+
+.legend-color.high {
+  background-color: #F59E0B;
+}
+
+.legend-color.very-high {
+  background-color: #EF4444;
+}
+
+.legend-color.extreme {
+  background-color: #7C3AED;
+}
+
+.legend-label {
+  color: #ffffff;
+  font-size: 0.875rem;
+}

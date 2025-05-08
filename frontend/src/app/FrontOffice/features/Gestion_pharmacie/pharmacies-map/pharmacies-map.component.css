@@ -1,0 +1,28 @@
+#map {
+    height: 600px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px; /* ✅ éloigne du footer */
+  }
+  
+  body {
+    font-family: 'Nunito', sans-serif;
+  }
+  
+  .leaflet-control-attribution {
+    display: none;
+  }
+  .card {
+    border-radius: 12px;
+  }
+  
+  .card-body h5 {
+    font-weight: 600;
+  }
+  
+  button.btn-outline-success {
+    font-size: 0.9rem;
+  }
+  .z-3 {
+    z-index: 1030; /* pour être au-dessus de la carte */
+  }

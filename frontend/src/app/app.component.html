@@ -1,0 +1,19 @@
+<div>
+  <app-navbar *ngIf="showHeaderFooter"></app-navbar>
+
+  <ng-container *ngIf="showDashboardHome; else showRoutes">
+    <app-dashboard-home></app-dashboard-home>
+  </ng-container>
+
+  <ng-template #showRoutes>
+    <router-outlet></router-outlet>
+  </ng-template>
+
+  <app-footer *ngIf="showHeaderFooter"></app-footer>
+</div>
+
+<!--<div>
+<app-dashboard-home></app-dashboard-home>
+</div>-->
+
+

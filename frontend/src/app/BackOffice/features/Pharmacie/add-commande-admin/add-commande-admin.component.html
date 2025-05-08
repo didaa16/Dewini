@@ -1,0 +1,137 @@
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h4 class="mb-4 text-success fw-bold">
+      <i class="bi bi-plus-circle-fill me-2"></i> Ajouter une commande
+    </h4>
+
+    <form #commandeForm="ngForm" (ngSubmit)="addCommande()">
+      
+      <!-- 🧍 Nom du patient -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-person-fill me-1 text-primary"></i> Nom du patient
+        </label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="newCommande.nomClient"
+          name="nomClient"
+          required
+          minlength="4"
+          #nomClient="ngModel"
+          placeholder="Entrez le nom du client"
+          [ngClass]="{
+            'is-valid': nomClient.valid && nomClient.touched,
+            'is-invalid': nomClient.invalid && nomClient.touched
+          }"
+        />
+        <div *ngIf="nomClient.errors?.['required'] && nomClient.touched" class="text-danger small mt-1">
+          ❌ Le nom est requis.
+        </div>
+        <div *ngIf="nomClient.errors?.['minlength'] && nomClient.touched" class="text-danger small mt-1">
+          ❌ Le nom doit contenir au moins 4 caractères.
+        </div>
+      </div>
+
+      <!-- 📍 Adresse -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-geo-alt-fill me-1 text-danger"></i> Adresse
+        </label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="newCommande.adresse"
+          name="adresse"
+          required
+          minlength="5"
+          #adresse="ngModel"
+          placeholder="Adresse de livraison"
+          [ngClass]="{
+            'is-valid': adresse.valid && adresse.touched,
+            'is-invalid': adresse.invalid && adresse.touched
+          }"
+        />
+        <div *ngIf="adresse.errors?.['required'] && adresse.touched" class="text-danger small mt-1">
+          ❌ L'adresse est requise.
+        </div>
+        <div *ngIf="adresse.errors?.['minlength'] && adresse.touched" class="text-danger small mt-1">
+          ❌ L'adresse doit contenir au moins 5 caractères.
+        </div>
+      </div>
+
+      <!-- ⏳ État -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-hourglass-split me-1 text-warning"></i> État de la commande
+        </label>
+        <select 
+          class="form-select"
+          [(ngModel)]="newCommande.etat"
+          name="etat"
+          required
+          #etat="ngModel"
+          [ngClass]="{
+            'is-valid': etat.valid && etat.touched,
+            'is-invalid': etat.invalid && etat.touched
+          }"
+        >
+          <option [ngValue]="null" disabled>-- Sélectionner l'état --</option>
+          <option value="EN_COURS">🟡 En cours</option>
+          <option value="LIVREE">🟢 Livrée</option>
+          <option value="ANNULEE">🔴 Annulée</option>
+        </select>
+        <div *ngIf="etat.errors?.['required'] && etat.touched" class="text-danger small mt-1">
+          ❌ L'état de la commande est requis.
+        </div>
+      </div>
+
+      <!-- 💊 Médicaments -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-capsule me-1 text-success"></i> Médicaments
+        </label>
+        <select 
+          class="form-select"
+          multiple
+          [(ngModel)]="selectedMedicaments"
+          name="selectedMedicaments"
+          #selectedMedicamentsField="ngModel"
+          [ngClass]="{
+            'is-valid': selectedMedicaments.length > 0 && selectedMedicamentsField.touched,
+            'is-invalid': selectedMedicaments.length == 0 && selectedMedicamentsField.touched
+          }"
+        >
+          <option *ngFor="let med of allMedicaments" [value]="med.id">
+            {{ med.nom }}
+          </option>
+        </select>
+        <small class="text-muted">Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs.</small>
+        <div *ngIf="selectedMedicaments.length == 0 && selectedMedicamentsField.touched" class="text-danger small mt-1">
+          ❌ Veuillez sélectionner au moins un médicament.
+        </div>
+      </div>
+
+      <!-- Boutons -->
+      <div class="text-end mt-4">
+        <button type="submit" class="btn btn-success px-4" [disabled]="commandeForm.invalid || selectedMedicaments.length === 0">
+          ✅ Enregistrer
+        </button>
+        <a routerLink="/dashboard/commandes" class="btn btn-outline-secondary ms-2 px-4">
+          ↩ Retour
+        </a>
+      </div>
+    </form>
+
+    <!-- ✅ Toast ajout réussi -->
+    <div *ngIf="toastVisible" class="toast align-items-center text-bg-success border-0 show position-fixed bottom-0 end-0 m-4 shadow-lg" role="alert">
+      <div class="d-flex">
+        <div class="toast-body fw-semibold">
+          ✅ Commande ajoutée avec succès !
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toastVisible = false"></button>
+      </div>
+    </div>
+
+  </div>
+</div>

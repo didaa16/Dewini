@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Activation</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 20px 0;
+            padding: 10px;
+            background: #f3f4f6;
+            display: inline-block;
+            border-radius: 4px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Welcome to Dewini, <span th:text="${username}"></span>!</h1>
+    <p>Your activation code is:</p>
+    <div class="code" th:text="${activation_code}"></div>
+
+    <p>Or click the button below to activate your account:</p>
+    <a th:href="${confirmationUrl}" class="button">Activate Account</a>
+
+    <p>If you didn't request this account, please ignore this email.</p>
+
+    <div class="footer">
+        <p>This activation link will expire in 24 hours.</p>
+        <p>© 2024 Dewini. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

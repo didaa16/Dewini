@@ -1,0 +1,113 @@
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+      <div class="card-header bg-primary text-white rounded-top-4 d-flex align-items-center gap-2">
+        <i class="bi bi-pencil-square fs-4"></i>
+        <h4 class="mb-0">Modifier une commande</h4>
+      </div>
+  
+      <div class="card-body p-4">
+        <form (ngSubmit)="submitUpdate()" #commandeForm="ngForm">
+          <!-- 👤 Nom du client -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-person-fill text-primary me-1"></i> Nom du client
+            </label>
+            <input 
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedLivraison.nomClient"
+              name="nomClient"
+              required
+              minlength="4"
+              #nomClient="ngModel"
+              placeholder="Entrez le nom du client"
+              [ngClass]="{
+                'is-valid': nomClient.valid && nomClient.touched,
+                'is-invalid': nomClient.invalid && nomClient.touched
+              }"
+            />
+            <div *ngIf="nomClient.errors?.['required'] && nomClient.touched" class="text-danger small mt-1">
+              ❌ Le nom est requis.
+            </div>
+            <div *ngIf="nomClient.errors?.['minlength'] && nomClient.touched" class="text-danger small mt-1">
+              ❌ Le nom doit faire au moins 4 caractères.
+            </div>
+          </div>
+        
+          <!-- 📍 Adresse -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-geo-alt-fill text-danger me-1"></i> Adresse
+            </label>
+            <input 
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedLivraison.adresse"
+              name="adresse"
+              required
+              minlength="5"
+              #adresse="ngModel"
+              placeholder="Entrez l’adresse de livraison"
+              [ngClass]="{
+                'is-valid': adresse.valid && adresse.touched,
+                'is-invalid': adresse.invalid && adresse.touched
+              }"
+            />
+            <div *ngIf="adresse.errors?.['required'] && adresse.touched" class="text-danger small mt-1">
+              ❌ L'adresse est requise.
+            </div>
+            <div *ngIf="adresse.errors?.['minlength'] && adresse.touched" class="text-danger small mt-1">
+              ❌ L'adresse doit contenir au moins 5 caractères.
+            </div>
+          </div>
+        
+          <!-- 🔄 État -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-arrow-repeat text-warning me-1"></i> État de la commande
+            </label>
+            <select 
+              class="form-select"
+              [(ngModel)]="selectedLivraison.etat"
+              name="etat"
+              required
+              #etat="ngModel"
+              [ngClass]="{
+                'is-valid': etat.valid && etat.touched,
+                'is-invalid': etat.invalid && etat.touched
+              }"
+            >
+              <option [ngValue]="null" disabled>-- Sélectionner l'état --</option>
+              <option value="EN_COURS">🟡 En cours</option>
+              <option value="LIVREE">🟢 Livrée</option>
+              <option value="ANNULEE">🔴 Annulée</option>
+            </select>
+            <div *ngIf="etat.errors?.['required'] && etat.touched" class="text-danger small mt-1">
+              ❌ L'état est requis.
+            </div>
+          </div>
+        
+          <!-- ✅ Boutons -->
+          <div class="text-end mt-4">
+            <button type="submit" class="btn btn-success px-4" [disabled]="commandeForm.invalid">
+              💾 Enregistrer
+            </button>
+            <a [routerLink]="['/dashboard/commandes']" class="btn btn-outline-secondary ms-2 px-4">
+              ↩ Retour
+            </a>
+          </div>
+        </form>
+        
+        <!-- ✅ Toast de confirmation -->
+<div
+*ngIf="toastVisible"
+class="toast-notif position-fixed bottom-0 end-0 m-4 bg-success text-white px-4 py-3 rounded-3 shadow"
+style="z-index: 9999;"
+>
+✅ Commande mise à jour avec succès !
+</div>
+
+      </div>
+    </div>
+  </div>
+  

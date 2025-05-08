@@ -1,0 +1,188 @@
+/* ✅ Layout général */
+.container-fluid {
+  padding-bottom: 2rem;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #178066;
+}
+
+/* ✅ Bouton Ajouter */
+.btn-success {
+  background-color: #178066;
+  border-color: #178066;
+}
+
+.btn-success:hover {
+  background-color: #146b55;
+  border-color: #146b55;
+}
+
+/* ✅ Filtres de recherche */
+input.form-control, select.form-select {
+  border-radius: 50px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 6px rgba(23, 128, 102, 0.05);
+}
+
+/* ✅ Statistiques */
+.p-3.bg-light {
+  background-color: #e6f4f1 !important;
+  border: none;
+}
+
+.p-3 h6 {
+  font-size: 1rem;
+  color: #555;
+}
+
+.p-3 h4 {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #178066;
+}
+
+.p-3.text-success h4 {
+  color: #1fab89;
+}
+
+.p-3.text-primary h4 {
+  color: #0d6efd;
+}
+
+/* ✅ Cartes d'ordonnances */
+.hover-card {
+  transition: all 0.3s ease;
+  background: #ffffff;
+  border-radius: 20px;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(23, 128, 102, 0.2);
+}
+
+/* ✅ Titres dans les cartes */
+.card-title, .text-success.fw-bold.mb-0 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #178066;
+}
+
+/* ✅ Badge Signée / Non signée */
+.badge {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 50px;
+}
+
+.bg-success {
+  background-color: #1fab89 !important;
+}
+
+.bg-secondary {
+  background-color: #adb5bd !important;
+}
+
+/* ✅ Info médecin/patient */
+.badge.bg-light.text-dark {
+  background-color: #f8f9fa !important;
+  color: #212529;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+/* ✅ Texte instructions */
+.card-text {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* ✅ Liste de prescriptions */
+ul.ps-3 li {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* ✅ Boutons d'action dans cartes */
+.btn-outline-warning, .btn-outline-danger, .btn-outline-secondary {
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-outline-warning:hover {
+  background-color: #ffc107;
+  color: white;
+  border: none;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+
+/* ✅ Pagination */
+.pagination {
+  margin-top: 2rem;
+}
+
+.page-link {
+  color: #178066;
+  border-radius: 50%;
+}
+
+.page-link:hover {
+  background-color: #178066;
+  color: white;
+}
+
+/* ✅ Contenu caché du PDF */
+#pdfContent {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  font-family: Arial, sans-serif;
+}
+
+/* ✅ Style tableau PDF */
+#pdfContent table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+#pdfContent th, #pdfContent td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+#pdfContent h1 {
+  font-size: 28px;
+  color: #178066;
+}
+
+#pdfContent h3 {
+  color: #1fab89;
+}
+
+/* ✅ Petits ajustements divers */
+:host {
+  display: block;
+  width: 100%;
+}

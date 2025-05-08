@@ -1,0 +1,165 @@
+/* General Card Styling */
+.card {
+  border: none;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #f9fafb;
+  border-bottom: none;
+  padding: 1.5rem;
+}
+
+/* Table Styling */
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-weight: 500;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+.table td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+/* Progress Bar */
+.progress {
+  background-color: #e5e7eb;
+  border-radius: 8px;
+  height: 8px;
+}
+
+.progress-bar.bg-primary {
+  background-color: #bfdbfe; /* Even softer blue */
+}
+
+/* Badges for Donation Types */
+.badge-sang {
+  background-color: #fef2f2 !important; /* Softer pink */
+  color: #fb7185 !important;
+}
+
+.badge-plasma {
+  background-color: #f0f9ff !important; /* Softer blue */
+  color: #60a5fa !important;
+}
+
+.badge-plaquettes {
+  background-color: #f0fdf4 !important; /* Softer green */
+  color: #4ade80 !important;
+}
+
+.bg-blood-group {
+  background-color: #f5f3ff !important; /* Softer purple */
+  color: #a78bfa !important;
+}
+
+.bg-success {
+  background-color: #ecfdf5 !important; /* Softer green for default */
+  color: #34d399 !important;
+}
+
+/* Buttons */
+.btn-outline-primary {
+  color: #bfdbfe;
+  border-color: #bfdbfe;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #bfdbfe;
+  color: #ffffff;
+}
+
+.btn-outline-danger {
+  color: #fb7185;
+  border-color: #fb7185;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #fb7185;
+  color: #ffffff;
+}
+
+.btn-outline-success {
+  color: #6ee7b7;
+  border-color: #6ee7b7;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-success:hover {
+  background-color: #6ee7b7;
+  color: #ffffff;
+}
+
+.btn-primary {
+  background-color: #bfdbfe;
+  border-color: #bfdbfe;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #93c5fd;
+  border-color: #93c5fd;
+}
+
+/* Input Group */
+.input-group-text {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.form-select {
+  border-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.form-select:focus {
+  border-color: #bfdbfe;
+  box-shadow: 0 0 0 3px rgba(191, 219, 254, 0.2);
+}
+
+/* Text and Icons */
+.text-muted {
+  color: #9ca3af !important;
+}
+
+.fs-4 {
+  font-size: 1.5rem !important;
+}
+
+.alert {
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fef2f2;
+  border: 1px solid #ffe4e6;
+}
+
+.alert-danger .fas {
+  color: #fb7185;
+}
+
+/* Icon Alignment */
+.table .fas {
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.badge .fas {
+  font-size: 0.8rem;
+}

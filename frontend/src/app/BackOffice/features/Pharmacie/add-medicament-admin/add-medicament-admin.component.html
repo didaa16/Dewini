@@ -1,0 +1,149 @@
+<div class="container mt-4">
+  <h2 class="text-success mb-4">➕ Ajouter un Médicament</h2>
+
+  <form #medicamentForm="ngForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="shadow p-4 bg-white rounded-4">
+
+    <!-- 🧾 Nom -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Nom du médicament</label>
+      <input 
+      class="form-control"
+      [(ngModel)]="medicament.nom"
+      name="nom"
+      required
+      minlength="4"
+      #nom="ngModel"
+      [ngClass]="{
+        'is-valid': nom.valid && nom.touched,
+        'is-invalid': nom.invalid && nom.touched
+      }"
+    />
+    
+      <div *ngIf="nom.errors?.['required'] && nom.touched" class="text-danger small mt-1">
+        ❌ Le nom est requis.
+      </div>
+      <div *ngIf="nom.errors?.['minlength'] && nom.touched" class="text-danger small mt-1">
+        ❌ Le nom doit faire au moins 4 caractères.
+      </div>
+    </div>
+    
+
+    <!-- 📝 Description -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Description</label>
+      <textarea 
+        class="form-control"
+        [(ngModel)]="medicament.description"
+        name="description"
+        rows="3"
+        required
+        #description="ngModel"
+      ></textarea>
+      <div *ngIf="description.invalid && description.touched" class="text-danger small mt-1">
+        ❌ La description est requise.
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- 📦 Quantité -->
+      <div class="col-md-4 mb-3">
+        <label class="form-label fw-semibold">Quantité en stock</label>
+        <input 
+          type="number"
+          class="form-control"
+          [(ngModel)]="medicament.quantiteEnStock"
+          name="quantiteEnStock"
+          required
+          min="1"
+          #quantiteEnStock="ngModel"
+        />
+        <div *ngIf="quantiteEnStock.invalid && quantiteEnStock.touched" class="text-danger small mt-1">
+          ❌ Quantité valide requise (≥ 1).
+        </div>
+      </div>
+
+      <!-- 💰 Prix -->
+      <div class="col-md-4 mb-3">
+        <label class="form-label fw-semibold">Prix (TND)</label>
+        <input 
+          type="number"
+          class="form-control"
+          [(ngModel)]="medicament.prix"
+          name="prix"
+          required
+          min="0"
+          #prix="ngModel"
+        />
+        <div *ngIf="prix.invalid && prix.touched" class="text-danger small mt-1">
+          ❌ Prix valide requis.
+        </div>
+      </div>
+
+      <!-- 📅 Date Expiration -->
+      <div class="col-md-4 mb-3">
+        <label class="form-label fw-semibold">Date d’expiration</label>
+        <input 
+          type="date"
+          class="form-control"
+          [(ngModel)]="medicament.dateExpiration"
+          name="dateExpiration"
+          required
+          #dateExpiration="ngModel"
+        />
+        <div *ngIf="dateExpiration.invalid && dateExpiration.touched" class="text-danger small mt-1">
+          ❌ Date d'expiration requise.
+        </div>
+      </div>
+    </div>
+
+    <!-- 🏷️ Catégorie -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Catégorie</label>
+      <select 
+        class="form-select"
+        [(ngModel)]="medicament.categorie"
+        name="categorie"
+        required
+        #categorie="ngModel"
+      >
+        <option [ngValue]="null" disabled>-- Choisir une catégorie --</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+      <div *ngIf="categorie.invalid && categorie.touched" class="text-danger small mt-1">
+        ❌ Catégorie requise.
+      </div>
+    </div>
+
+    <!-- 🖼️ Image -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Image</label>
+      <input 
+        type="file"
+        class="form-control"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+      />
+      <div *ngIf="imageError" class="text-danger small mt-1">
+        ❌ {{ imageError }}
+      </div>
+    </div>
+
+    <!-- 🖼️ Preview -->
+    <div *ngIf="previewUrl" class="mb-3">
+      <img [src]="previewUrl" alt="Preview" class="img-thumbnail" style="max-height: 200px;" />
+    </div>
+
+    <!-- 📶 Progression -->
+    <div class="progress mb-3" *ngIf="uploadProgress > 0 && uploadProgress < 100">
+      <div class="progress-bar bg-success" role="progressbar" [style.width.%]="uploadProgress" aria-valuemin="0" aria-valuemax="100">
+        {{ uploadProgress }}%
+      </div>
+    </div>
+
+    <!-- ✅ Bouton Envoi -->
+    <div class="text-end">
+      <button type="submit" class="btn btn-success px-4" [disabled]="medicamentForm.invalid || !selectedFile">✅ Ajouter</button>
+    </div>
+
+  </form>
+</div>

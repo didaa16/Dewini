@@ -1,0 +1,79 @@
+<div class="container mt-5">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-header bg-warning text-dark rounded-top-4">
+      <h4 class="mb-0">✏️ Modifier le Médicament</h4>
+    </div>
+
+    <div class="card-body">
+      <form (ngSubmit)="onSubmit()" #medForm="ngForm">
+        <div class="row">
+          <!-- 🧾 Nom -->
+          <div class="col-md-6 mb-3">
+            <label for="nom" class="form-label fw-bold">Nom</label>
+            <input type="text" id="nom" class="form-control" [(ngModel)]="medicament.nom" name="nom" required />
+          </div>
+
+          <!-- 💰 Prix -->
+          <div class="col-md-6 mb-3">
+            <label for="prix" class="form-label fw-bold">Prix (TND)</label>
+            <input type="number" step="0.01" id="prix" class="form-control" [(ngModel)]="medicament.prix" name="prix" required />
+          </div>
+        </div>
+
+        <!-- 📝 Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label fw-bold">Description</label>
+          <textarea id="description" class="form-control" rows="3" [(ngModel)]="medicament.description" name="description" required></textarea>
+        </div>
+        <!-- 🏷️ Catégorie -->
+<div class="mb-3">
+  <label for="categorie" class="form-label fw-bold">🏷️ Catégorie</label>
+  <select
+    id="categorie"
+    class="form-select shadow-sm rounded-3"
+    [(ngModel)]="medicament.categorie"
+    name="categorie"
+    required>
+    <option [ngValue]="null" disabled>-- Choisir une catégorie --</option>
+    <option *ngFor="let cat of categories" [value]="cat">
+      {{ cat }}
+    </option>
+  </select>
+</div>
+
+        <div class="row">
+          <!-- 📦 Stock -->
+          <div class="col-md-6 mb-3">
+            <label for="quantite" class="form-label fw-bold">Quantité en stock</label>
+            <input type="number" id="quantite" class="form-control" [(ngModel)]="medicament.quantiteEnStock" name="quantiteEnStock" required />
+          </div>
+
+          <!-- 📅 Expiration -->
+          <div class="col-md-6 mb-3">
+            <label for="dateExpiration" class="form-label fw-bold">Date d’expiration</label>
+            <input type="date" id="dateExpiration" class="form-control" [(ngModel)]="medicament.dateExpiration" name="dateExpiration" required />
+          </div>
+        </div>
+
+        <!-- 📸 Image actuelle -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Image actuelle</label><br />
+          <img [src]="imagePreview || medicament.imageUrl" alt="Image du médicament" class="img-thumbnail rounded" style="max-width: 200px;" />
+        </div>
+
+        <!-- 🖼️ Nouvelle image -->
+        <div class="mb-3">
+          <label for="image" class="form-label fw-bold">Changer l'image</label>
+          <input type="file" id="image" (change)="onFileSelected($event)" class="form-control" />
+        </div>
+
+        <!-- ✅ Actions -->
+        <div class="text-end">
+          <button type="submit" class="btn btn-success shadow-sm px-4">✅ Mettre à jour</button>
+          <a routerLink="/medicaments" class="btn btn-secondary ms-2">↩️ Annuler</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="mb-5"></div>
+</div>

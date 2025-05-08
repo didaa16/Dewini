@@ -1,0 +1,194 @@
+<div class="urgence-detail-container">
+  <div class="urgence-card slide-in">
+    <!-- En-tête -->
+    <div class="card-header glassmorphism">
+      <div class="header-content">
+        <div class="header-titles">
+          <h3><i class="fas fa-file-medical"></i> Détails de l'Urgence</h3>
+          <p class="urgence-code">#{{urgence?.idUrgence}}</p>
+        </div>
+        <div class="priority-indicator" [ngClass]="getPriorityClass(urgence.priority)">
+          <div class="inner-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body" *ngIf="urgence; else loading">
+      <!-- Grille principale -->
+      <div class="detail-grid">
+        <!-- Colonne Gauche -->
+        <div class="detail-column">
+          <!-- Carte Patient -->
+          <div class="detail-card hover-scale">
+            <div class="card-icon bg-primary">
+              <i class="fas fa-user-injured"></i>
+            </div>
+            <h4>Informations Patient</h4>
+            <div class="detail-item">
+              <label><i class="fas fa-id-badge"></i> Nom complet</label>
+              <p class="text-ellipsis">{{ urgence.patient.firstname }} {{ urgence.patient.lastname }}</p>
+            </div>
+            <button class="btn action-btn icon-btn" (click)="goToPatientProfile()">
+              <i class="fas fa-external-link-alt"></i> Profil complet
+            </button>
+          </div>
+
+          <!-- Carte Localisation -->
+          <div class="detail-card hover-scale" *ngIf="urgence.typeUrgence === 'A_Domicile'">
+            <div class="card-icon bg-secondary">
+              <i class="fas fa-map-marked-alt"></i>
+            </div>
+            <h4>Localisation</h4>
+            <div class="detail-item">
+              <label><i class="fas fa-map-pin"></i> Adresse</label>
+              <p class="text-muted">{{ urgence.addressePatient || 'Non spécifiée' }}</p>
+            </div>
+            <div class="map-container elevation-2">
+              <app-map-tracking
+                *ngIf="urgence.medecin && urgence.medecin.address && urgence.patient && urgence.patient.address"
+                [doctorAddress]="urgence.medecin.address"
+                [patientAddress]="urgence.patient.address">
+              </app-map-tracking>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colonne Droite -->
+        <div class="detail-column">
+          <!-- Carte Détails -->
+          <div class="detail-card hover-scale">
+            <div class="card-icon bg-info">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <h4>Détails de l'urgence</h4>
+
+            <div class="badge-grid">
+              <div class="badge-item">
+                <span class="badge-label">Type</span>
+                <span class="status-badge type" [ngClass]="getTypeClass(urgence.typeUrgence)">
+                  {{ formatType(urgence.typeUrgence) }}
+                </span>
+              </div>
+
+              <div class="badge-item">
+                <span class="badge-label">Statut</span>
+                <span class="status-badge" [ngClass]="getStatusClass(urgence.statutUrgence)">
+                  {{ formatStatut(urgence.statutUrgence) }}
+                </span>
+              </div>
+
+              <div class="badge-item">
+                <span class="badge-label">Priorité</span>
+                <span class="status-badge priority" [ngClass]="getPriorityClass(urgence.priority)">
+                  {{ urgence.priority }}
+                </span>
+              </div>
+            </div>
+
+            <div class="timeline">
+              <div class="timeline-item">
+                <i class="fas fa-calendar-alt"></i>
+                <div class="timeline-content">
+                  <label>Date de déclaration</label>
+                  <p>{{ urgence.date | date:'medium' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carte Médecin -->
+          <div class="detail-card hover-scale" *ngIf="urgence.medecin">
+            <div class="card-icon bg-success">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <h4>Médecin assigné</h4>
+            <div class="detail-item">
+              <label><i class="fas fa-signature"></i> Nom complet</label>
+              <p>{{ urgence.medecin.firstname }} {{ urgence.medecin.lastname }}</p>
+            </div>
+            <button class="btn action-btn success icon-btn" (click)="goToMedecinProfile()">
+              <i class="fas fa-stethoscope"></i> Dossier médical
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="detail-card full-width hover-scale spaced-section">
+        <div class="card-icon bg-warning">
+          <i class="fas fa-file-medical"></i>
+        </div>
+        <h4>Description de l'urgence</h4>
+        <div class="description-content scroll-style">
+          {{ urgence.description || 'Aucune description fournie' }}
+        </div>
+      </div>
+
+      <!-- Consultation -->
+      <div class="detail-card full-width hover-scale spaced-section" *ngIf="urgence.consultationUrgente">
+        <div class="card-icon bg-danger">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h4>Suivi de consultation</h4>
+
+        <!-- Modification dans la section consultation-header -->
+        <div class="consultation-header">
+          <div class="ambulance-control">
+            <span class="ambulance-status" [ngClass]="{'required': urgence.consultationUrgente.ambulance}">
+                {{ urgence.consultationUrgente.ambulance ? 'Ambulance requise' : 'Ambulance non nécessaire' }}
+            </span>
+            <button class="btn action-btn warning icon-btn ambulance-toggle"
+                    (click)="toggleAmbulance()">
+              <i class="fas fa-ambulance"></i>
+              {{ urgence.consultationUrgente.ambulance ? 'Désactiver' : 'Activer' }} ambulance
+            </button>
+
+          </div>
+        </div>
+
+
+
+        <div class="consultation-details">
+          <div class="detail-grid compact">
+            <div class="detail-item">
+              <label><i class="fas fa-calendar-check"></i> Date consultation</label>
+              <p>{{ urgence.consultationUrgente.date | date:'medium' }}</p>
+            </div>
+
+            <div class="detail-item video-section" *ngIf="urgence.typeUrgence === 'En_Ligne' && urgence.consultationUrgente.lienVideo">
+              <div class="video-link-content">
+                <label><i class="fas fa-video"></i> Lien d'appel</label>
+                <a [href]="urgence.consultationUrgente.lienVideo"
+                   target="_blank"
+                   class="btn action-btn info icon-btn">
+                  <i class="fas fa-external-link-alt"></i> Accéder à l'enregistrement
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <ng-template #loading>
+      <div class="loading-overlay">
+        <div class="modern-spinner">
+          <div class="spinner-core"></div>
+          <div class="spinner-orbits">
+            <div class="orbit"></div>
+            <div class="orbit"></div>
+            <div class="orbit"></div>
+          </div>
+          <div class="loading-text">Chargement des détails...</div>
+        </div>
+      </div>
+    </ng-template>
+
+    <div class="card-footer">
+      <button class="btn action-btn ghost icon-btn back-button" (click)="backToList()">
+        <i class="fas fa-arrow-left"></i> Retour à la liste
+      </button>
+    </div>
+  </div>
+</div>

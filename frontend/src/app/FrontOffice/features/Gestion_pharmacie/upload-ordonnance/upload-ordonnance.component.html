@@ -1,0 +1,15 @@
+<div class="container mt-5">
+    <h4 class="text-success mb-3">📄 Uploader une ordonnance PDF</h4>
+  
+    <input type="file" (change)="onFileSelected($event)" accept="application/pdf" class="form-control mb-3" />
+  
+    <button class="btn btn-primary" (click)="upload()" [disabled]="!selectedFile">📤 Envoyer vers Cloudinary</button>
+  
+    <div *ngIf="uploadUrl" class="alert alert-success mt-3">
+      ✅ Upload réussi ! URL :
+      <a [href]="uploadUrl" target="_blank">{{ uploadUrl }}</a>
+    </div>
+
+    
+  </div>
+  

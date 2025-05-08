@@ -1,0 +1,180 @@
+<div class="container mt-5">
+  <h2 class="text-success mb-4 text-center">✏️ Modifier l’Ordonnance</h2>
+<form #ordForm="ngForm" (ngSubmit)="updateOrdonnance()" class="shadow p-4 bg-white rounded-3">
+
+  <!-- Instructions -->
+  <div class="mb-3">
+    <label class="form-label fw-bold">📝 Instructions</label>
+    <textarea
+      class="form-control"
+      [(ngModel)]="ordonnance.instructions"
+      name="instructions"
+      required
+      minlength="5"
+      #instructions="ngModel"
+      [ngClass]="{
+        'is-valid': instructions.valid && instructions.touched,
+        'is-invalid': instructions.invalid && instructions.touched
+      }"
+      rows="3"
+    ></textarea>
+    <div *ngIf="instructions.invalid && instructions.touched" class="text-danger small mt-1">
+      ❌ Les instructions sont requises (min. 5 caractères).
+    </div>
+  </div>
+
+  <!-- Médecin ID -->
+  <div class="mb-3">
+    <label class="form-label fw-bold">👨‍⚕️ ID Médecin</label>
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="ordonnance.medecinId"
+      name="medecinId"
+      required
+      min="1"
+      #medecinId="ngModel"
+      [ngClass]="{
+        'is-valid': medecinId.valid && medecinId.touched,
+        'is-invalid': medecinId.invalid && medecinId.touched
+      }"
+    />
+    <div *ngIf="medecinId.errors?.['required'] && medecinId.touched" class="text-danger small mt-1">
+      ❌ L'ID Médecin est requis.
+    </div>
+    <div *ngIf="medecinId.errors?.['min'] && medecinId.touched" class="text-danger small mt-1">
+      ❌ L'ID doit être supérieur à 0.
+    </div>
+  </div>
+
+  <!-- Patient ID -->
+  <div class="mb-3">
+    <label class="form-label fw-bold">🧑‍⚕️ ID Patient</label>
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="ordonnance.patientId"
+      name="patientId"
+      required
+      min="1"
+      #patientId="ngModel"
+      [ngClass]="{
+        'is-valid': patientId.valid && patientId.touched,
+        'is-invalid': patientId.invalid && patientId.touched
+      }"
+    />
+    <div *ngIf="patientId.errors?.['required'] && patientId.touched" class="text-danger small mt-1">
+      ❌ L'ID Patient est requis.
+    </div>
+    <div *ngIf="patientId.errors?.['min'] && patientId.touched" class="text-danger small mt-1">
+      ❌ L'ID doit être supérieur à 0.
+    </div>
+  </div>
+
+  <!-- Prescriptions -->
+  <div *ngFor="let pres of ordonnance.prescriptions; let i = index" class="border p-3 mb-4 rounded-3">
+    <h5 class="mb-3 text-secondary">💊 Prescription {{ i + 1 }}</h5>
+    <div class="row g-3">
+      
+      <!-- Médicament -->
+      <div class="col-md-4">
+        <label class="form-label">Médicament</label>
+        <select
+          class="form-select"
+          [(ngModel)]="pres.medicament.id"
+          name="medicament{{ i }}"
+          required
+          #medicament="ngModel"
+          [ngClass]="{
+            'is-valid': medicament.valid && medicament.touched,
+            'is-invalid': medicament.invalid && medicament.touched
+          }"
+        >
+          <option [ngValue]="null" disabled>-- Choisir un médicament --</option>
+          <option *ngFor="let med of listeMedicaments" [value]="med.id">{{ med.nom }}</option>
+        </select>
+        <div *ngIf="medicament.invalid && medicament.touched" class="text-danger small mt-1">
+          ❌ Veuillez choisir un médicament.
+        </div>
+      </div>
+
+      <!-- Posologie -->
+      <div class="col-md-4">
+        <label class="form-label">Posologie</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="pres.posologie"
+          name="posologie{{ i }}"
+          required
+          minlength="3"
+          #posologie="ngModel"
+          [ngClass]="{
+            'is-valid': posologie.valid && posologie.touched,
+            'is-invalid': posologie.invalid && posologie.touched
+          }"
+        />
+        <div *ngIf="posologie.invalid && posologie.touched" class="text-danger small mt-1">
+          ❌ Posologie requise (min. 3 caractères).
+        </div>
+      </div>
+
+      <!-- Durée -->
+      <div class="col-md-3">
+        <label class="form-label">Durée</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="pres.duree"
+          name="duree{{ i }}"
+          required
+          minlength="3"
+          #duree="ngModel"
+          [ngClass]="{
+            'is-valid': duree.valid && duree.touched,
+            'is-invalid': duree.invalid && duree.touched
+          }"
+        />
+        <div *ngIf="duree.invalid && duree.touched" class="text-danger small mt-1">
+          ❌ Durée requise (min. 3 caractères).
+        </div>
+      </div>
+
+      <!-- Supprimer -->
+      <div class="col-md-1 d-flex align-items-end">
+        <button type="button" class="btn btn-outline-danger btn-sm w-100" (click)="supprimerPrescription(i)">❌</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mb-4">
+    <button type="button" class="btn btn-outline-secondary" (click)="ajouterPrescription()">➕ Ajouter une prescription</button>
+  </div>
+
+  <!-- Signature -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">🖊️ Signature du médecin</label>
+    <div class="border rounded-3 p-2 bg-light">
+      <canvas #signatureCanvas width="400" height="150" style="border: 1px solid #ccc; border-radius: 8px; cursor: crosshair;"></canvas>
+      <div class="mt-2 d-flex justify-content-between">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="effacerSignature()">🧹 Effacer</button>
+        <button type="button" class="btn btn-outline-primary btn-sm" (click)="sauvegarderSignature()">✅ Enregistrer la signature</button>
+      </div>
+    </div>
+
+    <div *ngIf="ordonnance.signature" class="mt-3">
+      <p class="mb-1 fw-semibold">📌 Signature enregistrée :</p>
+      <img [src]="ordonnance.signature" class="img-thumbnail" style="max-width: 200px;" />
+    </div>
+  </div>
+
+  <!-- Bouton -->
+  <div class="text-end">
+    <button type="submit" class="btn btn-success px-4" [disabled]="ordForm.invalid">
+      💾 Enregistrer les modifications
+    </button>
+  </div>
+</form>
+
+  
+</div>

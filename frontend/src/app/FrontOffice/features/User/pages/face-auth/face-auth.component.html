@@ -1,0 +1,34 @@
+<!-- face-auth.component.html -->
+<div class="face-auth-container">
+  <div class="header">
+    <h1>Face Recognition</h1>
+    <p class="subtitle">Positionnez votre visage devant la caméra pour vous connecter</p>
+  </div>
+
+  <!-- Suppression de la div alert-danger -->
+  
+  <div class="camera-wrapper">
+    <video #videoElement autoplay playsinline class="camera-feed"></video>
+    <canvas #canvasElement class="d-none"></canvas>
+  </div>
+
+  <div class="get-started">
+    <p><strong>Get started</strong></p>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary btn-block mt-4 w-100" 
+            (click)="captureAndVerify()"
+            [disabled]="isLoading">
+            
+      <span *ngIf="!isLoading">
+        <i class="bi bi-camera me-2"></i>
+        Se connecter
+      </span>
+      <span *ngIf="isLoading">
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        Connexion en cours...
+      </span>
+    </button>
+  </div>
+</div>

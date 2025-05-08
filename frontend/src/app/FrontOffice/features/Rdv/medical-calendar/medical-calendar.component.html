@@ -1,0 +1,72 @@
+<!-- Fenêtre modale pour ajouter des détails supplémentaires -->
+<div *ngIf="isModalOpen" class="modal">
+    <div class="modal-content">
+      <h2>Ajouter un rendez-vous</h2>
+      <form (ngSubmit)="onSaveRendezvous()" #rendezvousForm="ngForm">
+        <label for="nomPatient">Nom du Patient:</label>
+        <input type="text" id="nomPatient" [(ngModel)]="newRendezvous.nomPatient" name="nomPatient" required minlength="4">
+      
+        <label for="emailPatient">Email:</label>
+        <input
+        type="email"
+        id="emailPatient"
+        [(ngModel)]="newRendezvous.emailPatient"
+        name="emailPatient"
+        required
+        #email="ngModel"
+      />      
+      <div *ngIf="email.invalid && email.touched" style="color: red;">
+        Email invalide
+      </div>
+        <label for="dateNaissance">Date de Naissance:</label>
+        <input
+        type="date"
+        id="dateNaissance"
+        [(ngModel)]="newRendezvous.dateNaissance"
+        name="dateNaissance"
+        required
+        #dateNaissance="ngModel"
+      />
+      <div *ngIf="!isAgeValid(newRendezvous.dateNaissance) && dateNaissance.touched" style="color:red">
+        Le patient doit avoir au moins 18 ans.
+      </div>      
+      <label for="medicalState">État Médical:</label>
+      <input
+        type="text"
+        id="medicalState"
+        [(ngModel)]="newRendezvous.medicalState"
+        name="medicalState"
+        required
+        minlength="10"
+        #medicalState="ngModel"
+      />
+      <div *ngIf="medicalState.invalid && medicalState.touched" style="color:red">
+        <span *ngIf="medicalState.errors?.['required']">Ce champ est requis.</span>
+        <span *ngIf="medicalState.errors?.['minlength']">L'état médical doit contenir au moins 10 caractères.</span>
+      </div>
+      
+        <label for="sexePatient">Sexe:</label>
+        <select id="sexePatient" [(ngModel)]="newRendezvous.sexePatient" name="sexePatient" required>
+          <option value="HOMME">HOMME</option>
+          <option value="FEMME">FEMME</option>
+        </select>
+      
+        <button type="submit" [disabled]="!rendezvousForm.form.valid">Enregistrer</button>
+        <button type="button" (click)="closeModal()">Annuler</button>
+      </form>
+      
+    </div>
+  </div>
+  
+  
+  <!-- Calendrier -->
+  <ejs-schedule 
+  (eventRendered)="onEventRendered($event)"
+    height="650px"
+    [selectedDate]="selectedDate"
+    [eventSettings]="eventSettings"
+    [currentView]="currentView"
+    (actionBegin)="onActionBegin($event)"
+    (popupOpen)="onPopupOpen($event)">
+  </ejs-schedule>
+  

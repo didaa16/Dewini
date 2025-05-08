@@ -1,0 +1,136 @@
+<div class="container-fluid mt-4">
+  <!-- Bannière -->
+  <div class="card bg-primary text-white mb-4">
+    <div class="card-body">
+      <h2 class="mb-0">Événements médicaux à venir</h2>
+      <p class="mb-0">Participez à nos actions de sensibilisation</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Filtres -->
+    <aside class="col-lg-3 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Filtrer les événements</h5>
+        </div>
+        <div class="card-body">
+          <!-- Lieu -->
+          <div class="mb-3">
+            <label for="lieuSelect" class="form-label">Lieu</label>
+            <select id="lieuSelect" class="form-select" [(ngModel)]="selectedLieu" (change)="filterEvents()" aria-label="Sélectionner un lieu">
+              <option [ngValue]="null">Tous les lieux</option>
+              <option *ngFor="let lieu of lieux" [ngValue]="lieu">{{ lieu.nom }}</option>
+            </select>
+          </div>
+
+          <!-- Prix -->
+          <div class="mb-3">
+            <label for="priceSelect" class="form-label">Prix</label>
+            <select id="priceSelect" class="form-select" [(ngModel)]="selectedPrice" (change)="filterEvents()" aria-label="Sélectionner un prix">
+              <option [ngValue]="null">Tous les prix</option>
+              <option [ngValue]="0">Gratuits</option>
+              <option [ngValue]="1">Payants</option>
+            </select>
+          </div>
+
+          <!-- Rayon -->
+          <div *ngIf="currentLocation" class="mb-3">
+            <label for="searchRadius" class="form-label">Rayon : {{ searchRadius }} km</label>
+            <input id="searchRadius" type="range" class="form-range" min="1" max="50" [(ngModel)]="searchRadius" (input)="onRadiusChange()" aria-label="Ajuster le rayon de recherche">
+            <small class="form-text text-muted">Ajustez pour rechercher des événements à proximité</small>
+          </div>
+
+          <!-- Boutons -->
+          <div class="d-grid gap-2">
+            <button *ngIf="currentLocation" class="btn btn-primary" 
+                    (click)="searchNearby()" [disabled]="isLoading" aria-label="Rechercher des événements à proximité">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              Rechercher à proximité
+            </button>
+            <button class="btn btn-outline-secondary" (click)="resetFilters()" aria-label="Réinitialiser les filtres">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <main class="col-lg-9">
+      <!-- Notification -->
+      <div *ngIf="notificationMessage" class="alert alert-info alert-dismissible fade show" role="alert" aria-live="polite">
+        {{ notificationMessage }}
+        <button type="button" class="btn-close" (click)="clearNotification()" aria-label="Fermer"></button>
+      </div>
+
+      <!-- Carte -->
+      <div class="card shadow-sm mb-4 position-relative">
+        <div class="card-body p-0" style="height: 50vh;">
+          <div *ngIf="isLoading" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-light bg-opacity-75" aria-live="polite">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement de la carte...</span>
+            </div>
+          </div>
+          <div id="map" class="h-100" aria-label="Carte des événements"></div>
+        </div>
+      </div>
+
+      <!-- Liste des événements -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Tous les événements</h5>
+          <span class="badge bg-primary rounded-pill">{{ filteredEvents.length }}</span>
+        </div>
+        <div class="card-body">
+          <!-- Chargement -->
+          <div *ngIf="isLoading" class="text-center py-5" aria-live="polite">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+
+          <!-- Aucun résultat -->
+          <div *ngIf="!isLoading && filteredEvents.length === 0" class="text-center py-5" aria-live="polite">
+            <i class="bi bi-calendar-x fs-1 text-muted"></i>
+            <p class="text-muted mt-2">Aucun événement trouvé</p>
+          </div>
+
+          <!-- Événements -->
+          <div class="row g-3" *ngIf="!isLoading && filteredEvents.length > 0">
+            <div class="col-md-6 col-lg-4" *ngFor="let event of filteredEvents">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">{{ event.nom }}</h5>
+                  <p class="card-text text-muted small">
+                    <i class="bi bi-calendar me-1"></i>
+                    {{ event.dateDebut | date:'mediumDate' }} - {{ event.dateFin | date:'mediumDate' }}
+                  </p>
+                  <p class="card-text text-muted small">
+                    <i class="bi bi-geo-alt me-1"></i>
+                    {{ event.lieu?.nom || 'Lieu non spécifié' }}
+                  </p>
+                  <p class="card-text">{{ event.description | slice:0:100 }}...</p>
+                </div>
+                <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                  <span class="badge rounded-pill" 
+                        [ngClass]="{ 'bg-success': event.prix === 0, 'bg-warning': event.prix > 0 }">
+                    {{ event.prix === 0 ? 'GRATUIT' : (event.prix | currency:'EUR') }}
+                  </span>
+                  <div>
+                    <button *ngIf="event.coordonnees" class="btn btn-sm btn-outline-primary me-2"
+                            (click)="showOnMap(event.coordonnees)" title="Voir sur la carte" aria-label="Voir sur la carte">
+                      <i class="bi bi-map"></i>
+                      voir
+                    </button>
+                    <a [routerLink]="['/events', event.id]" class="btn btn-sm btn-primary" [attr.aria-label]="'Voir les détails de ' + event.nom">
+                      Détails
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

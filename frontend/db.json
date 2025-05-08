@@ -1,0 +1,84 @@
+{
+  "urgence": [
+    {
+      "idUrgence": 1,
+      "patient": {
+        "idUtilisateur": 1,
+        "nom": "Test",
+        "prenom": "Patient",
+        "email": "testuser@gmail.com",
+        "telephone": "29069179",
+        "role": "PATIENT"
+      },
+      "medecin": {
+        "idUtilisateur": 2,
+        "nom": "Test",
+        "prenom": "Medecin",
+        "email": "testuser@gmail.com",
+        "telephone": "29069179",
+        "role": "MEDECIN"
+      },
+      "date": "2025-03-08T03:23:49.000+00:00",
+      "description": "Douleur thoracique sévère",
+      "addressePatient": "Ariana",
+      "typeUrgence": "A_Domicile",
+      "statutUrgence": "En_Attente",
+      "consultationUrgente": {
+        "idConsultationUrgente": 1,
+        "date": "2025-03-08T03:33:13.000+00:00",
+        "lienVideo": "test",
+        "asuivre": true
+      }
+    },
+    {
+      "idUrgence": 4,
+      "patient": {
+        "idUtilisateur": 1,
+        "nom": "Test",
+        "prenom": "Patient",
+        "email": "testuser@gmail.com",
+        "telephone": "29069179",
+        "role": "PATIENT"
+      },
+      "medecin": {
+        "idUtilisateur": 2,
+        "nom": "Test",
+        "prenom": "Medecin",
+        "email": "testuser@gmail.com",
+        "telephone": "29069179",
+        "role": "MEDECIN"
+      },
+      "date": "2025-03-08T03:23:49.000+00:00",
+      "description": "second urgence",
+      "addressePatient": "oued ellil",
+      "typeUrgence": "A_Domicile",
+      "statutUrgence": "En_Attente",
+      "consultationUrgente": null
+    },
+    {
+      "idUrgence": 5,
+      "patient": {
+        "idUtilisateur": 1,
+        "nom": "Test",
+        "prenom": "Patient",
+        "email": "testuser@gmail.com",
+        "telephone": "29069179",
+        "role": "PATIENT"
+      },
+      "medecin": {
+        "idUtilisateur": 2,
+        "nom": "Test",
+        "prenom": "Medecin",
+        "email": "testuser@gmail.com",
+        "telephone": "29069179",
+        "role": "MEDECIN"
+      },
+      "date": "2025-03-08T03:23:49.000+00:00",
+      "description": "Douleur thoracique sévère",
+      "addressePatient": "Ariana",
+      "typeUrgence": "A_Domicile",
+      "statutUrgence": "En_Attente",
+      "consultationUrgente": null
+    }
+  ]
+}

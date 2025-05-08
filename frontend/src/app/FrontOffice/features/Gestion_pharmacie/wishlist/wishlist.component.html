@@ -1,0 +1,21 @@
+<div class="container mt-4">
+  <h2 class="text-success mb-4">💚 Ma Wishlist</h2>
+  <div class="row">
+    <div class="col-md-3 col-sm-6 mb-4" *ngFor="let med of favorisService.getFavoris()">
+      <div class="card h-100 shadow-sm border-0 rounded-4">
+        <img [src]="med.imageUrl || 'https://via.placeholder.com/200x150'" class="card-img-top" style="height:150px; object-fit:cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ med.nom }}</h5>
+          <p class="card-text text-muted">{{ med.description | slice:0:60 }}...</p>
+          <p class="fw-bold text-danger">{{ med.prix }} TND</p>
+          <button
+            *ngIf="favorisService.estFavori(med.id!)"
+            class="btn btn-outline-danger mt-auto w-100 rounded-pill"
+            (click)="retirerFavori(med); $event.stopPropagation()">
+            ❌ Retirer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

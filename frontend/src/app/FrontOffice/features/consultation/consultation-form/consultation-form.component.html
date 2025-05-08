@@ -1,0 +1,112 @@
+<div class="consultation-form-container" [@fadeIn]>
+  <!-- Loading Overlay -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-titles">
+        <h1><i class="fas fa-stethoscope"></i> {{ isEditMode ? 'Modifier' : 'Créer' }} une Consultation</h1>
+      </div>
+    </div>
+  </header>
+
+  <div *ngIf="error" class="alert alert-danger my-3" role="alert" [@fadeIn]>
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+  </div>
+
+  <div class="form-container" *ngIf="!loading && isMedecin" [@fadeIn]>
+    <div class="card">
+      <div class="card-body">
+        <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()" class="form-grid">
+          <!-- Patient Field -->
+          <div class="form-group">
+            <label for="patient_id">Patient</label>
+            <select id="patient_id" formControlName="patient_id" class="form-control" 
+            [class.is-invalid]="isFieldInvalid('patient_id')"
+            (change)="onPatientSelected($event)">
+      <option value="">Sélectionnez un patient</option>
+      <option *ngFor="let patient of patients" [ngValue]="patient.id">
+        {{ patient.firstname }} {{ patient.lastname }}
+      </option>
+    </select>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('patient_id')">
+              Veuillez sélectionner un patient
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="medecin_name">Médecin</label>
+            <input *ngIf="!loadingMedecin"
+         id="medecin_name" 
+         formControlName="medecin_name" 
+         class="form-control" 
+         readonly>
+         
+  <input type="hidden" formControlName="medecin_id">
+          </div>
+
+          <!-- Dossier Medical Field -->
+          <div class="form-group">
+            <label for="dossierMedical_id">Dossier Médical</label>
+            <select id="dossierMedical_id" formControlName="dossierMedical_id" class="form-control" [class.is-invalid]="isFieldInvalid('dossierMedical_id')">
+              <option value="">Sélectionnez un dossier</option>
+              <option *ngFor="let dossier of dossiers" [ngValue]="dossier.id_dossier">
+                Dossier #{{ dossier.id_dossier }} - {{ dossier.patient?.firstname }} {{ dossier.patient?.lastname }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('dossierMedical_id')">
+              Veuillez sélectionner un dossier médical
+            </div>
+          </div>
+
+          <!-- Date and Time Fields -->
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" formControlName="date" class="form-control" [class.is-invalid]="isFieldInvalid('date')">
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('date')">
+              La date est requise
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="heure">Heure</label>
+            <input type="time" id="heure" formControlName="heure" class="form-control" [class.is-invalid]="isFieldInvalid('heure')">
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('heure')">
+              L'heure est requise
+            </div>
+          </div>
+
+          <!-- Rapport and Recommandations -->
+          <div class="form-group full-width">
+            <label for="rapport">Rapport</label>
+            <textarea id="rapport" formControlName="rapport" class="form-control" rows="5" [class.is-invalid]="isFieldInvalid('rapport')"></textarea>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('rapport')">
+              Le rapport est requis (max 500 caractères)
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="recommandations">Recommandations</label>
+            <textarea id="recommandations" formControlName="recommandations" class="form-control" rows="5" [class.is-invalid]="isFieldInvalid('recommandations')"></textarea>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('recommandations')">
+              Les recommandations sont requises (max 500 caractères)
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="onCancel()" [@buttonHover]>
+              <i class="fas fa-times-circle"></i> Annuler
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="!consultationForm.valid || loading" [@buttonHover]>
+              <i class="fas fa-check-circle"></i> {{ isEditMode ? 'Modifier' : 'Créer' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

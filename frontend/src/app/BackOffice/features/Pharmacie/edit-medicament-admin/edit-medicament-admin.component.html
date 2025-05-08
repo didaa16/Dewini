@@ -1,0 +1,181 @@
+<!-- edit-medicament-admin.component.html -->
+<div class="container mt-4">
+    <h2 class="text-success mb-4">✏️ Modifier un Médicament (Admin)</h2>
+  
+    <form (ngSubmit)="onSubmit()" #medicamentForm="ngForm" enctype="multipart/form-data" class="shadow-lg p-4 bg-white rounded-4">
+
+      <!-- 🧾 Nom -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Nom</label>
+        <input 
+          class="form-control"
+          [(ngModel)]="medicament.nom"
+          name="nom"
+          required
+          minlength="4"
+          #nom="ngModel"
+          [ngClass]="{
+            'is-valid': nom.valid && nom.touched,
+            'is-invalid': nom.invalid && nom.touched
+          }"
+        />
+        <div *ngIf="nom.errors?.['required'] && nom.touched" class="text-danger small mt-1">
+          ❌ Le nom est requis.
+        </div>
+        <div *ngIf="nom.errors?.['minlength'] && nom.touched" class="text-danger small mt-1">
+          ❌ Le nom doit contenir au moins 4 caractères.
+        </div>
+      </div>
+    
+      <!-- 📝 Description -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Description</label>
+        <textarea 
+          class="form-control"
+          [(ngModel)]="medicament.description"
+          name="description"
+          required
+          minlength="5"
+          #description="ngModel"
+          rows="3"
+          [ngClass]="{
+            'is-valid': description.valid && description.touched,
+            'is-invalid': description.invalid && description.touched
+          }"
+        ></textarea>
+        <div *ngIf="description.errors?.['required'] && description.touched" class="text-danger small mt-1">
+          ❌ La description est requise.
+        </div>
+        <div *ngIf="description.errors?.['minlength'] && description.touched" class="text-danger small mt-1">
+          ❌ La description doit contenir au moins 5 caractères.
+        </div>
+      </div>
+    
+      <!-- 📦 Stock et 💰 Prix -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Quantité en stock</label>
+          <input 
+            type="number"
+            class="form-control"
+            [(ngModel)]="medicament.quantiteEnStock"
+            name="quantiteEnStock"
+            required
+            min="0"
+            #quantiteEnStock="ngModel"
+            [ngClass]="{
+              'is-valid': quantiteEnStock.valid && quantiteEnStock.touched,
+              'is-invalid': quantiteEnStock.invalid && quantiteEnStock.touched
+            }"
+          />
+          <div *ngIf="quantiteEnStock.errors?.['required'] && quantiteEnStock.touched" class="text-danger small mt-1">
+            ❌ La quantité est requise.
+          </div>
+          <div *ngIf="quantiteEnStock.errors?.['min'] && quantiteEnStock.touched" class="text-danger small mt-1">
+            ❌ La quantité doit être positive.
+          </div>
+        </div>
+    
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Prix (TND)</label>
+          <input 
+            type="number"
+            step="0.01"
+            class="form-control"
+            [(ngModel)]="medicament.prix"
+            name="prix"
+            required
+            min="0"
+            #prix="ngModel"
+            [ngClass]="{
+              'is-valid': prix.valid && prix.touched,
+              'is-invalid': prix.invalid && prix.touched
+            }"
+          />
+          <div *ngIf="prix.errors?.['required'] && prix.touched" class="text-danger small mt-1">
+            ❌ Le prix est requis.
+          </div>
+          <div *ngIf="prix.errors?.['min'] && prix.touched" class="text-danger small mt-1">
+            ❌ Le prix doit être positif.
+          </div>
+        </div>
+      </div>
+    
+      <!-- 📅 Date expiration -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Date d'expiration</label>
+        <input 
+          type="date"
+          class="form-control"
+          [(ngModel)]="medicament.dateExpiration"
+          name="dateExpiration"
+          required
+          #dateExpiration="ngModel"
+          [ngClass]="{
+            'is-valid': dateExpiration.valid && dateExpiration.touched,
+            'is-invalid': dateExpiration.invalid && dateExpiration.touched
+          }"
+        />
+        <div *ngIf="dateExpiration.errors?.['required'] && dateExpiration.touched" class="text-danger small mt-1">
+          ❌ La date d'expiration est requise.
+        </div>
+      </div>
+    
+      <!-- 🏷️ Catégorie -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Catégorie</label>
+        <select 
+          class="form-select"
+          [(ngModel)]="medicament.categorie"
+          name="categorie"
+          required
+          #categorie="ngModel"
+          [ngClass]="{
+            'is-valid': categorie.valid && categorie.touched,
+            'is-invalid': categorie.invalid && categorie.touched
+          }"
+        >
+          <option [ngValue]="null" disabled>-- Choisir une catégorie --</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+        <div *ngIf="categorie.errors?.['required'] && categorie.touched" class="text-danger small mt-1">
+          ❌ La catégorie est requise.
+        </div>
+      </div>
+    
+      <!-- 🖼 Image -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Image</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" />
+      </div>
+    
+      <!-- 🖼 Prévisualisation -->
+      <div *ngIf="imagePreview" class="text-center mb-3">
+        <img [src]="imagePreview" alt="Prévisualisation" class="img-thumbnail" style="max-width: 200px; max-height: 150px; object-fit: cover;" />
+      </div>
+    
+      <!-- ✅ Submit -->
+      <div class="d-grid">
+        <button class="btn btn-success rounded-pill" [disabled]="medicamentForm.invalid">
+          💾 Enregistrer les modifications
+        </button>
+      </div>
+    
+    </form>
+    
+  </div>
+  <!-- ✅ Toast succès après modification -->
+<!-- ✅ Toast succès après modification -->
+<!-- ✅ Toast succès après modification -->
+<div
+  *ngIf="toastVisible"
+  class="toast-notif position-fixed bottom-0 end-0 m-4 bg-success text-white px-4 py-3 rounded-3 shadow-lg"
+  style="z-index: 1050;"
+>
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi bi-check-circle-fill fs-4"></i>
+    <span class="fw-semibold fs-6">Médicament mis à jour avec succès ✅</span>
+  </div>
+</div>
+
+

@@ -1,0 +1,79 @@
+/* Structure principale */
+.calendar-wrapper {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    position: relative;
+    min-height: 700px;
+  }
+  
+  /* Loader */
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Événements */
+  .fc-event {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .fc-event:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  
+  .fc-event-homme {
+    background-color: #36a2eb;
+    border-color: #36a2eb;
+    color: white !important;
+  }
+  
+  .fc-event-femme {
+    background-color: #ff6384;
+    border-color: #ff6384;
+    color: white !important;
+  }
+  
+  /* Boutons */
+  .fc-button {
+    background-color: #3f51b5 !important;
+    border-color: #3f51b5 !important;
+  }
+  
+  .fc-button-primary:not(:disabled).fc-button-active {
+    background-color: #2c387e !important;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .fc-header-toolbar {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .fc-toolbar-chunk {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    
+    .fc-button {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.8rem;
+    }
+  }
+  
+  /* Business Hours */
+  .fc-nonbusiness {
+    background: rgba(255, 0, 0, 0.05);
+  }

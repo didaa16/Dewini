@@ -1,0 +1,17 @@
+form {
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+  }
+  
+  input, textarea {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  canvas {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  

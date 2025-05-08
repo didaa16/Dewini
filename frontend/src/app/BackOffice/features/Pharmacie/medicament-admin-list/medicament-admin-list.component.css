@@ -1,0 +1,113 @@
+/* 🎨 Hover effet sur carte */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(23, 128, 102, 0.2); /* vert doux */
+  cursor: pointer;
+}
+
+/* 🎨 Titre de la page */
+:host ::ng-deep h2.text-primary-custom {
+  color: #178066 !important;
+}
+
+/* 🎨 Bouton Ajouter */
+:host ::ng-deep .btn-primary-custom {
+  background-color: #178066;
+  border: none;
+  color: white;
+}
+
+:host ::ng-deep .btn-primary-custom:hover {
+  background-color: #146b55;
+  color: white;
+}
+
+/* 🎨 Nom médicament (card-title) */
+:host ::ng-deep .card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease-in-out;
+}
+
+:host ::ng-deep .hover-card:hover .card-title {
+  color: #178066;
+}
+
+/* 🎨 Texte description et prix */
+:host ::ng-deep .card-text {
+  font-size: 0.95rem;
+  color: #555555;
+}
+
+/* 🎨 Footer boutons cartes */
+:host ::ng-deep .card-footer .btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+/* 🎨 Badge Médicament Expiré */
+:host ::ng-deep .badge.bg-danger {
+  background-color: #dc3545;
+}
+
+/* 🎨 Badge Médicament Expire bientôt */
+:host ::ng-deep .badge.bg-warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+/* 🎨 Badge Catégorie */
+:host ::ng-deep .badge.bg-info {
+  background-color: #62d2a2;
+  color: #ffffff;
+}
+
+/* 🎨 Pagination */
+:host ::ng-deep .page-link {
+  color: #178066;
+}
+
+:host ::ng-deep .page-link:hover {
+  background-color: #178066;
+  color: white;
+}
+
+/* 🎨 Statistiques */
+:host ::ng-deep .alert-primary {
+  background-color: #e6f4f1;
+  color: #178066;
+  border: none;
+}
+
+:host ::ng-deep .alert-danger {
+  background-color: #fdecea;
+  color: #dc3545;
+  border: none;
+}
+
+:host ::ng-deep .alert-warning {
+  background-color: #fff8e1;
+  color: #ff9800;
+  border: none;
+}
+
+/* 🌟 Alignement pagination + suppression marges */
+:host ::ng-deep .pagination {
+  margin: 0;
+}
+
+:host {
+  display: block;
+  width: 100%;
+}

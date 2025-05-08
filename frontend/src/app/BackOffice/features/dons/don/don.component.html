@@ -1,0 +1,140 @@
+<div class="layout-wrapper layout-content-navbar">
+  <div class="layout-container">
+    <div class="layout-page">
+      <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+          <div *ngIf="isLoading" class="text-center my-5">
+            <div class="spinner-border text-primary" style="width: 2.5rem; height: 2.5rem;" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-3 text-muted">Chargement en cours...</p>
+          </div>
+
+          <div *ngIf="!isLoading">
+            <h2 class="mb-4 text-center">
+              <i class="fas fa-vial me-2 text-primary"></i>
+              {{ isEditing ? 'Modifier un Don' : 'Ajouter un Nouveau Don' }}
+            </h2>
+
+            <!-- Notification d'erreur -->
+            <div *ngIf="errorMessage" class="error-notification">
+              <div class="error-content">
+                <i class="fas fa-exclamation-circle error-icon"></i>
+                <div class="error-text">
+                  <h5 class="error-title">Oups !</h5>
+                  <p>{{ errorMessage }}</p>
+                </div>
+                <button class="error-close" (click)="errorMessage = ''">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="fas fa-tint me-2" style="color: #e53935;"></i>
+                  {{ isEditing ? 'Modification Don Sanguin' : 'Nouveau Don Sanguin' }}
+              </h5>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="donForm" (ngSubmit)="isEditing ? updateDon() : addDon()">
+                  <div class="row g-4">
+                    <div class="col-md-6">
+                      <label for="centreId" class="form-label">
+                        <i class="fas fa-hospital me-1"></i>Centre de don
+                      </label>
+                      <select class="form-select" id="centreId" formControlName="centreId"
+                              [class.is-invalid]="(formControls['centreId'].invalid && formControls['centreId'].touched) || (formSubmitted && formControls['centreId'].invalid)">
+                        <option value="" disabled>Sélectionner un centre</option>
+                        <option *ngFor="let centre of centres" [value]="centre.idCentre">
+                          {{ centre.nom }}
+                        </option>
+                      </select>
+                      <div *ngIf="formControls['centreId'].invalid && (formControls['centreId'].touched || formSubmitted)" class="invalid-feedback">
+                        Veuillez sélectionner un centre
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="typeDon" class="form-label">
+                        <i class="fas fa-vial me-1"></i>Type de don
+                      </label>
+                      <select class="form-select" id="typeDon" formControlName="typeDon"
+                              [class.is-invalid]="(formControls['typeDon'].invalid && formControls['typeDon'].touched) || (formSubmitted && formControls['typeDon'].invalid)">
+                        <option value="" disabled>Sélectionner un type</option>
+                        <option *ngFor="let type of typeDonOptions" [value]="type">
+                          {{ type | titlecase }}
+                        </option>
+                      </select>
+                      <div *ngIf="formControls['typeDon'].invalid && (formControls['typeDon'].touched || formSubmitted)" class="invalid-feedback">
+                        Veuillez sélectionner un type de don
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="grpSanguin" class="form-label">
+                        <i class="fas fa-tint me-1"></i>Groupe sanguin
+                      </label>
+                      <select class="form-select" id="grpSanguin" formControlName="grpSanguin"
+                              [class.is-invalid]="(formControls['grpSanguin'].invalid && formControls['grpSanguin'].touched) || (formSubmitted && formControls['grpSanguin'].invalid)">
+                        <option value="" disabled>Sélectionner un groupe</option>
+                        <option *ngFor="let groupe of groupeSanguinOptions" [value]="groupe">
+                          {{ groupe.replace('_', ' ') | titlecase }}
+                        </option>
+                      </select>
+                      <div *ngIf="formControls['grpSanguin'].invalid && (formControls['grpSanguin'].touched || formSubmitted)" class="invalid-feedback">
+                        Veuillez sélectionner un groupe sanguin
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="dateDon" class="form-label">
+                        <i class="fas fa-calendar-alt me-1"></i>Date du don
+                      </label>
+                      <input type="date" class="form-control" id="dateDon" formControlName="dateDon"
+                            [min]="today"
+                            [class.is-invalid]="(formControls['dateDon'].invalid && formControls['dateDon'].touched) || (formSubmitted && formControls['dateDon'].invalid)">
+                      <div *ngIf="formControls['dateDon'].errors?.['required'] && (formControls['dateDon'].touched || formSubmitted)" class="invalid-feedback">
+                        Veuillez sélectionner une date
+                      </div>
+                      <div *ngIf="formControls['dateDon'].errors?.['pastDate'] && (formControls['dateDon'].touched || formSubmitted)" class="invalid-feedback">
+                        La date doit être aujourd’hui ou dans le futur
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="quantite" class="form-label">
+                        <i class="fas fa-weight me-1"></i>Quantité
+                      </label>
+                      <input id="quantite" type="number" class="form-control" formControlName="quantite"
+                            min="1"
+                            [class.is-invalid]="(formControls['quantite'].invalid && formControls['quantite'].touched) || (formSubmitted && formControls['quantite'].invalid)">
+                      <div *ngIf="formControls['quantite'].errors?.['required'] && (formControls['quantite'].touched || formSubmitted)" class="invalid-feedback">
+                        La quantité est requise
+                      </div>
+                      <div *ngIf="formControls['quantite'].errors?.['min'] && (formControls['quantite'].touched || formSubmitted)" class="invalid-feedback">
+                        La quantité doit être positive (supérieure à 0)
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary me-3" [disabled]="isLoading">
+                      <i class="fas fa-save me-1"></i>
+                      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1"></span>
+                      {{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" *ngIf="isEditing" (click)="cancelEdit()" [disabled]="isLoading">
+                      <i class="fas fa-times me-1"></i>Annuler
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

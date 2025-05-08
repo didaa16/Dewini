@@ -1,0 +1,143 @@
+<div class="layout-wrapper layout-content-navbar">
+  <div class="layout-container">
+
+    <div class="layout-page">
+
+      <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+          <!-- État de chargement -->
+          <div *ngIf="loading" class="text-center p-5">
+            <div class="spinner-border text-primary" style="width: 2.5rem; height: 2.5rem;" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-3 text-muted">Chargement des dons en cours...</p>
+          </div>
+
+          <!-- Message d'erreur -->
+          <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-exclamation-circle me-2"></i>
+              <div>
+                <h6 class="alert-heading mb-1">Erreur</h6>
+                <p class="mb-0">{{ error }}</p>
+              </div>
+            </div>
+            <button type="button" class="btn-close" (click)="error = null" aria-label="Close"></button>
+          </div>
+
+          <!-- Contenu principal -->
+          <div *ngIf="!loading && !error" class="card">
+            <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-hand-holding-heart text-primary me-3 fs-4"></i>
+                  <div>
+                    <h5 class="mb-0">Gestion des dons</h5>
+                    <small class="text-muted">{{ filteredDons.length }} dons trouvés</small>
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                  <div class="input-group input-group-sm" style="width: 200px;">
+                    <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                    <select class="form-select" [(ngModel)]="dateFilter" (change)="applyFilters()">
+                      <option value="all">Toutes les dates</option>
+                      <option value="today">Aujourd'hui</option>
+                      <option value="week">Cette semaine</option>
+                      <option value="month">Ce mois</option>
+                    </select>
+                  </div>
+                  <button [routerLink]="['/dashboard/dons']" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus me-1"></i> Nouveau don
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th class="ps-4"><i class="fas fa-hashtag me-1"></i> ID</th>
+                      <th><i class="fas fa-vial me-1"></i> Type</th>
+                      <th><i class="fas fa-tint me-1"></i> Groupe sanguin</th>
+                      <th><i class="fas fa-calendar-alt me-1"></i> Date/Heure</th>
+                      <th><i class="fas fa-users me-1"></i> Participants</th>
+                      <th><i class="fas fa-hospital me-1"></i> Centre</th>
+                      <th class="text-end pe-4"><i class="fas fa-cog me-1"></i> Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let don of filteredDons">
+                      <td class="ps-4 fw-semibold"><i class="fas fa-hashtag me-1 text-muted"></i> {{ don.idDon }}</td>
+                      <td>
+                        <span class="badge rounded-pill py-2 px-3 d-inline-flex align-items-center"
+                              [ngClass]="getDonTypeClass(don.typeDon)">
+                          <i class="fas me-2" [class]="getDonTypeIcon(don.typeDon)"></i>
+                          {{ don.typeDon }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge bg-blood-group">
+                          <i class="fas fa-tint me-1"></i> {{ don.grpSanguin }}
+                        </span>
+                      </td>
+                      <td>
+                        <div><i class="fas fa-calendar-alt me-1 text-muted"></i> {{ don.dateDon | date:'dd/MM/yyyy' }}</div>
+                        <small class="text-muted"><i class="fas fa-clock me-1"></i> {{ don.dateDon | date:'HH:mm' }}</small>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                            <div class="progress-bar bg-primary"
+                                 [style.width]="getParticipationPercentage(don) + '%'"></div>
+                          </div>
+                          <span class="text-nowrap">
+                            <i class="fas fa-users me-1 text-muted"></i> {{ getDonneursPresentCount(don) }}/{{ getDonneursCount(don) }}
+                          </span>
+                        </div>
+                      </td>
+                      <td class="text-truncate" style="max-width: 150px;">
+                        <i class="fas fa-hospital me-1 text-muted"></i> {{ don.centre.nom }}
+                      </td>
+                      <td class="text-end pe-4">
+                        <div class="btn-group btn-group-sm" role="group">
+                          <button (click)="editDon(don.idDon)"
+                                  class="btn btn-outline-primary"
+                                  title="Modifier">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button (click)="confirmDelete(don.idDon)"
+                                  class="btn btn-outline-danger"
+                                  title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                          <button (click)="appel(don.idDon)"
+                                  class="btn btn-outline-success"
+                                  title="Faire l'appel">
+                            <i class="fas fa-calendar-alt"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr *ngIf="filteredDons.length === 0">
+                      <td colspan="7" class="text-center py-5">
+                        <div class="text-muted">
+                          <i class="fas fa-folder-open fs-1"></i>
+                          <h6 class="mt-3">Aucun don trouvé</h6>
+                          <button [routerLink]="['/dons']" class="btn btn-primary mt-2">
+                            <i class="fas fa-plus me-1"></i> Créer un don
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

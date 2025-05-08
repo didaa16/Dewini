@@ -1,0 +1,71 @@
+<div class="container mt-5">
+  <div class="card shadow border-0 rounded-4">
+    <div class="card-header bg-info text-white rounded-top-4">
+      <h4 class="mb-0">✏ Modifier Ordonnance #{{ ordonnance.id }}</h4>
+    </div>
+
+    <div class="card-body">
+      <!-- 📝 Instructions -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">📋 Instructions</label>
+        <textarea class="form-control" rows="3" [(ngModel)]="ordonnance.instructions" name="instructions"></textarea>
+      </div>
+
+      <!-- 👨‍⚕️ Médecin et Patient -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">👨‍⚕️ ID Médecin</label>
+          <input type="number" class="form-control" [(ngModel)]="ordonnance.medecinId" name="medecinId">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">🧑‍⚕️ ID Patient</label>
+          <input type="number" class="form-control" [(ngModel)]="ordonnance.patientId" name="patientId">
+        </div>
+      </div>
+
+      <!-- 💊 Prescriptions -->
+      <h5 class="fw-bold mb-3">💊 Prescriptions</h5>
+      <div *ngFor="let pres of ordonnance.prescriptions; let i = index" class="border rounded-4 p-3 mb-4 shadow-sm bg-light">
+        <!-- Médicament -->
+        <div class="mb-3">
+          <label class="form-label">Médicament</label>
+          <select class="form-select" [(ngModel)]="pres.medicament" name="medicament{{i}}">
+            <option [ngValue]="null" disabled>-- Sélectionner --</option>
+            <option *ngFor="let med of listeMedicaments" [ngValue]="med">
+              {{ med.nom }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Posologie et Durée -->
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <input class="form-control" placeholder="💊 Posologie" [(ngModel)]="pres.posologie" name="posologie{{i}}" />
+          </div>
+          <div class="col-md-6 mb-2">
+            <input class="form-control" placeholder="📆 Durée" [(ngModel)]="pres.duree" name="duree{{i}}" />
+          </div>
+        </div>
+
+        <!-- Bouton suppression -->
+        <div class="text-end">
+          <button class="btn btn-outline-danger btn-sm" (click)="supprimerPrescription(i)">
+            ❌ Supprimer cette prescription
+          </button>
+        </div>
+      </div>
+
+      <!-- ➕ Ajouter une prescription -->
+      <div class="mb-4 text-center">
+        <button class="btn btn-outline-secondary" (click)="ajouterPrescription()">➕ Ajouter une prescription</button>
+      </div>
+
+      <!-- ✅ Mettre à jour -->
+      <div class="text-end">
+        <button class="btn btn-success px-4" (click)="updateOrdonnance()">💾 Mettre à jour</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-5"></div>
+</div>

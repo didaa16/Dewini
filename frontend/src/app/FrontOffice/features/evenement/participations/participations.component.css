@@ -1,0 +1,103 @@
+/* Réduit la taille de la police dans la section des statistiques */
+.stats-summary .stat {
+    font-size: 14px;  /* Taille réduite pour les statistiques */
+  }
+  
+  .stats-summary .stat strong {
+    font-size: 16px;  /* Taille de la partie "label" des statistiques */
+  }
+  
+  /* Réduit la taille du titre des statistiques */
+  h3 {
+    font-size: 18px;  /* Taille réduite pour le titre des statistiques */
+  }
+  
+  /* Réduit la taille des sous-titres des graphiques */
+  h4 {
+    font-size: 16px;  /* Taille réduite pour les sous-titres des graphiques */
+  }
+  
+  /* Ajuste l'espace autour des statistiques */
+  .stats-summary {
+    margin: 10px;  /* Réduit l'espace autour des statistiques */
+  }
+  
+  .status-distribution, .presence-rate {
+    margin-top: 10px;  /* Réduit l'espace entre les graphiques */
+  }
+  
+  .stat {
+    margin-bottom: 5px;  /* Réduit l'espace entre les éléments de statistiques */
+  }
+  
+  /* Limite la taille des graphiques */
+  canvas {
+    max-width: 400px;  /* Largeur maximale pour les graphiques */
+    max-height: 300px;  /* Hauteur maximale pour les graphiques */
+    width: 100%;  /* Les graphiques s'ajustent à la largeur du conteneur */
+    height: auto;  /* Hauteur ajustée automatiquement pour respecter le ratio */
+  }
+  
+  /* Réduit la taille des boutons dans le tableau des participations */
+  button {
+    font-size: 12px;  /* Réduit la taille du texte dans les boutons */
+    padding: 5px 10px;  /* Réduit l'espace autour du texte dans les boutons */
+    margin-top: 5px;  /* Ajoute un léger espace au-dessus du bouton */
+  }
+  
+  /* Table plus compacte */
+  .table th, .table td {
+    padding: 8px;  /* Réduit l'espace dans les cellules du tableau */
+    font-size: 14px;  /* Réduit la taille de la police dans le tableau */
+  }
+  /* Container pour aligner les deux graphiques côte à côte */
+.charts-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  /* Chaque graphique */
+  .chart-item {
+    flex: 1;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  /* Canvas plus petits */
+  canvas {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+  }
+  /* Style pour la carte des statistiques */
+.stats-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-left: 20px;
+  }
+  
+  /* Style pour les éléments statistiques */
+  .stat {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .stat:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .stats-card {
+      margin-left: 0;
+      margin-top: 20px;
+    }
+  }

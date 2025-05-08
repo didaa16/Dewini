@@ -1,0 +1,210 @@
+<div class="container mt-5 add-ordonnance-form">
+  <h2 class="text-success mb-4 text-center">➕ Ajouter une Ordonnance</h2>
+
+  <form (ngSubmit)="submit()" #ordonnanceForm="ngForm" class="shadow p-4 bg-white rounded-3">
+
+    <!-- Instructions -->
+    <div class="mb-3">
+      <label for="instructions" class="form-label">📝 Instructions</label>
+      <textarea
+        class="form-control"
+        id="instructions"
+        [(ngModel)]="ordonnance.instructions"
+        name="instructions"
+        rows="3"
+        required
+        minlength="5"
+        #instructions="ngModel"
+        [ngClass]="{
+          'is-valid': instructions.valid && instructions.touched,
+          'is-invalid': instructions.invalid && instructions.touched
+        }"
+      ></textarea>
+      <div *ngIf="instructions.errors?.['required'] && instructions.touched" class="text-danger small mt-1">
+        ❌ Les instructions sont requises.
+      </div>
+      <div *ngIf="instructions.errors?.['minlength'] && instructions.touched" class="text-danger small mt-1">
+        ❌ Les instructions doivent contenir au moins 5 caractères.
+      </div>
+    </div>
+
+    <!-- ID Médecin -->
+    <div class="mb-3">
+      <label for="medecinId" class="form-label">👨‍⚕️ ID Médecin</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="ordonnance.medecinId"
+        name="medecinId"
+        required
+        #medecinId="ngModel"
+        [ngClass]="{
+          'is-valid': medecinId.valid && medecinId.touched,
+          'is-invalid': medecinId.invalid && medecinId.touched
+        }"
+      />
+      <div *ngIf="medecinId.errors?.['required'] && medecinId.touched" class="text-danger small mt-1">
+        ❌ L'ID du médecin est requis.
+      </div>
+    </div>
+
+    <!-- ID Patient -->
+    <div class="mb-4">
+      <label for="patientId" class="form-label">🧑‍⚕️ ID Patient</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="ordonnance.patientId"
+        name="patientId"
+        required
+        #patientId="ngModel"
+        [ngClass]="{
+          'is-valid': patientId.valid && patientId.touched,
+          'is-invalid': patientId.invalid && patientId.touched
+        }"
+      />
+      <div *ngIf="patientId.errors?.['required'] && patientId.touched" class="text-danger small mt-1">
+        ❌ L'ID du patient est requis.
+      </div>
+    </div>
+
+    <!-- Liste des prescriptions -->
+    <div *ngFor="let pres of ordonnance.prescriptions; let i = index" class="prescription-box border rounded p-3 mb-4">
+      <h5 class="mb-3">💊 Prescription {{ i + 1 }}</h5>
+
+      <div class="row g-3">
+        <!-- Médicament -->
+        <div class="col-md-4">
+          <label class="form-label">Médicament</label>
+          <select
+            class="form-select"
+            [(ngModel)]="pres.medicament.id"
+            name="medicament{{ i }}"
+            required
+            #medicamentField="ngModel"
+            [ngClass]="{
+              'is-valid': medicamentField.valid && medicamentField.touched,
+              'is-invalid': medicamentField.invalid && medicamentField.touched
+            }"
+          >
+            <option [ngValue]="null" disabled>-- Choisir un médicament --</option>
+            <option *ngFor="let med of listeMedicaments" [value]="med.id">
+              {{ med.nom }}
+            </option>
+          </select>
+          <div *ngIf="medicamentField.errors?.['required'] && medicamentField.touched" class="text-danger small mt-1">
+            ❌ Sélectionnez un médicament.
+          </div>
+        </div>
+
+        <!-- Posologie -->
+        <div class="col-md-4">
+          <label class="form-label">Posologie</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="pres.posologie"
+            name="posologie{{ i }}"
+            required
+            minlength="2"
+            #posologieField="ngModel"
+            placeholder="ex: 2x/jour"
+            [ngClass]="{
+              'is-valid': posologieField.valid && posologieField.touched,
+              'is-invalid': posologieField.invalid && posologieField.touched
+            }"
+          />
+          <div *ngIf="posologieField.errors?.['required'] && posologieField.touched" class="text-danger small mt-1">
+            ❌ La posologie est requise.
+          </div>
+          <div *ngIf="posologieField.errors?.['minlength'] && posologieField.touched" class="text-danger small mt-1">
+            ❌ La posologie est trop courte.
+          </div>
+        </div>
+
+        <!-- Durée -->
+        <div class="col-md-3">
+          <label class="form-label">Durée</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="pres.duree"
+            name="duree{{ i }}"
+            required
+            minlength="2"
+            #dureeField="ngModel"
+            placeholder="ex: 5 jours"
+            [ngClass]="{
+              'is-valid': dureeField.valid && dureeField.touched,
+              'is-invalid': dureeField.invalid && dureeField.touched
+            }"
+          />
+          <div *ngIf="dureeField.errors?.['required'] && dureeField.touched" class="text-danger small mt-1">
+            ❌ La durée est requise.
+          </div>
+          <div *ngIf="dureeField.errors?.['minlength'] && dureeField.touched" class="text-danger small mt-1">
+            ❌ La durée est trop courte.
+          </div>
+        </div>
+
+        <!-- Supprimer -->
+        <div class="col-md-1 d-flex align-items-end">
+          <button
+            class="btn btn-outline-danger btn-sm w-100"
+            type="button"
+            (click)="removePrescription(i)"
+            title="Supprimer cette prescription"
+          >
+            ❌
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ➕ Ajouter prescription -->
+    <div class="text-center mb-4">
+      <button type="button" class="btn btn-outline-secondary" (click)="addPrescription()">
+        ➕ Ajouter une prescription
+      </button>
+    </div>
+
+    <!-- 🖊️ Signature numérique -->
+  <!-- 🖊️ Signature numérique -->
+<div class="mb-4">
+  <label class="form-label fw-bold text-success">✍ Signature du médecin</label>
+
+  <div class="border rounded p-3 shadow-sm bg-light">
+    <canvas
+      id="signatureCanvas"
+      width="500"
+      height="150"
+      style="border: 2px dashed #ccc; border-radius: 6px; background-color: white;">
+    </canvas>
+
+    <div class="d-flex justify-content-end gap-2 mt-3">
+      <button class="btn btn-outline-danger btn-sm" type="button" (click)="effacerSignature()">
+        🧹 Effacer
+      </button>
+      <button class="btn btn-outline-primary btn-sm" type="button" (click)="sauvegarderSignature()">
+        💾 Enregistrer la signature
+      </button>
+    </div>
+  </div>
+
+  <!-- 🖼️ Affichage preview signature capturée -->
+  <div *ngIf="signatureDataUrl" class="mt-4 text-center">
+    <p class="fw-bold mb-2">📌 Signature enregistrée :</p>
+    <img [src]="signatureDataUrl" class="img-thumbnail" style="max-width: 300px;">
+  </div>
+</div>
+
+
+    <!-- Enregistrer -->
+    <div class="text-end">
+      <button class="btn btn-success btn-lg shadow-sm" type="submit" [disabled]="ordonnanceForm.invalid">
+        💾 Enregistrer l’ordonnance
+      </button>
+    </div>
+    
+  </form>
+</div>

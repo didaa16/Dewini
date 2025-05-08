@@ -1,0 +1,103 @@
+<div class="container-fluid py-4">
+    <h1 class="mb-4 px-3">Medical Dashboard</h1>
+
+    <!-- Doctor Card - Full Width -->
+    <div class="doctor-card mx-3">
+        <div class="row align-items-center">
+            <div class="col-md-4 text-center">
+                <img src="assets/images/doctor.svg" class="img-fluid doctor-img" alt="Doctor">
+            </div>
+            <div class="col-md-8 doctor-info">
+                <p class="mb-2 fs-5">Good Morning, Admin</p>
+                <h2 class="mb-2 display-5">System Overview</h2>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Total Active Users:</strong> {{stats.activeAccounts || 0}}</p>
+                        <p class="mb-2"><strong>Inactive Accounts:</strong> {{stats.inactiveAccounts || 0}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Most Common Specialty:</strong> {{stats.mostCommonSpecialty || 'N/A'}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards - Below Doctor Card -->
+    <div class="stats-container px-3">
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+                    <h1 class="stat-value text-primary">{{stats.usersByRole?.PATIENT || 0}}</h1>
+                    <p class="stat-label">Patients</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+                    <h1 class="stat-value text-danger">{{stats.usersByRole?.DOCTOR || 0}}</h1>
+                    <p class="stat-label">Doctors</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+                    <h1 class="stat-value text-success">{{stats.usersByRole?.ADMIN || 0}}</h1>
+                    <p class="stat-label">Admins</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+                    <h1 class="stat-value text-info">{{stats.activeAccounts || 0}}</h1>
+                    <p class="stat-label">Active Users</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row mt-4 px-3">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <canvas id="roleChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <canvas id="genderChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="m-0 font-weight-bold text-primary">Activité de connexion</h6>
+                      <span class="badge bg-success">{{stats.loginComparison}}</span>
+                    </div>
+                    <div class="card-body">
+                      <div class="chart-area">
+                        <canvas id="loginChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <canvas id="specialtyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-urgence-stats></app-urgence-stats>
+<app-urgence-map-stats></app-urgence-map-stats>
+<app-dons-stats></app-dons-stats>

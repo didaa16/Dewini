@@ -1,0 +1,155 @@
+/* ✅ Hover Card */
+.hover-card {
+  transition: all 0.3s ease-in-out;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(23, 128, 102, 0.15);
+  background: #ffffff;
+}
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(23, 128, 102, 0.25);
+}
+
+/* ✅ Titre principal (Gestion des Commandes) */
+h2.text-success {
+  color: #178066 !important;
+}
+
+/* ✅ Badges États Commandes */
+.badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4em 0.8em;
+  border-radius: 50rem;
+}
+.badge.bg-success {
+  background-color: #178066 !important;
+}
+.badge.bg-warning {
+  background-color: #f9ae3b !important;
+  color: #fff !important;
+}
+.badge.bg-primary {
+  background-color: #1fab89 !important;
+  color: #fff !important;
+}
+.badge.bg-danger {
+  background-color: #e74c3c !important;
+}
+
+/* ✅ Boutons */
+.btn-success, .btn-outline-success {
+  background-color: #178066;
+  border-color: #178066;
+  color: #fff;
+}
+.btn-success:hover, .btn-outline-success:hover {
+  background-color: #12644f;
+  border-color: #12644f;
+}
+
+/* ✅ Toast Notification */
+.toast-notif {
+  transition: all 0.3s ease-in-out;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ✅ Autres styles */
+.equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+/* ✅ Hover Card */
+.hover-card {
+  transition: all 0.3s ease-in-out;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(23, 128, 102, 0.15);
+  background: #ffffff;
+}
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(23, 128, 102, 0.25);
+}
+
+/* ✅ Titre principal et titres de carte */
+.text-primary-custom {
+  color: #178066 !important;
+}
+
+/* ✅ Badges États Commandes */
+.badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4em 0.8em;
+  border-radius: 50rem;
+}
+.badge.bg-success {
+  background-color: #178066 !important;
+}
+.badge.bg-warning {
+  background-color: #f9ae3b !important;
+  color: #fff !important;
+}
+.badge.bg-primary {
+  background-color: #1fab89 !important;
+  color: #fff !important;
+}
+.badge.bg-danger {
+  background-color: #e74c3c !important;
+}
+
+/* ✅ Boutons */
+.btn-success, .btn-outline-success {
+  background-color: #178066;
+  border-color: #178066;
+  color: #ffffff;
+}
+.btn-success:hover, .btn-outline-success:hover {
+  background-color: #12644f;
+  border-color: #12644f;
+}
+
+/* ✅ Pagination */
+.page-link {
+  color: #178066;
+}
+.page-link:hover {
+  background-color: #178066;
+  color: white;
+}
+
+/* ✅ Toast Notification */
+.toast-notif {
+  transition: all 0.3s ease-in-out;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ✅ Autres styles */
+.equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

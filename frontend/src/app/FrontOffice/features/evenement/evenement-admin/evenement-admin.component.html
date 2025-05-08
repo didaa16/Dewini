@@ -1,0 +1,408 @@
+<div class="container">
+  <!-- Bouton Ajouter -->
+  <button *ngIf="!isAddMode && !selectedEvenement" (click)="toggleAddMode()" class="btn btn-primary mb-3">
+    Ajouter un événement
+  </button>
+
+  <!-- Formulaire -->
+  <div *ngIf="selectedEvenement" class="card mb-4">
+    <div class="card-body">
+      <h2 class="card-title">{{ isAddMode ? 'Ajouter un événement' : 'Modifier l\'événement' }}</h2>
+
+      <!-- Message d'erreur -->
+      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+
+      <form #eventForm="ngForm" (ngSubmit)="handleSubmit()">
+        <!-- Nom -->
+        <div class="mb-3">
+          <label for="nom" class="form-label">Nom *</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nom"
+            name="nom"
+            [(ngModel)]="selectedEvenement.nom"
+            required
+            #nom="ngModel"
+            [ngClass]="{'is-invalid': nom.invalid && (nom.dirty || nom.touched)}"
+          />
+          <div *ngIf="nom.invalid && (nom.dirty || nom.touched)" class="invalid-feedback">
+            Le nom est requis.
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            id="description"
+            name="description"
+            [(ngModel)]="selectedEvenement.description"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <!-- Dates -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="dateDebut" class="form-label">Date début *</label>
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="dateDebut"
+              name="dateDebut"
+              [ngModel]="selectedEvenement.dateDebut | date:'yyyy-MM-ddTHH:mm'"
+              (ngModelChange)="selectedEvenement.dateDebut = $event"
+              required
+              #dateDebut="ngModel"
+              [ngClass]="{'is-invalid': dateDebut.invalid && (dateDebut.dirty || dateDebut.touched)}"
+            />
+            <div *ngIf="dateDebut.invalid && (dateDebut.dirty || dateDebut.touched)" class="invalid-feedback">
+              La date de début est requise.
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="dateFin" class="form-label">Date fin *</label>
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="dateFin"
+              name="dateFin"
+              [ngModel]="selectedEvenement.dateFin | date:'yyyy-MM-ddTHH:mm'"
+              (ngModelChange)="selectedEvenement.dateFin = $event"
+              required
+              #dateFin="ngModel"
+              [ngClass]="{'is-invalid': dateFin.invalid && (dateFin.dirty || dateFin.touched)}"
+            />
+            <div *ngIf="dateFin.invalid && (dateFin.dirty || dateFin.touched)" class="invalid-feedback">
+              La date de fin est requise.
+            </div>
+          </div>
+        </div>
+
+        <!-- Suggestion IA améliorée -->
+        <div class="mb-4 ai-suggestion-container p-3 rounded shadow-sm">
+          <button type="button" (click)="suggererDateAvecIA()" class="btn btn-primary">
+            <i class="fas fa-robot me-2"></i>Suggérer une date optimisée par IA
+          </button>
+
+          <div *ngIf="suggestedDat" class="mt-3">
+            <div class="ai-suggestion-header d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">
+                <i class="fas fa-calendar-check text-primary me-2"></i>
+                Suggestion optimale
+              </h5>
+              <span class="badge bg-success">
+                Confiance: {{ calculateConfidence(suggestedDat.taux_participation_estime) }}%
+              </span>
+            </div>
+
+            <div class="row">
+              <!-- Colonne visuelle -->
+              <div class="col-md-4">
+                <div class="visual-date mb-3">
+                  <!-- Mini calendrier -->
+                  <div class="calendar-widget text-center p-2 border rounded">
+                    <div class="calendar-month fw-bold small">
+                      {{ suggestedDat.date_recommandee | date:'MMM yyyy' }}
+                    </div>
+                    <div class="calendar-day bg-primary text-white rounded-circle mx-auto my-2" 
+                         style="width: 40px; height: 40px; line-height: 40px;">
+                      {{ suggestedDat.date_recommandee | date:'d' }}
+                    </div>
+                  </div>
+
+                  <!-- Horloge -->
+                  <div class="clock-widget text-center mt-3">
+                    <div class="clock-face d-inline-block position-relative" 
+                         style="width: 80px; height: 80px; border: 2px solid #333; border-radius: 50%;">
+                      <div class="hour-hand position-absolute start-50 bottom-50" 
+                           [style.transform]="'rotate(' + getHourRotation(suggestedDat.date_recommandee) + 'deg)'"
+                           style="width: 3px; height: 25px; background: #333; transform-origin: 50% 100%;"></div>
+                      <div class="minute-hand position-absolute start-50 bottom-50" 
+                           [style.transform]="'rotate(' + getMinuteRotation(suggestedDat.date_recommandee) + 'deg)'"
+                           style="width: 2px; height: 35px; background: #333; transform-origin: 50% 100%;"></div>
+                    </div>
+                    <div class="digital-time fw-bold mt-2">
+                      {{ suggestedDat.date_recommandee | date:'HH:mm' }}
+                    </div>
+                  </div>
+
+                  <!-- Compte à rebours -->
+                  <div class="countdown-widget text-center mt-3">
+                    <h6 class="fw-bold">Compte à rebours</h6>
+                    <div class="countdown-timer d-flex justify-content-center gap-2">
+                      <div class="countdown-unit p-2 bg-primary text-white rounded" [@flipAnimation]="daysState">
+                        <div class="countdown-value fw-bold">{{ countdown.days }}</div>
+                        <div class="countdown-label small">Jours</div>
+                      </div>
+                      <div class="countdown-unit p-2 bg-primary text-white rounded" [@flipAnimation]="hoursState">
+                        <div class="countdown-value fw-bold">{{ countdown.hours }}</div>
+                        <div class="countdown-label small">Heures</div>
+                      </div>
+                      <div class="countdown-unit p-2 bg-primary text-white rounded" [@flipAnimation]="minutesState">
+                        <div class="countdown-value fw-bold">{{ countdown.minutes }}</div>
+                        <div class="countdown-label small">Minutes</div>
+                      </div>
+                      <div class="countdown-unit p-2 bg-primary text-white rounded" [@flipAnimation]="secondsState">
+                        <div class="countdown-value fw-bold">{{ countdown.seconds }}</div>
+                        <div class="countdown-label small">Secondes</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Colonne graphique -->
+              <div class="col-md-5">
+                <div class="participation-chart-container">
+                  <h6 class="text-center mb-3">Historique de participation</h6>
+                  <div class="d-flex justify-content-center mt-3">
+                    <span class="thumbs-up-emoji" (click)="applySuggestedDate()" title="Appliquer cette date" style="cursor: pointer; font-size: 2rem;">👍</span>
+                  </div>
+                  <canvas #participationChart width="100%" height="150"></canvas>
+                </div>
+              </div>
+
+              <!-- Colonne stats -->
+              <div class="col-md-3">
+                <div class="stats-grid">
+                  <div class="stat-card p-2 mb-2 rounded text-center">
+                    <div class="stat-value text-primary fw-bold">
+                      {{ suggestedDat.taux_participation_estime | number:'1.2-2' }}
+                    </div>
+                    <div class="stat-label small text-muted">Taux de participation</div>
+                    <div class="stat-comparison small" 
+                         [class.text-success]="suggestedDat.taux_participation_estime > 0.5"
+                         [class.text-danger]="suggestedDat.taux_participation_estime <= 0.5">
+                      {{ getComparisonText(suggestedDat.taux_participation_estime) }}
+                    </div>
+                  </div>
+
+                  <div class="stat-card p-2 mb-2 rounded text-center">
+                    <div class="stat-value text-primary fw-bold">
+                      {{ suggestedDat.nombre_participants }}
+                    </div>
+                    <div class="stat-label small text-muted">Participants estimés</div>
+                    <div class="stat-comparison small text-success">
+                      Capacité: {{ maxCapacity }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ai-footer small text-muted mt-2">
+              <i class="fas fa-info-circle"></i> 
+              Cette suggestion est basée sur l'analyse de {{ historicalEventsCount }} événements similaires
+            </div>
+          </div>
+        </div>
+
+        <!-- Lieu -->
+        <div class="mb-3">
+          <label class="form-label">Lieu *</label>
+          <div class="input-group">
+            <select
+              class="form-select"
+              [(ngModel)]="selectedEvenement.lieu"
+              name="lieu"
+              required
+              #lieu="ngModel"
+              [compareWith]="compareLieux"
+              [ngClass]="{'is-invalid': lieu.invalid && (lieu.dirty || lieu.touched)}"
+            >
+              <option *ngFor="let lieu of filteredLieux" [ngValue]="lieu">
+                {{ lieu.nom }} ({{ lieu.estExterieur ? 'Extérieur' : 'Intérieur' }})
+              </option>
+            </select>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Rechercher lieu..."
+              [(ngModel)]="searchTerm"
+              (input)="filterLieux()"
+              name="searchLieu"
+            />
+            <div *ngIf="lieu.invalid && (lieu.dirty || lieu.touched)" class="invalid-feedback">
+              Le lieu est requis.
+            </div>
+          </div>
+        </div>
+
+        <!-- Prix et seuil -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="prix" class="form-label">Prix *</label>
+            <input
+              type="number"
+              class="form-control"
+              id="prix"
+              name="prix"
+              [(ngModel)]="selectedEvenement.prix"
+              required
+              min="0"
+              step="0.01"
+              #prix="ngModel"
+              [ngClass]="{'is-invalid': prix.invalid && (prix.dirty || prix.touched)}"
+            />
+            <div *ngIf="prix.invalid && (prix.dirty || prix.touched)" class="invalid-feedback">
+              Le prix est requis et doit être positif.
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="seuilMinimum" class="form-label">Seuil Minimum *</label>
+            <input
+              type="number"
+              class="form-control"
+              id="seuilMinimum"
+              name="seuilMinimum"
+              [(ngModel)]="selectedEvenement.seuilMinimum"
+              required
+              min="0"
+              #seuilMinimum="ngModel"
+              [ngClass]="{'is-invalid': seuilMinimum.invalid && (seuilMinimum.dirty || seuilMinimum.touched)}"
+            />
+            <div *ngIf="seuilMinimum.invalid && (seuilMinimum.dirty || seuilMinimum.touched)" class="invalid-feedback">
+              Le seuil minimum est requis et doit être positif.
+            </div>
+          </div>
+        </div>
+
+        <!-- Coordonnées -->
+        <div *ngIf="selectedEvenement && selectedEvenement.coordonnees" class="row mb-3">
+          <div class="col-md-6">
+            <label for="lat" class="form-label">Latitude</label>
+            <input
+              type="number"
+              class="form-control"
+              id="lat"
+              name="lat"
+              [(ngModel)]="selectedEvenement.coordonnees.latitude"
+              step="0.000001"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="lng" class="form-label">Longitude</label>
+            <input
+              type="number"
+              class="form-control"
+              id="lng"
+              name="lng"
+              [(ngModel)]="selectedEvenement.coordonnees.longitude"
+              step="0.000001"
+            />
+          </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid">
+            {{ isAddMode ? 'Ajouter' : 'Mettre à jour' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Liste des événements -->
+  <div *ngIf="!isAddMode && !selectedEvenement">
+    <h3 class="mb-3">Liste des événements</h3>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Nom</th>
+            <th>Dates</th>
+            <th>Lieu</th>
+            <th>Prix</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let evenement of evenements">
+            <td><strong>{{ evenement.nom }}</strong></td>
+            <td>
+              {{ formatDateForDisplay(evenement.dateDebut) }}<br />
+              → {{ formatDateForDisplay(evenement.dateFin) }}
+            </td>
+            <td>{{ evenement.lieu?.nom || 'Non défini' }}</td>
+            <td>{{ evenement.prix | currency:'EUR' }}</td>
+            <td>
+              <!-- Ajoutez cette section pour la gestion des participants -->
+              <div class="card mt-4">
+                <div class="card-header">
+                  <h4>Gestion des Participants</h4>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Participants à l'événement</h5>
+                    <a [routerLink]="['/dashboard/evenement', evenement.id, 'participant']" 
+                       class="btn btn-primary">
+                      <i class="bi bi-people-fill"></i> Gérer les participants
+                    </a>
+                  </div>
+
+                  <!-- Mini tableau récapitulatif (optionnel) -->
+                  <div class="table-responsive" *ngIf="participantsPreview.length > 0">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th>Nom</th>
+                          <th>Rôle</th>
+                          <th>Type</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let participant of participantsPreview">
+                          <td>{{ participant.id }}</td>
+                          <td>{{ participant.role }}</td>
+                          <td>{{ participant.type }}</td>
+                          <td>
+                            <a [routerLink]="['/dashboard/evenement', evenement.id, 'participant', 'editer', participant.id]"
+                               class="btn btn-sm btn-outline-primary">
+                              <i class="bi bi-pencil"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- <div *ngIf="participantsPreview.length === 0" class="alert alert-info">
+                    Aucun participant pour cet événement
+                  </div> Aucun participant -->
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-2 my-3">
+                <button (click)="editEvenement(evenement.id)" style="background: none; border: none; font-size: 24px; cursor: pointer;">
+                  ✏️
+                </button>
+                <button (click)="deleteEvenement(evenement.id)" style="background: none; border: none; font-size: 24px; cursor: pointer;">
+                  🗑️
+                </button>
+                <button (click)="adjustEvent(evenement.id)" style="background: none; border: none; font-size: 24px; cursor: pointer;">
+                  🎛️
+                </button>
+                <button (click)="showWeather(evenement.id)" style="background: none; border: none; font-size: 24px; cursor: pointer;">
+                  ☁️☀️
+                </button>
+                <button [routerLink]="['/dashboard/evenement', evenement.id, 'participants']" style="background: none; border: none; font-size: 24px; cursor: pointer;">
+                  👥
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

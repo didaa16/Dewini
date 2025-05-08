@@ -1,0 +1,135 @@
+<div class="rendezvous-container">
+  <h2 class="rendezvous-title text-center mb-5">
+    <i class="bi bi-calendar-heart me-2"></i>
+    Rendez-vous à la Sauvette
+  </h2>
+
+  <!-- Boutons d'actions -->
+  <div class="mb-4 d-flex gap-3">
+    <button (click)="navigateToAddForm()" 
+    class="btn btn-gold ms-3"> <!-- ms-3 pour espacement -->
+<i class="bi bi-calendar-plus me-2"></i>Nouveau Rendez-vous
+</button>
+    
+   <!-- Bouton Envoyer les rappels -->
+<button (click)="sendReminders()" 
+class="btn btn-custom"
+[disabled]="isSendingReminders || rendezvousList.length === 0">
+<span *ngIf="!isSendingReminders">
+<i class="bi bi-envelope-check me-2"></i>Envoyer les rappels (24h avant)
+</span>
+<span *ngIf="isSendingReminders" class="d-flex align-items-center">
+<span class="spinner-border spinner-border-sm me-2"></span>
+Envoi en cours...
+</span>
+</button>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="alert alert-info d-flex align-items-center">
+    <div class="spinner-border text-primary me-2" role="status"></div>
+    <span>Chargement en cours...</span>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage }}
+      </div>
+      <button (click)="loadRendezvous()" class="btn btn-sm btn-outline-light">
+        <i class="bi bi-arrow-clockwise"></i> Réessayer
+      </button>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && !errorMessage && rendezvousList.length === 0" 
+       class="alert alert-warning d-flex align-items-center">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    Aucun rendez-vous trouvé
+  </div>
+
+  <div class="row rendezvous-container" *ngIf="!isLoading && !errorMessage && rendezvousList.length > 0">
+    <div class="col-12 mb-4" *ngFor="let rdv of rendezvousList">
+      <div class="card shadow-sm h-100 full-width-card">
+        <div class="d-flex h-100">
+          <!-- Image gauche -->
+          <div class="medical-image-col flex-shrink-0"
+            style="width: 30%; min-height: 100%; background: var(--medical-green, #20c997) url('https://st3.depositphotos.com/5228995/15494/i/450/depositphotos_154946744-stock-photo-young-female-doctor-pointing-up.jpg') center/cover no-repeat;">
+          </div>
+  
+          <!-- Contenu droit -->
+          <div class="card-body flex-grow-1 p-3" style="width: 70%;">
+            <h5 class="card-title" style="color: #20c997;">
+              <i class="bi bi-person-circle me-2" style="color: #20c997;"></i>
+              {{ rdv.nomPatient || 'N/A' }}
+            </h5>
+            <div class="card-text">
+              <p class="mb-1">
+                <i class="bi bi-envelope me-2"></i>
+                <strong>Email :</strong>
+                <span [class.text-danger]="!rdv.emailPatient || rdv.emailPatient === 'Email manquant'"
+                      [title]="!rdv.emailPatient ? 'Email non enregistré' : ''">
+                  {{ rdv.emailPatient }}
+                  <i *ngIf="!rdv.emailPatient" class="bi bi-exclamation-triangle ms-2"></i>
+                </span>
+              </p>
+              <p class="mb-2">
+                <i class="bi bi-calendar-event me-2"></i>
+                <strong>Date :</strong> {{ rdv.dateRendezvous }}
+              </p>
+              <p class="mb-2">
+                <i class="bi bi-clock me-2"></i>
+                <strong>Heure :</strong> {{ rdv.heureRendezvous || 'N/A' }}
+              </p>
+              <p class="mb-3">
+                <i class="bi bi-alarm me-2"></i>
+                <strong>Statut rappel :</strong>
+                <span class="badge" [ngClass]="{
+                  'bg-success': shouldShowAsSent(rdv),
+                  'bg-secondary': !shouldShowAsSent(rdv)
+                }">
+                  {{ shouldShowAsSent(rdv) ? 'Envoyé' : 'Non envoyé' }}
+                </span>
+              </p>
+            </div>
+  
+            <div class="d-flex justify-content-end mt-auto">
+              <button (click)="navigateToEditForm(rdv)" 
+                      class="btn btn-sm btn-outline-primary me-2"
+                      title="Modifier">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button (click)="deleteRendezvous(rdv.idRendezvous!)" 
+                      class="btn btn-sm btn-outline-danger"
+                      title="Supprimer">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Popup de confirmation de suppression -->
+<div *ngIf="showDeletePopup" class="popup-overlay">
+  <div class="popup-container">
+    <div class="popup-content">
+      <div class="popup-header">
+        <span class="popup-icon delete-icon">!</span>
+        <h3>Confirmer la suppression</h3>
+      </div>
+      <div class="popup-body">
+        <p>Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est irréversible.</p>
+      </div>
+      <div class="popup-footer">
+        <button (click)="cancelDelete()" class="popup-button cancel-button">Annuler</button>
+        <button (click)="confirmDelete()" class="popup-button delete-button">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

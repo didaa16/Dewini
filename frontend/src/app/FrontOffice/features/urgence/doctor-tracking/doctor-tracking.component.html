@@ -1,0 +1,13 @@
+<div class="tracking-container">
+  <h2>📡 Suivi en direct du médecin</h2>
+
+  <p *ngIf="isTracking">
+    Latitude : <strong>{{ lat }}</strong><br />
+    Longitude : <strong>{{ lng }}</strong>
+  </p>
+
+  <p *ngIf="!isTracking">Tracking désactivé.</p>
+
+  <button (click)="stopTracking()" *ngIf="isTracking">⛔ Arrêter le suivi</button>
+  <button (click)="startTracking()" *ngIf="!isTracking">▶️ Démarrer le suivi</button>
+</div>

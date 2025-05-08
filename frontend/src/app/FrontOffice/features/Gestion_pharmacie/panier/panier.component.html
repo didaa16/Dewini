@@ -1,0 +1,175 @@
+<div class="container mt-5 mb-5">
+  <h2 class="text-success mb-4 fw-bold">🛒 Mon Panier</h2>
+
+  <!-- Panier vide -->
+  <div *ngIf="panier.length === 0" class="alert alert-info text-center shadow-sm rounded-4">
+    ❌ Aucun médicament ajouté au panier.
+  </div>
+
+  <!-- Panier rempli -->
+  <div *ngIf="panier.length > 0" class="row">
+    <!-- Liste des articles -->
+    <div class="col-lg-8 mb-4">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body">
+          <table class="table align-middle mb-0">
+            <thead class="table-success">
+              <tr class="text-center">
+                <th>Produit</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let med of panier" class="text-center align-middle">
+                <td class="text-start">
+                  <div class="d-flex align-items-center">
+                    <img [src]="med.imageUrl || 'https://via.placeholder.com/60x60'" class="rounded me-3" width="60" height="60">
+                    <div>
+                      <strong>{{ med.nom }}</strong><br>
+                      <small class="text-muted">{{ med.description | slice:0:50 }}...</small>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ med.prix | number:'1.2-2' }} TND</td>
+                <td>
+                  <input type="number" [(ngModel)]="med.quantite" class="form-control form-control-sm text-center" min="1" style="width: 70px;">
+                </td>
+                <td>{{ (med.prix * (med.quantite || 1)) | number:'1.2-2' }} TND</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-danger rounded-pill" (click)="supprimer(med.id!)">
+                    Retirer
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Résumé commande -->
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body">
+          <h5 class="mb-4 text-center fw-bold">🧾 Résumé</h5>
+
+          <ul class="list-group list-group-flush mb-3">
+            <li class="list-group-item d-flex justify-content-between">
+              <strong>Total articles :</strong> <span class="text-success fw-bold">{{ panier.length }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <strong>Livraison :</strong> <span class="text-success fw-bold">Gratuite</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <strong>Total :</strong> <span class="text-success fw-bold">{{ getTotal() | number:'1.2-2' }} TND</span>
+            </li>
+          </ul>
+
+          <!-- Formulaire de commande -->
+          <form #commandeForm="ngForm" (ngSubmit)="passerCommande()" novalidate>
+            <div class="form-group mb-2">
+              <label for="nomClient">Nom du client</label>
+              <div *ngIf="loadingUserInfo" class="text-muted small">
+                Chargement de vos informations...
+              </div>
+              <input
+                *ngIf="!loadingUserInfo"
+                type="text"
+                class="form-control"
+                id="nomClient"
+                [(ngModel)]="nomClient"
+                name="nomClient"
+                required
+                minlength="3"
+                #nomClientField="ngModel"
+              />
+             
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="adresse">Adresse de livraison</label>
+              <input
+                type="text"
+                class="form-control"
+                id="adresse"
+                [(ngModel)]="adresse"
+                name="adresse"
+                required
+                minlength="5"
+                #adresseField="ngModel"
+                [ngClass]="{
+                  'is-valid': adresseField.valid && adresseField.touched,
+                  'is-invalid': adresseField.invalid && adresseField.touched
+                }"
+              />
+              <div *ngIf="adresseField.invalid && adresseField.touched" class="text-danger small">
+                ❌ Veuillez entrer une adresse valide (min. 5 caractères).
+              </div>
+            </div>
+
+            <!-- Boutons du formulaire -->
+            <div class="d-grid gap-2 mt-3">
+              <button
+                type="button"
+                class="btn btn-outline-warning"
+                (click)="verifierInteractions()">
+                ⚠️ Vérifier interactions
+              </button>
+
+              <button
+                type="submit"
+                class="btn btn-success"
+                [disabled]="commandeForm.invalid || panier.length === 0">
+                ✅ Valider la commande
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="viderPanier()">
+                🗑️ Vider le panier
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactions -->
+  <div *ngIf="interactions.length > 0" class="alert alert-warning shadow-sm rounded-4 mt-4">
+    <h5>⚠️ Interactions détectées :</h5>
+    <ul class="mb-0">
+      <li *ngFor="let inter of interactions">
+        <strong>{{ inter.ingredient }}</strong> :
+        <span *ngIf="inter.data?.warnings?.length">
+          {{ inter.data.warnings[0] | slice:0:200 }}...
+          <a href="#" (click)="inter.showFull = !inter.showFull; $event.preventDefault()">
+            {{ inter.showFull ? 'Réduire' : 'Lire plus' }}
+          </a>
+          <div *ngIf="inter.showFull" class="mt-2 small text-muted">
+            {{ inter.data.warnings[0] }}
+          </div>
+        </span>
+        <span *ngIf="!inter.data">❌ Aucune donnée disponible.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Toast succès -->
+  <div
+    class="toast position-fixed bottom-0 end-0 m-4 text-bg-success shadow fade show rounded"
+    *ngIf="toastVisible"
+    style="z-index: 9999; min-width: 280px;"
+  >
+    <div class="d-flex">
+      <div class="toast-body">
+        {{ toastMessage }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toastVisible = false"></button>
+    </div>
+  </div>
+</div>

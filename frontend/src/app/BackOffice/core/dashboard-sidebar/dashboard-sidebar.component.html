@@ -1,0 +1,307 @@
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" [class.menu-collapsed]="isMenuCollapsed">
+  <div class="app-brand demo">
+    <a [routerLink]="['/dashboard']" class="app-brand-link">
+      <span class="app-brand-logo demo logo-wrapper">
+        <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+          <!-- Enhanced Gradients and Effects -->
+          <defs>
+            <!-- Main Background Gradient with Smoother Transition -->
+            <linearGradient id="logoGradient" x1="10%" y1="10%" x2="90%" y2="90%">
+              <stop offset="0%" style="stop-color:#30d1bb;stop-opacity:1" />
+              <stop offset="40%" style="stop-color:#25b5a2;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#14746c;stop-opacity:1" />
+            </linearGradient>
+
+            <!-- Text Gradient with Enhanced Depth -->
+            <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#f5f5f5;stop-opacity:1" />
+            </linearGradient>
+
+            <!-- Sophisticated Shadow System -->
+            <filter id="premiumShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#104842" flood-opacity="0.4"/>
+              <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#0c3834" flood-opacity="0.2"/>
+            </filter>
+
+            <!-- Inner Glow for Medical Elements -->
+            <filter id="innerGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+              <feOffset dx="0" dy="0" result="offsetBlur"/>
+              <feFlood flood-color="#ffffff" flood-opacity="0.3" result="glowColor"/>
+              <feComposite in="glowColor" in2="offsetBlur" operator="in" result="softGlow"/>
+              <feMerge>
+                <feMergeNode in="softGlow"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Background with Enhanced Corners and Subtle Pattern -->
+          <rect x="12" y="12" width="216" height="216" rx="36" fill="url(#logoGradient)" filter="url(#premiumShadow)"/>
+
+          <!-- Subtle Overlay Pattern -->
+          <rect x="12" y="12" width="216" height="216" rx="36" fill="url(#logoGradient)" opacity="0.05"
+                style="mix-blend-mode: overlay"/>
+
+          <!-- Medical Cross Symbol - More Professional -->
+          <g filter="url(#innerGlow)">
+            <rect x="108" y="44" width="24" height="72" rx="9.6" fill="white" />
+            <rect x="78" y="68" width="84" height="24" rx="9.6" fill="white" />
+          </g>
+
+          <!-- Heartbeat Line - More Fluid and Medical Looking -->
+          <path d="M42,156 H60 L72,132 L84,180 L96,144 L108,156 H120 L132,132 L144,180 L156,144 L168,156 H192"
+                stroke="white" stroke-width="7.2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                filter="url(#innerGlow)" />
+
+          <!-- Text with Premium Typography -->
+          <text x="120" y="218" font-family="Arial, Helvetica, sans-serif" font-size="33.6" font-weight="bold"
+                fill="white" text-anchor="middle" filter="url(#premiumShadow)">Dewini</text>
+        </svg>
+      </span>
+      <span class="app-brand-text demo menu-text fw-bold ms-2">Dewini</span>
+    </a>
+    <a href="#" class="layout-menu-toggle menu-link text-large ms-auto" (click)="toggleMenu($event)">
+      <i class="bx bx-chevron-left d-block d-xl-none align-middle"></i>
+    </a>
+  </div>
+  <div class="menu-divider mt-0"></div>
+  <div class="menu-inner-shadow"></div>
+  <ul class="menu-inner py-1">
+    <!-- Dashboards -->
+    <li class="menu-item active open" [class.active]="activeMenu === 'dashboard'" [class.open]="submenuStates['dashboard']">
+      <a href="#" class="menu-link menu-toggle" (click)="toggleSubmenu($event, 'dashboard')">
+        <i class="menu-icon tf-icons bx bx-home-smile"></i>
+        <div class="text-truncate">Dashboard</div>
+        <span class="badge rounded-pill bg-danger ms-auto">5</span>
+      </a>
+      <ul class="menu-sub" *ngIf="submenuStates['dashboard']">
+        <li class="menu-item" [class.active]="activeMenu === 'home'">
+          <a [routerLink]="['/dashboard']" class="menu-link" (click)="setActiveMenu('home')">
+            <div class="text-truncate">Accueil</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'notifications'">
+          <a [routerLink]="['/dashboard/notifications']" class="menu-link" (click)="setActiveMenu('notifications')">
+            <div class="text-truncate">Notifications</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'analyses'">
+          <a [routerLink]="['/dashboard/analyses']" class="menu-link" (click)="setActiveMenu('analyses')">
+            <div class="text-truncate">Analyses</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'predictions'">
+          <a [routerLink]="['/dashboard/predictions']" class="menu-link" (click)="setActiveMenu('predictions')">
+            <div class="text-truncate">Prédictions</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Gestions -->
+    <li class="menu-header small text-uppercase">
+      <span class="menu-header-text">Fonctionnalités & Opérations</span>
+    </li>
+
+    <!-- Users Menu -->
+    <li class="menu-item" [class.active]="activeMenu === 'users'" [class.open]="submenuStates['users']">
+      <a href="#" class="menu-link menu-toggle" (click)="toggleSubmenu($event, 'users')">
+        <i class="menu-icon bx bx-user"></i>
+        <div class="text-truncate">Utilisateurs</div>
+      </a>
+      <ul class="menu-sub" *ngIf="submenuStates['users']">
+        <li class="menu-item" [class.active]="activeMenu === 'account'">
+          <a [routerLink]="['/dashboard/admin/users']" class="menu-link" (click)="setActiveMenu('account')">
+            <div class="text-truncate">Liste Des Comptes</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'user-notifications'">
+          <a [routerLink]="['/dashboard/user-profile', userId]" class="menu-link" (click)="setActiveMenu('user-notifications')">
+            <div class="text-truncate">Admin Profile</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'connections'">
+          <a [routerLink]="['/dashboard/admin/stats']" class="menu-link" (click)="setActiveMenu('connections')">
+            <div class="text-truncate">Statistiques des utilisateurs</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Rendez-vous Menu -->
+    <li class="menu-item" [class.active]="activeMenu === 'rendezvous'" [class.open]="submenuStates['rendezvous']">
+      <a href="#" class="menu-link menu-toggle" (click)="toggleSubmenu($event, 'rendezvous')">
+        <i class="menu-icon bx bx-list-ul"></i>
+        <div class="text-truncate">Rendez-vous</div>
+      </a>
+      <ul class="menu-sub" *ngIf="submenuStates['rendezvous']">
+        <li class="menu-item" [class.active]="activeMenu === 'rdv-account'">
+          <a [routerLink]="['/dashboard/liste-reponses']" class="menu-link" (click)="setActiveMenu('rdv-account')">
+            <div class="text-truncate">List Réponse</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Dossiers Médicaux Menu -->
+    <li class="menu-item" [class.active]="activeMenu === 'dossiersMedicaux'" [class.open]="submenuStates['dossiersMedicaux']">
+      <a href="#" class="menu-link menu-toggle" (click)="toggleSubmenu($event, 'dossiersMedicaux')">
+        <i class="menu-icon bx bx-folder"></i>
+        <div class="text-truncate">Dossiers Médicaux</div>
+      </a>
+      <ul class="menu-sub" *ngIf="submenuStates['dossiersMedicaux']">
+        <li class="menu-item" [class.active]="activeMenu === 'dossiers'">
+          <a [routerLink]="['/dashboard/dossiers-medicaux']" class="menu-link" (click)="setActiveMenu('dossiers')">
+            <div class="text-truncate">Dossiers</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'consultations'">
+          <a [routerLink]="['/dashboard/consultations']" class="menu-link" (click)="setActiveMenu('consultations')">
+            <div class="text-truncate">Consultations</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Pharmacie Menu -->
+    <li class="menu-item" [class.active]="activeMenu === 'pharmacie'" [class.open]="submenuStates['pharmacie']">
+      <a href="#" class="menu-link menu-toggle" (click)="toggleSubmenu($event, 'pharmacie')">
+        <i class="icon-base bx bx-clinic icon-md me-3"></i>
+        <div class="text-truncate">Pharmacie</div>
+      </a>
+      <ul class="menu-sub" *ngIf="submenuStates['pharmacie']">
+        <li class="menu-item" [class.active]="activeMenu === 'medicaments'">
+          <a [routerLink]="['/dashboard/medicaments']" class="menu-link" (click)="setActiveMenu('medicaments')">
+            <div class="text-truncate">Médicaments</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ordonnances'">
+          <a [routerLink]="['/dashboard/ordonnances']" class="menu-link" (click)="setActiveMenu('ordonnances')">
+            <div class="text-truncate">Ordonnances</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'commandes'">
+          <a [routerLink]="['/dashboard/commandes']" class="menu-link" (click)="setActiveMenu('commandes')">
+            <div class="text-truncate">Commandes</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Urgences Menu -->
+    <li class="menu-item" [class.active]="activeMenu === 'urgences'" [class.open]="submenuStates['urgences']">
+      <a href="#" class="menu-link menu-toggle" (click)="toggleSubmenu($event, 'urgences')">
+        <i class="menu-icon bx bx-phone-call"></i>
+        <div class="text-truncate">Urgences</div>
+      </a>
+      <ul class="menu-sub" *ngIf="submenuStates['urgences']">
+        <li class="menu-item" [class.active]="activeMenu === 'ur-account'">
+          <a [routerLink]="['/dashboard/urgenceDashboard']" class="menu-link" (click)="setActiveMenu('ur-account')">
+            <div class="text-truncate">Liste Urgences</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Dons Menu -->
+    <li class="menu-item" [class.active]="activeMenu === 'dons'" [class.open]="submenuStates['dons']">
+      <a href="#" class="menu-link menu-toggle" (click)="toggleSubmenu($event, 'dons')">
+        <i class="menu-icon bx bx-donate-blood"></i>
+        <div class="text-truncate">Dons</div>
+      </a>
+      <ul class="menu-sub" *ngIf="submenuStates['dons']">
+        <li class="menu-item" [class.active]="activeMenu === 'ac-account'">
+          <a [routerLink]="['/dashboard/centres']" class="menu-link" (click)="setActiveMenu('ac-account')">
+            <div class="text-truncate">Centres</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-notifications'">
+          <a [routerLink]="['/dashboard/affichageDons']" class="menu-link" (click)="setActiveMenu('ac-notifications')">
+            <div class="text-truncate">Dons</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Actualités Menu -->
+    <li class="menu-item" [class.active]="activeMenu === 'actualites'" [class.open]="submenuStates['actualites']">
+      <a href="#" class="menu-link menu-toggle" (click)="toggleSubmenu($event, 'actualites')">
+        <i class="menu-icon bx bx-news"></i>
+        <div class="text-truncate">Actualités</div>
+      </a>
+      <ul class="menu-sub" *ngIf="submenuStates['actualites']">
+        <li class="menu-item" [class.active]="activeMenu === 'ac-account'">
+          <a [routerLink]="['/dashboard/participations']" class="menu-link" (click)="setActiveMenu('ac-account')">
+            <div class="text-truncate">participations</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-notifications'">
+          <a [routerLink]="['/dashboard/evenements']" class="menu-link" (click)="setActiveMenu('ac-notifications')">
+            <div class="text-truncate">evenements</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-connections'">
+          <a [routerLink]="['/dashboard/evenement/:eventId/participant/nouveau']" class="menu-link" (click)="setActiveMenu('ac-connections')">
+            <div class="text-truncate">Connexions</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-connections'">
+          <a [routerLink]="['/dashboard/evenement/:eventId/participant/:participantId/editer']" class="menu-link" (click)="setActiveMenu('ac-connections')">
+            <div class="text-truncate">Connexions</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-connections'">
+          <a [routerLink]="['/dashboard/evenement/:eventId/participant']" class="menu-link" (click)="setActiveMenu('ac-connections')">
+            <div class="text-truncate">Connexions</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-connections'">
+          <a [routerLink]="['/dashboard/participation/:id']" class="menu-link" (click)="setActiveMenu('ac-connections')">
+            <div class="text-truncate">Connexions</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-connections'">
+          <a [routerLink]="['/dashboard/evenement/:id/participants']" class="menu-link" (click)="setActiveMenu('ac-connections')">
+            <div class="text-truncate">Connexions</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-connections'">
+          <a [routerLink]="['/dashboard/prediction/:id']" class="menu-link" (click)="setActiveMenu('ac-connections')">
+            <div class="text-truncate">Connexions</div>
+          </a>
+        </li>
+        <li class="menu-item" [class.active]="activeMenu === 'ac-connections'">
+          <a [routerLink]="['/dashboard/weather/:id']" class="menu-link" (click)="setActiveMenu('ac-connections')">
+            <div class="text-truncate">Connexions</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- App Infos -->
+    <li class="menu-header small text-uppercase">
+      <span class="menu-header-text">Dewini & Infos</span>
+    </li>
+    <li class="menu-item">
+      <a href="#" target="_blank" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-support"></i>
+        <div class="text-truncate">Support</div>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="#" target="_blank" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-file"></i>
+        <div class="text-truncate">Documentation</div>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="#" target="_blank" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-info-circle"></i>
+        <div class="text-truncate">À Propos</div>
+      </a>
+    </li>
+    <!-- Autres menus si nécessaires -->
+  </ul>
+</aside>

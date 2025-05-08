@@ -1,0 +1,162 @@
+<div class="container my-5">
+  <!-- Indicateur de chargement -->
+  <div *ngIf="loading" class="text-center p-5">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p class="mt-3 fs-5">Chargement des opportunités de don en cours...</p>
+  </div>
+
+  <!-- Titre amélioré avec compteur -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="mb-0 medical-title">
+        <i class="fas fa-heartbeat me-2"></i>
+        <span class="gradient-text">Opportunités de Don</span>
+        <span *ngIf="!loading" class="badge bg-primary ms-2">{{ filteredDons.length }} disponible(s)</span>
+      </h3>
+      <p class="text-muted mb-0"><small>Contribuez à sauver des vies près de chez vous</small></p>
+    </div>
+    <button routerLink="/scanner" class="btn btn-primary">
+      <i class="fas fa-qrcode me-2"></i>Scanner un QR Code
+    </button>
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="input-group medical-search-bar">
+        <span class="input-group-text bg-white">
+          <i class="fas fa-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Rechercher par type (Sang, Plasma, Organes...)"
+          [(ngModel)]="searchTerm"
+          (input)="filterDons()"
+        >
+        <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()" [disabled]="!searchTerm">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+    <button (click)="loadDons()" class="btn btn-sm btn-outline-primary ms-3">
+      <i class="fas fa-sync-alt"></i> Réessayer
+    </button>
+  </div>
+
+  <!-- Cartes des dons -->
+  <div *ngIf="!loading && !error" class="row g-4">
+    <div *ngIf="filteredDons.length === 0" class="col-12">
+      <div class="card text-center py-5 medical-empty-card">
+        <div class="card-body">
+          <i class="fas fa-heart-broken text-muted" style="font-size: 3rem;"></i>
+          <h5 class="card-title mt-3">
+            {{ searchTerm ? 'Aucun résultat pour "' + searchTerm + '"' : 'Aucune opportunité disponible actuellement' }}
+          </h5>
+          <p class="card-text">
+            {{ searchTerm ? 'Essayez un autre terme de recherche' : 'Revenez plus tard ou élargissez votre zone de recherche' }}
+          </p>
+          <button *ngIf="searchTerm" (click)="clearSearch()" class="btn btn-outline-primary mt-3">
+            <i class="fas fa-redo"></i> Réinitialiser
+          </button>
+          <button *ngIf="!searchTerm" (click)="loadDons()" class="btn btn-outline-primary mt-3">
+            <i class="fas fa-sync-alt"></i> Rafraîchir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngFor="let don of filteredDons" class="col-md-6 col-lg-4" @fadeIn>
+      <div class="card h-100 medical-donation-card">
+        <!-- En-tête de carte amélioré -->
+        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-1 d-flex align-items-center">
+              <i class="fas fa-hospital me-2" [ngClass]="{
+                'text-danger': don.typeDon === 'SANG',
+                'text-warning': don.typeDon === 'PLASMA',
+                'text-info': don.typeDon === 'PLAQUETTES',
+                'text-success': don.typeDon.includes('ORGANE')
+              }"></i>
+              <span class="medical-center-name">{{ don.centre.nom }}</span>
+            </h5>
+            <div class="d-flex align-items-center">
+              <i class="fas fa-map-marker-alt text-muted me-1" style="font-size: 0.8rem;"></i>
+              <small class="text-muted">{{ don.centre.adresse }}</small>
+            </div>
+          </div>
+          <span class="badge" [ngClass]="{
+            'bg-danger': don.typeDon === 'SANG',
+            'bg-warning': don.typeDon === 'PLASMA',
+            'bg-info': don.typeDon === 'PLAQUETTES',
+            'bg-success': don.typeDon.includes('ORGANE')
+          }">
+            {{ don.typeDon }}
+          </span>
+        </div>
+
+        <div class="card-body">
+          <div class="medical-info-item">
+            <div class="medical-info-icon" [ngClass]="{
+              'bg-danger-light': don.typeDon === 'SANG',
+              'bg-warning-light': don.typeDon === 'PLASMA',
+              'bg-info-light': don.typeDon === 'PLAQUETTES',
+              'bg-success-light': don.typeDon.includes('ORGANE')
+            }">
+              <i class="fas fa-tint text-danger"></i>
+            </div>
+            <div class="medical-info-content">
+              <small class="text-muted">Groupe sanguin</small>
+              <h6 class="mb-0">{{ don.grpSanguin || 'Non spécifié' }}</h6>
+            </div>
+          </div>
+
+          <div class="medical-info-item">
+            <div class="medical-info-icon bg-light">
+              <i class="fas fa-calendar-alt text-primary"></i>
+            </div>
+            <div class="medical-info-content">
+              <small class="text-muted">Date du don</small>
+              <h6 class="mb-0">{{ don.dateDon | date:'dd/MM/yyyy' }}</h6>
+            </div>
+          </div>
+
+          <div class="medical-info-item">
+            <div class="medical-info-icon bg-light">
+              <i class="fas fa-file-alt text-info"></i>
+            </div>
+            <div class="medical-info-content">
+              <small class="text-muted">Description</small>
+              <p class="mb-0 text-muted">{{ don.description || 'Aucune description fournie' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer bg-transparent border-top-0">
+          <button
+            (click)="participer(don.idDon)"
+            class="btn w-100 medical-participate-btn"
+            [disabled]="participatingDonId === don.idDon"
+            [@pulse]="participatingDonId === don.idDon ? 'in' : 'out'"
+          >
+            <span *ngIf="participatingDonId !== don.idDon">
+              <i class="fas fa-heart me-2"></i> Participer
+            </span>
+            <span *ngIf="participatingDonId === don.idDon">
+              <i class="fas fa-spinner fa-spin me-2"></i> En cours...
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

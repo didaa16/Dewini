@@ -1,0 +1,41 @@
+<div class="container mt-5">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h4 class="mb-0">📝 Modifier une commande</h4>
+    </div>
+
+    <div class="card-body">
+      <form (ngSubmit)="submitUpdate()">
+        <!-- 🧍‍♂️ Nom client -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">👤 Nom du client</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedLivraison.nomClient" name="nomClient" required />
+        </div>
+
+        <!-- 🏠 Adresse -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">📍 Adresse</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedLivraison.adresse" name="adresse" required />
+        </div>
+
+        <!-- 🔄 État -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">📦 État</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedLivraison.etat" name="etat" required />
+        </div>
+
+        <!-- ✅ Boutons -->
+        <div class="text-end">
+          <button type="submit" class="btn btn-success shadow-sm px-4">
+            💾 Enregistrer
+          </button>
+          <a [routerLink]="['/commandes']" class="btn btn-secondary ms-2">
+            ↩ Retour
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="mb-5"></div>
+</div>

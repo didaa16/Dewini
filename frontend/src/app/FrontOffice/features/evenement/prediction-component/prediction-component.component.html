@@ -1,0 +1,40 @@
+<div *ngIf="prediction">
+    <h2>Prédiction pour l'événement {{ prediction.evenement_id }}</h2>
+    
+    <p><strong>Nom :</strong> {{ prediction.nom }}</p>
+  
+    <!-- Check ou X avant le texte "Participation prédite" -->
+    <p><strong>Participation prédite : </strong>
+      <span *ngIf="prediction.attendance_likelihood > 0.5" class="check-icon">✔️</span>
+      <span *ngIf="prediction.attendance_likelihood <= 0.5" class="x-icon">❌</span>
+      {{ prediction.predicted_attendance ? 'Oui' : 'Non' }}
+    </p>
+  
+    <!-- Probabilité affichée avec barre de progression -->
+    <p><strong>Probabilité :</strong> 
+      <span class="stat-text">{{ prediction.attendance_likelihood | percent:'1.0-2' }}</span>
+    </p>
+  
+    <!-- Barre de progression -->
+    <div class="progress-bar-container">
+      <div class="progress-bar" [ngClass]="{
+          'high-probability': prediction.attendance_likelihood > 0.5,
+          'low-probability': prediction.attendance_likelihood <= 0.5
+        }" [ngStyle]="{ 'width': (prediction.attendance_likelihood * 100) + '%' }">
+        <span class="progress-text">{{ (prediction.attendance_likelihood * 100) | number: '1.0-0' }}%</span>
+      </div>
+    </div>
+  
+    <!-- Suggestions avec emoji devant -->
+    <div class="suggestions">
+      <p><strong>Suggestions :</strong></p>
+      <ul>
+        <li *ngFor="let suggestion of prediction.suggestions">
+          <span *ngIf="prediction.attendance_likelihood > 0.5" class="emoji-animation happy">😄👍</span>
+          <span *ngIf="prediction.attendance_likelihood <= 0.5" class="emoji-animation sad">😞👎</span>
+          {{ suggestion }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  

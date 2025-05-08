@@ -1,0 +1,141 @@
+<div class="container-fluid px-4 mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-center text-primary-custom fw-bold mb-4" style="font-size: 2rem; background: linear-gradient(135deg, #178066, #1fab89); -webkit-background-clip: text; color: transparent;">
+      <i class="bi bi-clipboard-plus-fill me-2"></i> Gestion des Ordonnances
+    </h2>       
+    <a class="btn btn-success rounded-pill shadow-sm px-4" [routerLink]="['/dashboard/ordonnances/ajouter']">
+      ➕ Ajouter
+    </a>
+  </div>
+
+  <!-- 🔍 Filtres -->
+  <div class="row mb-4">
+    <div class="col-md-4 mb-2">
+      <input type="text" class="form-control" placeholder="🔍 Recherche ID ou patient/médecin" [(ngModel)]="searchTerm">
+    </div>
+    <div class="col-md-3 mb-2">
+      <input type="date" class="form-control" [(ngModel)]="dateDebut">
+    </div>
+    <div class="col-md-3 mb-2">
+      <input type="date" class="form-control" [(ngModel)]="dateFin">
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" [(ngModel)]="triSelection">
+        <option value="">Trier par...</option>
+        <option value="id-asc">ID croissant</option>
+        <option value="id-desc">ID décroissant</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 📊 Statistiques -->
+<!-- 📊 Statistiques -->
+<div class="row text-center justify-content-center mb-4">
+  <div class="col-md-3 col-8 mb-2">
+    <div class="p-3 bg-light rounded shadow-sm">
+      <h6>Total</h6>
+      <h4 class="text-dark">{{ ordonnances.length }}</h4>
+    </div>
+  </div>
+  <div class="col-md-3 col-8 mb-2">
+    <div class="p-3 bg-light rounded shadow-sm">
+      <h6>Signées</h6>
+      <h4 class="text-success">{{ totalSignees() }}</h4>
+    </div>
+  </div>
+  <div class="col-md-3 col-8 mb-2">
+    <div class="p-3 bg-light rounded shadow-sm">
+      <h6>Récentes</h6>
+      <h4 class="text-primary">{{ totalRecentes() }}</h4>
+    </div>
+  </div>
+</div>
+
+
+  <!-- 📝 Liste des ordonnances -->
+  <div class="row">
+    <div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let ordonnance of ordonnancesFiltres">
+      <div class="card hover-card h-100 d-flex flex-column shadow-sm border-0 rounded-4">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="fw-bold mb-0 text-primary-custom">
+              Ordonnance #{{ ordonnance.id }}
+            </h5>
+            
+            <span class="badge"
+                  [ngClass]="{
+                    'bg-success': ordonnance.signature,
+                    'bg-secondary': !ordonnance.signature
+                  }">
+              {{ ordonnance.signature ? 'Signée' : 'Non signée' }}
+            </span>
+          </div>
+
+          <div class="mb-2">
+            <span class="badge bg-light text-dark">👨‍⚕️ Médecin : {{ ordonnance.medecinId }}</span><br>
+            <span class="text-muted">📍 Patient : {{ ordonnance.patientId }}</span>
+          </div>
+
+          <p class="card-text text-muted">📖 <strong>Instructions :</strong> <em>{{ ordonnance.instructions }}</em></p>
+
+          <div class="mt-2">
+            <p class="mb-1 fw-semibold text-warning">💊 Prescriptions :</p>
+            <ul class="ps-3 mb-0">
+              <li *ngFor="let p of ordonnance.prescriptions">
+                {{ p.medicament.nom }} — {{ p.posologie }} — {{ p.duree }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-auto pt-3 d-flex justify-content-end gap-2">
+            <button class="btn btn-sm btn-outline-warning" [routerLink]="['/dashboard/ordonnances/modifier', ordonnance.id]">✏️</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="supprimer(ordonnance.id!)">🗑</button>
+            <button class="btn btn-outline-secondary btn-sm" (click)="generateAndUploadPdf(ordonnance)">☁️</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📄 Ordonnance à capturer pour PDF -->
+  <div id="pdfContent" style="display: none; width: 800px; background: white; padding: 40px; font-family: Arial, sans-serif; border-radius: 12px;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="color: #178066; margin: 0;">🩺 DEWINI - Ordonnance Médicale</h1>
+      <p style="font-size: 14px;">Plateforme Médicale Intelligente</p>
+      <hr style="margin-top: 10px;">
+    </div>
+
+    <div style="margin-bottom: 20px; font-size: 15px;">
+      <p><strong>📝 Instructions :</strong> {{ selectedOrdonnance?.instructions }}</p>
+    </div>
+
+    <div>
+      <h3 style="color: #1fab89;">💊 Liste des Prescriptions</h3>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <thead style="background-color: #f0f0f0;">
+          <tr>
+            <th align="left">Médicament</th>
+            <th align="left">Posologie</th>
+            <th align="left">Durée</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of selectedOrdonnance?.prescriptions">
+            <td>{{ p.medicament.nom }}</td>
+            <td>{{ p.posologie }}</td>
+            <td>{{ p.duree }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="selectedOrdonnance?.signature" style="margin-top: 40px;">
+      <p><strong>🖊️ Signature du Médecin :</strong></p>
+      <img [src]="selectedOrdonnance.signature" alt="Signature" style="width: 180px; border: 1px solid #ccc; border-radius: 6px; padding: 4px;">
+    </div>
+
+    <div style="text-align: right; margin-top: 40px; font-size: 12px; color: #888;">
+      <p><em>Document généré via DEWINI – {{ today | date:'dd/MM/yyyy' }}</em></p>
+    </div>
+  </div>
+</div>
